@@ -1,10 +1,10 @@
 ---
 project_name: react-native-survey-js-ui
 current_milestone_id: M01
-highest_sprint_in_milestone: S01
+highest_sprint_in_milestone: S05
 current_sprint_id: S01
 status: active
-last_updated: 2025-01-06 00:00:00
+last_updated: 2025-01-06T00:00:00Z
 ---
 
 # Project Manifest: react-native-survey-js-ui
@@ -26,16 +26,39 @@ This project follows a milestone-based development approach with strict TDD requ
 ## 2. Current Focus
 
 - **Milestone:** M01 - Foundation & Testing Infrastructure
-- **Sprint:** S01 - Project Setup & Sample App
+- **Sprint:** S01 - Library Foundation Setup
 
 ## 3. Sprints in Current Milestone
 
-### S01 Foundation Setup (📋 PLANNED)
+### S01 Library Foundation Setup (📋 PLANNED)
+📋 Initialize React Native library infrastructure with `create-react-native-library`
+📋 Configure package.json for npm distribution and TypeScript setup
+📋 Create src/ directory structure with main exports
+📋 Configure peer dependencies and basic library build process
 
-📋 Project infrastructure with Expo + TypeScript + TDD setup
-📋 Sample React Native app with Survey and Explore tabs
-📋 Core Survey component shell with survey-core integration
-📋 CI/CD pipeline and comprehensive testing framework
+### S02 Development Environment Setup (📋 PLANNED)
+📋 Create example React Native app in example/ directory
+📋 Configure Metro for local library resolution and hot reload
+📋 Implement tab navigation (Survey Demo + Explore tabs)
+📋 Establish seamless development workflow
+
+### S03 Core Survey Integration (📋 PLANNED)
+📋 Create main Survey component with survey-core integration
+📋 Implement base question architecture foundation
+📋 Define TypeScript interfaces for SurveyJS models
+📋 Create basic survey demo in example app tabs
+
+### S04 TDD Infrastructure (📋 PLANNED)
+📋 Configure Jest and React Native Testing Library
+📋 Create comprehensive unit and integration tests
+📋 Set up mock utilities and achieve >90% code coverage
+📋 Establish TDD workflow for future development
+
+### S05 CI/CD and Final Integration (📋 PLANNED)
+📋 Set up automated testing pipeline for cross-platform
+📋 Implement build verification and TypeScript validation
+📋 Create library documentation and final integration testing
+📋 Complete M01 milestone validation
 
 ## 4. Key Documentation
 
@@ -45,7 +68,8 @@ This project follows a milestone-based development approach with strict TDD requ
 
 ## 5. Quick Links
 
-- **Current Sprint:** [S01 Sprint Folder](./03_SPRINTS/S01_M01_Foundation_Setup/)
+- **Current Sprint:** [S01 Sprint Folder](./03_SPRINTS/S01_M01_Library_Foundation/)
+- **All M01 Sprints:** [Sprint Directory](./03_SPRINTS/)
 - **Active Tasks:** Check sprint folder for T##_S01_*.md files
 - **Project Reviews:** [Latest Review](./10_STATE_OF_PROJECT/)
 
