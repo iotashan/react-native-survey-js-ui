@@ -29,6 +29,14 @@ Initialize React Native library infrastructure with proper npm configuration and
 - Package.json properly configured with peer dependencies
 - Ready for local development workflow integration
 
+## Tasks
+- [T01_S01_Initialize_Library_Project.md](./T01_S01_Initialize_Library_Project.md) - Bootstrap React Native library project using create-react-native-library
+- [T02_S01_Configure_Package_Json.md](./T02_S01_Configure_Package_Json.md) - Configure package.json for npm distribution with proper metadata
+- [T03_S01_Setup_TypeScript_Configuration.md](./T03_S01_Setup_TypeScript_Configuration.md) - Set up TypeScript configuration for library development  
+- [T04_S01_Create_Source_Directory_Structure.md](./T04_S01_Create_Source_Directory_Structure.md) - Create src/ directory structure with main exports
+- [T05_S01_Configure_Peer_Dependencies.md](./T05_S01_Configure_Peer_Dependencies.md) - Configure React and React Native as peer dependencies
+- [T06_S01_Establish_Build_Process.md](./T06_S01_Establish_Build_Process.md) - Establish library build process and scripts
+
 ## Notes / Retrospective Points
 - This is the foundational sprint that enables all subsequent development
 - Focus on getting the library infrastructure right from the start
