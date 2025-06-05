@@ -144,6 +144,9 @@
       "src/**/*.{ts,tsx}",
       "!src/**/*.test.{ts,tsx}",
       "!src/**/__tests__/**"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
     ]
   },
   "commitlint": {

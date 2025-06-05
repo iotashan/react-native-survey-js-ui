@@ -1,6 +1,44 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Survey } from './Survey';
+
+// Mock the hooks
+jest.mock('../../hooks', () => ({
+  useSurveyModel: jest.fn((model) => ({
+    model: {
+      data: {},
+      currentPageNo: 0,
+      isCompleted: false,
+      doComplete: jest.fn(() => {
+        // Simulate completion
+        const completeHandler = mockCompleteHandlers.find(h => h.model === model);
+        if (completeHandler) {
+          completeHandler.handler({ data: {} });
+        }
+      }),
+      onComplete: {
+        add: jest.fn((handler) => {
+          mockCompleteHandlers.push({ model, handler });
+        }),
+        remove: jest.fn(),
+      },
+    },
+    isLoading: false,
+    error: null,
+  })),
+  useSurveyState: jest.fn(() => ({
+    data: {},
+    currentPageNo: 0,
+    isCompleted: false,
+    questions: [],
+  })),
+}));
+
+let mockCompleteHandlers: Array<{ model: any; handler: any }> = [];
+
+beforeEach(() => {
+  mockCompleteHandlers = [];
+});
 
 describe('Survey Component', () => {
   it('should render without crashing', () => {
@@ -17,13 +55,10 @@ describe('Survey Component', () => {
     expect(getByText('Test Survey')).toBeTruthy();
   });
 
-  it('should render placeholder text', () => {
+  it('should render survey-core integration text', () => {
     const { getByText } = render(<Survey model={{}} />);
     expect(
-      getByText('Survey rendering will be implemented in future sprints.')
-    ).toBeTruthy();
-    expect(
-      getByText('This is a demonstration of the Survey Demo tab functionality.')
+      getByText('Survey-core integration active. Full rendering in future sprints.')
     ).toBeTruthy();
   });
 
@@ -32,7 +67,7 @@ describe('Survey Component', () => {
     expect(getByText('Complete Survey')).toBeTruthy();
   });
 
-  it('should call onComplete when complete button is pressed', () => {
+  it('should call onComplete when complete button is pressed', async () => {
     const mockOnComplete = jest.fn();
     const mockModel = {
       id: 'test-survey',
@@ -46,13 +81,13 @@ describe('Survey Component', () => {
     const completeButton = getByText('Complete Survey');
     fireEvent.press(completeButton);
 
-    expect(mockOnComplete).toHaveBeenCalledTimes(1);
-    expect(mockOnComplete).toHaveBeenCalledWith({
-      timestamp: expect.any(String),
-      surveyId: 'test-survey',
-      data: {
-        mockResponse: 'This is a placeholder response',
-      },
+    await waitFor(() => {
+      expect(mockOnComplete).toHaveBeenCalledTimes(1);
+      expect(mockOnComplete).toHaveBeenCalledWith({
+        timestamp: expect.any(String),
+        surveyId: 'test-survey',
+        data: {},
+      });
     });
   });
 
@@ -96,7 +131,7 @@ describe('Survey Component', () => {
     const { queryByText } = render(<Survey model={{}} />);
     // Check that no title is rendered (placeholder text should still be there)
     const placeholderText = queryByText(
-      'Survey rendering will be implemented in future sprints.'
+      'Survey-core integration active. Full rendering in future sprints.'
     );
     expect(placeholderText).toBeTruthy();
   });
