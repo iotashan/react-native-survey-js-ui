@@ -26,7 +26,7 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
       const handleComplete = (sender: any) => {
         onComplete({
           timestamp: new Date().toISOString(),
-          surveyId: model.id || 'survey',
+          surveyId: model['id'] || 'survey',
           data: sender.data,
         });
       };
@@ -76,7 +76,7 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
     }
   };
 
-  const showProgressBar = surveyModel?.showProgressBar !== false;
+  const showProgressBar = surveyModel?.showProgressBar === true;
   const progressPercentage =
     surveyState.pageCount > 0
       ? ((surveyState.currentPageNo + 1) / surveyState.pageCount) * 100
@@ -108,7 +108,10 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
               question={question}
               value={questionValues[question.name]}
               onChange={(value) => {
-                setQuestionValues((prev) => ({ ...prev, [question.name]: value }));
+                setQuestionValues((prev) => ({
+                  ...prev,
+                  [question.name]: value,
+                }));
                 if (surveyModel) {
                   surveyModel.setValue(question.name, value);
                 }

@@ -111,10 +111,7 @@ describe('BaseQuestion Component', () => {
   describe('Validation Error Display', () => {
     it('should display validation errors when provided', () => {
       const { getByText } = render(
-        <BaseQuestion
-          question={mockQuestion}
-          error="This field is required"
-        />
+        <BaseQuestion question={mockQuestion} error="This field is required" />
       );
       expect(getByText('This field is required')).toBeTruthy();
     });
@@ -128,10 +125,7 @@ describe('BaseQuestion Component', () => {
 
     it('should apply error styling when error is present', () => {
       const { getByTestId } = render(
-        <BaseQuestion
-          question={mockQuestion}
-          error="Error message"
-        />
+        <BaseQuestion question={mockQuestion} error="Error message" />
       );
       const container = getByTestId('base-question-container');
       const flattenedStyle = StyleSheet.flatten(container.props.style);
@@ -179,7 +173,9 @@ describe('BaseQuestion Component', () => {
         />
       );
       const container = getByTestId('base-question-container');
-      expect(container.props.accessibilityLabel).toBe('Accessible Question, required');
+      expect(container.props.accessibilityLabel).toBe(
+        'Accessible Question, required'
+      );
     });
 
     it('should indicate read-only state in accessibility', () => {
@@ -193,7 +189,9 @@ describe('BaseQuestion Component', () => {
         />
       );
       const container = getByTestId('base-question-container');
-      expect(container.props.accessibilityLabel).toBe('Read-only Question, read-only');
+      expect(container.props.accessibilityLabel).toBe(
+        'Read-only Question, read-only'
+      );
     });
   });
 });

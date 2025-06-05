@@ -52,9 +52,9 @@ describe('TextQuestion Component', () => {
       <TextQuestion question={mockQuestion} onChange={mockOnChange} />
     );
     const input = getByTestId('text-question-input');
-    
+
     fireEvent.changeText(input, 'John Doe');
-    
+
     expect(mockOnChange).toHaveBeenCalledWith('John Doe');
   });
 
@@ -67,7 +67,7 @@ describe('TextQuestion Component', () => {
       />
     );
     const input = getByTestId('text-question-input');
-    
+
     expect(input.props.value).toBe('Current Value');
   });
 
@@ -76,7 +76,7 @@ describe('TextQuestion Component', () => {
       <TextQuestion question={mockQuestion} onChange={mockOnChange} />
     );
     const input = getByTestId('text-question-input');
-    
+
     expect(input.props.editable).toBe(true);
   });
 
@@ -88,7 +88,7 @@ describe('TextQuestion Component', () => {
       />
     );
     const input = getByTestId('text-question-input');
-    
+
     expect(input.props.editable).toBe(false);
   });
 
@@ -112,7 +112,7 @@ describe('TextQuestion Component', () => {
         />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.keyboardType).toBe('email-address');
     });
 
@@ -124,7 +124,7 @@ describe('TextQuestion Component', () => {
         />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.keyboardType).toBe('numeric');
     });
 
@@ -136,7 +136,7 @@ describe('TextQuestion Component', () => {
         />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.keyboardType).toBe('phone-pad');
     });
 
@@ -148,7 +148,7 @@ describe('TextQuestion Component', () => {
         />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.keyboardType).toBe('url');
     });
 
@@ -160,7 +160,7 @@ describe('TextQuestion Component', () => {
         />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.keyboardType).toBe('default');
     });
   });
@@ -171,7 +171,7 @@ describe('TextQuestion Component', () => {
         <TextQuestion question={mockQuestion} onChange={mockOnChange} />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.multiline).toBe(false);
     });
 
@@ -183,7 +183,7 @@ describe('TextQuestion Component', () => {
         />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.multiline).toBe(true);
       expect(input.props.numberOfLines).toBe(4);
     });
@@ -195,7 +195,7 @@ describe('TextQuestion Component', () => {
         <TextQuestion question={mockQuestion} onChange={mockOnChange} />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.accessibilityLabel).toBe('What is your name?');
     });
 
@@ -207,7 +207,7 @@ describe('TextQuestion Component', () => {
         />
       );
       const input = getByTestId('text-question-input');
-      
+
       expect(input.props.accessibilityHint).toBe('Required field');
     });
   });
