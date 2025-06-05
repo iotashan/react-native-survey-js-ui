@@ -21,6 +21,6 @@ module.exports = {
   },
   moduleNameMapper: {
     '^react-native-survey-js-ui$':
-      '<rootDir>/__mocks__/react-native-survey-js-ui.js',
+      '<rootDir>/__mocks__/react-native-survey-js-ui.tsx',
   },
 };
