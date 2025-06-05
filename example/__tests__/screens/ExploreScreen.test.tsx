@@ -1,19 +1,3 @@
-// Mock Dimensions before importing ExploreScreen
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  return {
-    ...RN,
-    Dimensions: {
-      get: jest.fn(() => ({
-        width: 375,
-        height: 812,
-      })),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-    },
-  };
-});
-
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import ExploreScreen from '../../src/screens/ExploreScreen';

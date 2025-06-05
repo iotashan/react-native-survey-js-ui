@@ -1,5 +1,26 @@
-/* eslint-disable */
+/* eslint-disable eslint-comments/no-unlimited-disable */
 // Removed gesture handler as it's not required
+
+// Mock React Native's native bridge and modules
+jest.mock('react-native/Libraries/BatchedBridge/NativeModules', () => ({}));
+jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => ({
+  get: () => null,
+  getEnforcing: () => null,
+}));
+
+// Mock React Native Feature Flags
+jest.mock('react-native/src/private/featureflags/specs/NativeReactNativeFeatureFlags', () => ({
+  __esModule: true,
+  default: {},
+}));
+
+jest.mock('react-native/src/private/featureflags/ReactNativeFeatureFlagsBase', () => ({
+  __esModule: true,
+  default: class MockFeatureFlagsBase {},
+}));
+
+// Set up React Native feature flags
+global.__fbBatchedBridgeConfig = {};
 
 // Mock react-native-safe-area-context
 jest.mock('react-native-safe-area-context', () => ({
@@ -23,6 +44,30 @@ jest.mock('@react-navigation/bottom-tabs', () => ({
     Navigator: ({ children }) => children,
     Screen: ({ children }) => children,
   }),
+}));
+
+// Mock Dimensions
+jest.mock('react-native/Libraries/Utilities/Dimensions', () => ({
+  get: jest.fn(() => ({
+    width: 375,
+    height: 812,
+  })),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+}));
+
+// Mock StyleSheet to fix __fbBatchedBridgeConfig error
+jest.mock('react-native/Libraries/StyleSheet/StyleSheet', () => ({
+  create: (styles) => styles,
+  flatten: (style) => style,
+  absoluteFill: {},
+  absoluteFillObject: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
 }));
 
 // Library mock will be handled per test file
