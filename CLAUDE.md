@@ -1,0 +1,1 @@
+- Use the iTerm MCP for running metro, and use the mobile MCP to test on the iPhone simulator.

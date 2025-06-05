@@ -108,6 +108,17 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/lib/",
+      "/__tests__/",
+      "/example/"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.test.{ts,tsx}",
+      "!src/**/__tests__/**"
     ]
   },
   "commitlint": {

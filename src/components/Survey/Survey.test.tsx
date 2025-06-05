@@ -11,7 +11,7 @@ describe('Survey Component', () => {
   it('should accept a survey model prop', () => {
     const mockModel = {
       title: 'Test Survey',
-      pages: []
+      pages: [],
     };
     const { getByText } = render(<Survey model={mockModel} />);
     expect(getByText('Test Survey')).toBeTruthy();

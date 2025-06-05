@@ -4,7 +4,7 @@ describe('Type Definitions', () => {
   it('should define SurveyModel interface', () => {
     const survey: SurveyModel = {
       title: 'Test Survey',
-      pages: []
+      pages: [],
     };
     expect(survey).toBeDefined();
     expect(survey.title).toBe('Test Survey');
@@ -14,7 +14,7 @@ describe('Type Definitions', () => {
     const question: QuestionModel = {
       name: 'q1',
       type: 'text',
-      title: 'Test Question'
+      title: 'Test Question',
     };
     expect(question).toBeDefined();
     expect(question.name).toBe('q1');

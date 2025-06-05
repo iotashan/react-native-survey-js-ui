@@ -41,7 +41,7 @@ export interface ValidatorModel {
 }
 
 // Common question types
-export type QuestionType = 
+export type QuestionType =
   | 'text'
   | 'radiogroup'
   | 'checkbox'
