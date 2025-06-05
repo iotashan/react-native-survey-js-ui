@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   ActivityIndicator,
   ScrollView,
   TouchableOpacity,
@@ -25,7 +24,7 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
       const handleComplete = (sender: any) => {
         onComplete({
           timestamp: new Date().toISOString(),
-          surveyId: model['id'] || 'survey',
+          surveyId: model.id || 'survey',
           data: sender.data,
         });
       };
@@ -76,9 +75,10 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
   };
 
   const showProgressBar = surveyModel?.showProgressBar !== false;
-  const progressPercentage = surveyState.pageCount > 0
-    ? ((surveyState.currentPageNo + 1) / surveyState.pageCount) * 100
-    : 0;
+  const progressPercentage =
+    surveyState.pageCount > 0
+      ? ((surveyState.currentPageNo + 1) / surveyState.pageCount) * 100
+      : 0;
 
   return (
     <View style={styles.container} testID="survey-container">
@@ -97,15 +97,17 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {model.title && <Text style={styles.title}>{model.title}</Text>}
-        
+
         <Text style={styles.placeholder}>
           Survey-core integration active. Full rendering in future sprints.
         </Text>
-        
+
         <Text style={styles.info}>
           Current Page: {surveyState.currentPageNo + 1}
         </Text>
-        <Text style={styles.info}>Questions: {surveyState.questions.length}</Text>
+        <Text style={styles.info}>
+          Questions: {surveyState.questions.length}
+        </Text>
         <Text style={styles.info}>
           Completed: {surveyState.isCompleted ? 'Yes' : 'No'}
         </Text>
@@ -143,10 +145,7 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
                 </Text>
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity
-                style={styles.navButton}
-                onPress={handleNext}
-              >
+              <TouchableOpacity style={styles.navButton} onPress={handleNext}>
                 <Text style={styles.navButtonText}>Next</Text>
               </TouchableOpacity>
             )}

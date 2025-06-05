@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Survey } from './Survey';
-import { Model } from 'survey-core';
 
 // Mock survey-core
 jest.mock('survey-core', () => ({
@@ -179,7 +178,7 @@ describe('Survey Component', () => {
       isCompleted: false,
       questions: [],
     });
-    
+
     const { getByText } = render(<Survey model={{}} />);
 
     const completeButton = getByText('Complete');
@@ -241,7 +240,7 @@ describe('Survey Component', () => {
       };
       const mockUseSurveyModel = require('../../hooks').useSurveyModel;
       const mockUseSurveyState = require('../../hooks').useSurveyState;
-      
+
       mockUseSurveyModel.mockReturnValue({
         model: {
           data: {},
@@ -259,7 +258,7 @@ describe('Survey Component', () => {
         isLoading: false,
         error: null,
       });
-      
+
       mockUseSurveyState.mockReturnValue({
         currentPageNo: 0,
         pageCount: 2,
@@ -268,7 +267,7 @@ describe('Survey Component', () => {
         isCompleted: false,
         questions: [],
       });
-      
+
       const { getByText } = render(<Survey model={mockModel} />);
       expect(getByText('Next')).toBeTruthy();
       expect(getByText('Previous')).toBeTruthy();
@@ -280,7 +279,7 @@ describe('Survey Component', () => {
       };
       const mockUseSurveyModel = require('../../hooks').useSurveyModel;
       const mockUseSurveyState = require('../../hooks').useSurveyState;
-      
+
       mockUseSurveyModel.mockReturnValue({
         model: {
           data: {},
@@ -298,7 +297,7 @@ describe('Survey Component', () => {
         isLoading: false,
         error: null,
       });
-      
+
       mockUseSurveyState.mockReturnValue({
         currentPageNo: 0,
         pageCount: 2,
@@ -307,16 +306,23 @@ describe('Survey Component', () => {
         isCompleted: false,
         questions: [],
       });
-      
-      const { getByText, debug } = render(<Survey model={mockModel} />);
+
+      const { getByText } = render(<Survey model={mockModel} />);
       // Find the Previous button by text
       const prevButtonText = getByText('Previous');
       // Walk up the tree to find the TouchableOpacity with the disabled prop
       let currentNode = prevButtonText;
-      while (currentNode && !currentNode.props.disabled && !currentNode.props.accessibilityState?.disabled) {
+      while (
+        currentNode &&
+        !currentNode.props.disabled &&
+        !currentNode.props.accessibilityState?.disabled
+      ) {
         currentNode = currentNode.parent;
       }
-      expect(currentNode?.props.disabled || currentNode?.props.accessibilityState?.disabled).toBe(true);
+      expect(
+        currentNode?.props.disabled ||
+          currentNode?.props.accessibilityState?.disabled
+      ).toBe(true);
     });
 
     it('should navigate to next page when Next is pressed', () => {
@@ -342,7 +348,7 @@ describe('Survey Component', () => {
         isLoading: false,
         error: null,
       });
-      
+
       mockUseSurveyState.mockReturnValue({
         currentPageNo: 0,
         pageCount: 2,
@@ -380,7 +386,7 @@ describe('Survey Component', () => {
         isLoading: false,
         error: null,
       });
-      
+
       mockUseSurveyState.mockReturnValue({
         currentPageNo: 1,
         pageCount: 2,
@@ -433,7 +439,7 @@ describe('Survey Component', () => {
       const mockUseSurveyModel = require('../../hooks').useSurveyModel;
       mockUseSurveyModel.mockReturnValue({
         model: {
-          ...mockUseSurveyModel.mock.calls[0]?.[0] || {},
+          ...(mockUseSurveyModel.mock.calls[0]?.[0] || {}),
           showProgressBar: false,
           pageCount: 2,
           currentPageNo: 0,
