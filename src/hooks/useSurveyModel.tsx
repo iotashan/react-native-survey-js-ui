@@ -82,8 +82,9 @@ export function useSurveyModel(
 
     // Cleanup on unmount
     return () => {
-      if (modelIdRef.current) {
-        SurveyModelManager.dispose(modelIdRef.current);
+      const currentModelId = modelIdRef.current;
+      if (currentModelId) {
+        SurveyModelManager.dispose(currentModelId);
       }
     };
   }, [json]);

@@ -1,6 +1,4 @@
-import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react-native';
-import { Model } from 'survey-core';
 import { useSurveyModel } from '../../hooks/useSurveyModel';
 import { SurveyModelManager } from '../../utils/surveyCore';
 
@@ -118,15 +116,12 @@ describe('useSurveyModel', () => {
   });
 
   it('should update model when json changes', () => {
-    const { rerender } = renderHook(
-      ({ json }) => useSurveyModel(json),
-      {
-        initialProps: { json: mockSurveyJson },
-      }
-    );
+    const { rerender } = renderHook(({ json }) => useSurveyModel(json), {
+      initialProps: { json: mockSurveyJson },
+    });
 
     const newJson = { ...mockSurveyJson, title: 'Updated Survey' };
-    
+
     rerender({ json: newJson });
 
     expect(SurveyModelManager.dispose).toHaveBeenCalled();

@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Button, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  ActivityIndicator,
+} from 'react-native';
 import type { SurveyModel } from '../../types';
 import { useSurveyModel, useSurveyState } from '../../hooks';
 
@@ -64,9 +70,7 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
       <Text style={styles.info}>
         Current Page: {surveyState.currentPageNo + 1}
       </Text>
-      <Text style={styles.info}>
-        Questions: {surveyState.questions.length}
-      </Text>
+      <Text style={styles.info}>Questions: {surveyState.questions.length}</Text>
       <Text style={styles.info}>
         Completed: {surveyState.isCompleted ? 'Yes' : 'No'}
       </Text>

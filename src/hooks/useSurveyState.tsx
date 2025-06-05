@@ -95,7 +95,9 @@ export function useSurveyState(model: Model | null): SurveyState {
 /**
  * Extract questions and their values from model
  */
-function getQuestions(model: Model | null): Array<{ name: string; value: any }> {
+function getQuestions(
+  model: Model | null
+): Array<{ name: string; value: any }> {
   if (!model) {
     return [];
   }

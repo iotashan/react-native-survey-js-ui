@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderHook, act } from '@testing-library/react-native';
 import { useSurveyState } from '../../hooks/useSurveyState';
 
@@ -82,7 +81,9 @@ describe('useSurveyState', () => {
     // Simulate value change
     act(() => {
       mockModel.data = { ...mockModel.data, name: 'Jane' };
-      valueChangedCallbacks.forEach(cb => cb(mockModel, { name: 'name', value: 'Jane' }));
+      valueChangedCallbacks.forEach((cb) =>
+        cb(mockModel, { name: 'name', value: 'Jane' })
+      );
     });
 
     expect(result.current.data).toEqual({ name: 'Jane', age: 30 });
@@ -96,7 +97,9 @@ describe('useSurveyState', () => {
     // Simulate page change
     act(() => {
       mockModel.currentPageNo = 1;
-      pageChangedCallbacks.forEach(cb => cb(mockModel, { oldValue: 0, newValue: 1 }));
+      pageChangedCallbacks.forEach((cb) =>
+        cb(mockModel, { oldValue: 0, newValue: 1 })
+      );
     });
 
     expect(result.current.currentPageNo).toBe(1);
@@ -114,7 +117,7 @@ describe('useSurveyState', () => {
         if (prop === 'isCompleted') return true;
         return null;
       });
-      completeCallbacks.forEach(cb => cb(mockModel, {}));
+      completeCallbacks.forEach((cb) => cb(mockModel, {}));
     });
 
     expect(result.current.isCompleted).toBe(true);
@@ -131,7 +134,9 @@ describe('useSurveyState', () => {
 
     // Simulate value change
     act(() => {
-      valueChangedCallbacks.forEach(cb => cb(mockModel, { name: 'question1', value: 'updated answer' }));
+      valueChangedCallbacks.forEach((cb) =>
+        cb(mockModel, { name: 'question1', value: 'updated answer' })
+      );
     });
 
     expect(result.current.questions).toEqual([
@@ -175,12 +180,9 @@ describe('useSurveyState', () => {
   });
 
   it('should remove old listeners when model changes', () => {
-    const { rerender } = renderHook(
-      ({ model }) => useSurveyState(model),
-      {
-        initialProps: { model: mockModel },
-      }
-    );
+    const { rerender } = renderHook(({ model }) => useSurveyState(model), {
+      initialProps: { model: mockModel },
+    });
 
     const newModel = {
       ...mockModel,

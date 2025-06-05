@@ -11,7 +11,9 @@ jest.mock('../../hooks', () => ({
       isCompleted: false,
       doComplete: jest.fn(() => {
         // Simulate completion
-        const completeHandler = mockCompleteHandlers.find(h => h.model === model);
+        const completeHandler = mockCompleteHandlers.find(
+          (h) => h.model === model
+        );
         if (completeHandler) {
           completeHandler.handler({ data: {} });
         }
@@ -58,7 +60,9 @@ describe('Survey Component', () => {
   it('should render survey-core integration text', () => {
     const { getByText } = render(<Survey model={{}} />);
     expect(
-      getByText('Survey-core integration active. Full rendering in future sprints.')
+      getByText(
+        'Survey-core integration active. Full rendering in future sprints.'
+      )
     ).toBeTruthy();
   });
 
