@@ -264,6 +264,51 @@ export interface SurveyEvent {
 }
 
 /**
+ * Event handler for survey value changes
+ */
+export interface SurveyValueChangedEvent {
+  /** Question name that changed */
+  name: string;
+  /** New value */
+  value: any;
+  /** Previous value */
+  oldValue?: any;
+  /** Question object that changed */
+  question?: QuestionModel;
+}
+
+/**
+ * Event handler for page navigation changes
+ */
+export interface SurveyCurrentPageChangedEvent {
+  /** Previous page object */
+  oldCurrentPage?: PageModel;
+  /** New current page object */
+  newCurrentPage?: PageModel;
+  /** Whether this is a forward navigation */
+  isNextPage?: boolean;
+  /** Whether this is a backward navigation */
+  isPrevPage?: boolean;
+}
+
+/**
+ * Event handler for survey completion
+ */
+export interface SurveyCompleteEvent {
+  /** Survey data at completion */
+  data: SurveyData;
+  /** Survey model instance */
+  sender?: any;
+}
+
+/**
+ * Survey event handler function types
+ */
+export type SurveyValueChangedHandler = (event: SurveyValueChangedEvent) => void;
+export type SurveyCurrentPageChangedHandler = (event: SurveyCurrentPageChangedEvent) => void;
+export type SurveyCompleteHandler = (event: SurveyCompleteEvent) => void;
+
+/**
  * Survey data structure
  */
 export interface SurveyData {

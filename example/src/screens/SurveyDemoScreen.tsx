@@ -18,12 +18,39 @@ export default function SurveyDemoScreen() {
   const [surveyResults, setSurveyResults] = useState<any>(null);
   const [showResults, setShowResults] = useState(false);
   const [showCode, setShowCode] = useState(false);
+  const [eventLogs, setEventLogs] = useState<string[]>([]);
 
   const isValid = validateSurveyModel(selectedExample.model);
 
   const handleSurveyComplete = (result: any) => {
     setSurveyResults(result);
     setShowResults(true);
+    addEventLog('Survey completed', result);
+  };
+
+  const handleValueChanged = (event: any) => {
+    addEventLog('Value changed', {
+      question: event.name,
+      newValue: event.value,
+      oldValue: event.oldValue,
+    });
+    console.log('Survey value changed:', event);
+  };
+
+  const handleCurrentPageChanged = (event: any) => {
+    addEventLog('Page changed', {
+      from: event.oldCurrentPage?.name || 'unknown',
+      to: event.newCurrentPage?.name || 'unknown',
+      isNext: event.isNextPage,
+      isPrev: event.isPrevPage,
+    });
+    console.log('Survey page changed:', event);
+  };
+
+  const addEventLog = (eventType: string, data: any) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = `[${timestamp}] ${eventType}: ${JSON.stringify(data)}`;
+    setEventLogs(prev => [logEntry, ...prev].slice(0, 20)); // Keep only last 20 events
   };
 
   const handleExampleSelect = (example: SurveyExample) => {
@@ -36,6 +63,7 @@ export default function SurveyDemoScreen() {
   const resetSurvey = () => {
     setSurveyResults(null);
     setShowResults(false);
+    setEventLogs([]);
     // Force re-render of Survey component by changing key
     setSelectedExample({ ...selectedExample });
   };
@@ -127,6 +155,20 @@ export default function SurveyDemoScreen() {
         </View>
       )}
 
+      {/* Event Logs Section */}
+      {eventLogs.length > 0 && (
+        <View style={styles.eventLogsContainer}>
+          <Text style={styles.eventLogsTitle}>Event Logs (Live Demo)</Text>
+          <ScrollView style={styles.eventLogsScrollView} showsVerticalScrollIndicator={true}>
+            {eventLogs.map((log, index) => (
+              <Text key={index} style={styles.eventLogText}>
+                {log}
+              </Text>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
       {/* Survey or Results */}
       {showResults ? (
         <View style={styles.resultsContainer}>
@@ -148,6 +190,8 @@ export default function SurveyDemoScreen() {
               key={selectedExample.id}
               model={selectedExample.model}
               onComplete={handleSurveyComplete}
+              onValueChanged={handleValueChanged}
+              onCurrentPageChanged={handleCurrentPageChanged}
             />
           ) : (
             <View style={styles.errorContainer}>
@@ -382,6 +426,35 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#333',
     lineHeight: 18,
+  },
+  eventLogsContainer: {
+    margin: 16,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 8,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#e9ecef',
+  },
+  eventLogsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 12,
+  },
+  eventLogsScrollView: {
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    padding: 12,
+    maxHeight: 200,
+    borderWidth: 1,
+    borderColor: '#dee2e6',
+  },
+  eventLogText: {
+    fontFamily: 'monospace',
+    fontSize: 11,
+    color: '#495057',
+    lineHeight: 16,
+    marginBottom: 4,
   },
   modalOverlay: {
     flex: 1,

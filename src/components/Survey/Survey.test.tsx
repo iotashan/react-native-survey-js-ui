@@ -23,6 +23,10 @@ jest.mock('survey-core', () => ({
       add: jest.fn(),
       remove: jest.fn(),
     },
+    onValueChanged: {
+      add: jest.fn(),
+      remove: jest.fn(),
+    },
     getProgressInfo: jest.fn(() => ({
       currentPageNo: 0,
       pageCount: json?.pages?.length || 1,
@@ -65,6 +69,14 @@ jest.mock('../../hooks', () => ({
           add: jest.fn((handler) => {
             mockCompleteHandlers.push({ model, handler });
           }),
+          remove: jest.fn(),
+        },
+        onCurrentPageChanged: {
+          add: jest.fn(),
+          remove: jest.fn(),
+        },
+        onValueChanged: {
+          add: jest.fn(),
           remove: jest.fn(),
         },
         getProgressInfo: jest.fn(() => ({
@@ -466,12 +478,18 @@ describe('Survey Component', () => {
       const mockUseSurveyModel = require('../../hooks').useSurveyModel;
       mockUseSurveyModel.mockReturnValue({
         model: {
-          ...mockUseSurveyModel.mock.results[0]?.value?.model,
-          showProgressBar: 'top',
+          showProgressBar: true,
           currentPageNo: 1,
           pageCount: 3,
           isFirstPage: false,
           isLastPage: false,
+          nextPage: jest.fn(),
+          prevPage: jest.fn(),
+          doComplete: jest.fn(),
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
+          onValueChanged: { add: jest.fn(), remove: jest.fn() },
+          getProgressInfo: jest.fn(() => ({ currentPageNo: 1, pageCount: 3 })),
         },
         isLoading: false,
         error: null,
@@ -668,6 +686,357 @@ describe('Survey Component', () => {
 
       const { getByText } = render(<Survey model={mockModel} />);
       expect(getByText('What is your name?')).toBeTruthy();
+    });
+  });
+
+  describe('Event System', () => {
+    let mockValueChangedHandlers: Array<{ model: any; handler: any }> = [];
+    let mockPageChangedHandlers: Array<{ model: any; handler: any }> = [];
+
+    beforeEach(() => {
+      mockValueChangedHandlers = [];
+      mockPageChangedHandlers = [];
+    });
+
+    describe('onValueChanged Event', () => {
+      it('should register onValueChanged event handler', () => {
+        const mockOnValueChanged = jest.fn();
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onValueChanged: {
+            add: jest.fn((handler) => {
+              mockValueChangedHandlers.push({ model: mockModel, handler });
+            }),
+            remove: jest.fn(),
+          },
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        render(<Survey model={mockModel} onValueChanged={mockOnValueChanged} />);
+
+        expect(mockSurveyModel.onValueChanged.add).toHaveBeenCalledWith(
+          expect.any(Function)
+        );
+      });
+
+      it('should call onValueChanged when question value changes', () => {
+        const mockOnValueChanged = jest.fn();
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onValueChanged: {
+            add: jest.fn((handler) => {
+              mockValueChangedHandlers.push({ model: mockModel, handler });
+              // Simulate value change immediately
+              setTimeout(() => {
+                handler(mockModel, {
+                  name: 'question1',
+                  value: 'new value',
+                  oldValue: 'old value',
+                  question: { name: 'question1', type: 'text' }
+                });
+              }, 0);
+            }),
+            remove: jest.fn(),
+          },
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        render(<Survey model={mockModel} onValueChanged={mockOnValueChanged} />);
+
+        return waitFor(() => {
+          expect(mockOnValueChanged).toHaveBeenCalledWith({
+            name: 'question1',
+            value: 'new value',
+            oldValue: 'old value',
+            question: { name: 'question1', type: 'text' }
+          });
+        });
+      });
+
+      it('should handle onValueChanged with error catching', () => {
+        const mockOnValueChanged = jest.fn(() => {
+          throw new Error('Handler error');
+        });
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onValueChanged: {
+            add: jest.fn((handler) => {
+              mockValueChangedHandlers.push({ model: mockModel, handler });
+              // Simulate value change that will throw
+              setTimeout(() => {
+                expect(() => {
+                  handler(mockModel, {
+                    name: 'question1',
+                    value: 'new value',
+                    oldValue: 'old value',
+                  });
+                }).not.toThrow();
+              }, 0);
+            }),
+            remove: jest.fn(),
+          },
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        render(<Survey model={mockModel} onValueChanged={mockOnValueChanged} />);
+      });
+
+      it('should not register onValueChanged when handler not provided', () => {
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onValueChanged: {
+            add: jest.fn(),
+            remove: jest.fn(),
+          },
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        render(<Survey model={mockModel} />);
+
+        expect(mockSurveyModel.onValueChanged.add).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('onCurrentPageChanged Event', () => {
+      it('should register onCurrentPageChanged event handler', () => {
+        const mockOnCurrentPageChanged = jest.fn();
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onCurrentPageChanged: {
+            add: jest.fn((handler) => {
+              mockPageChangedHandlers.push({ model: mockModel, handler });
+            }),
+            remove: jest.fn(),
+          },
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onValueChanged: { add: jest.fn(), remove: jest.fn() },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        render(<Survey model={mockModel} onCurrentPageChanged={mockOnCurrentPageChanged} />);
+
+        expect(mockSurveyModel.onCurrentPageChanged.add).toHaveBeenCalledWith(
+          expect.any(Function)
+        );
+      });
+
+      it('should call onCurrentPageChanged when page changes', () => {
+        const mockOnCurrentPageChanged = jest.fn();
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onCurrentPageChanged: {
+            add: jest.fn((handler) => {
+              mockPageChangedHandlers.push({ model: mockModel, handler });
+              // Simulate page change immediately
+              setTimeout(() => {
+                handler(mockModel, {
+                  oldCurrentPage: { name: 'page1', title: 'Page 1' },
+                  newCurrentPage: { name: 'page2', title: 'Page 2' },
+                  isNextPage: true,
+                  isPrevPage: false,
+                });
+              }, 0);
+            }),
+            remove: jest.fn(),
+          },
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onValueChanged: { add: jest.fn(), remove: jest.fn() },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        render(<Survey model={mockModel} onCurrentPageChanged={mockOnCurrentPageChanged} />);
+
+        return waitFor(() => {
+          expect(mockOnCurrentPageChanged).toHaveBeenCalledWith({
+            oldCurrentPage: { name: 'page1', title: 'Page 1' },
+            newCurrentPage: { name: 'page2', title: 'Page 2' },
+            isNextPage: true,
+            isPrevPage: false,
+          });
+        });
+      });
+
+      it('should not register onCurrentPageChanged when handler not provided', () => {
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onCurrentPageChanged: {
+            add: jest.fn(),
+            remove: jest.fn(),
+          },
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onValueChanged: { add: jest.fn(), remove: jest.fn() },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        render(<Survey model={mockModel} />);
+
+        expect(mockSurveyModel.onCurrentPageChanged.add).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Event Cleanup', () => {
+      it('should remove event handlers on unmount', () => {
+        const mockOnComplete = jest.fn();
+        const mockOnValueChanged = jest.fn();
+        const mockOnCurrentPageChanged = jest.fn();
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onComplete: {
+            add: jest.fn(),
+            remove: jest.fn(),
+          },
+          onValueChanged: {
+            add: jest.fn(),
+            remove: jest.fn(),
+          },
+          onCurrentPageChanged: {
+            add: jest.fn(),
+            remove: jest.fn(),
+          },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        const { unmount } = render(
+          <Survey 
+            model={mockModel} 
+            onComplete={mockOnComplete}
+            onValueChanged={mockOnValueChanged}
+            onCurrentPageChanged={mockOnCurrentPageChanged}
+          />
+        );
+
+        unmount();
+
+        expect(mockSurveyModel.onComplete.remove).toHaveBeenCalled();
+        expect(mockSurveyModel.onValueChanged.remove).toHaveBeenCalled();
+        expect(mockSurveyModel.onCurrentPageChanged.remove).toHaveBeenCalled();
+      });
+
+      it('should handle cleanup when survey model is null', () => {
+        const mockOnComplete = jest.fn();
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        mockUseSurveyModel.mockReturnValue({
+          model: null,
+          isLoading: false,
+          error: null,
+        });
+
+        const { unmount } = render(
+          <Survey model={mockModel} onComplete={mockOnComplete} />
+        );
+
+        expect(() => unmount()).not.toThrow();
+      });
+    });
+
+    describe('Multiple Event Handlers', () => {
+      it('should handle all events when multiple handlers provided', () => {
+        const mockOnComplete = jest.fn();
+        const mockOnValueChanged = jest.fn();
+        const mockOnCurrentPageChanged = jest.fn();
+        const mockModel = { id: 'test-survey' };
+        
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        const mockSurveyModel = {
+          onComplete: {
+            add: jest.fn(),
+            remove: jest.fn(),
+          },
+          onValueChanged: {
+            add: jest.fn(),
+            remove: jest.fn(),
+          },
+          onCurrentPageChanged: {
+            add: jest.fn(),
+            remove: jest.fn(),
+          },
+        };
+        
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        render(
+          <Survey 
+            model={mockModel} 
+            onComplete={mockOnComplete}
+            onValueChanged={mockOnValueChanged}
+            onCurrentPageChanged={mockOnCurrentPageChanged}
+          />
+        );
+
+        expect(mockSurveyModel.onComplete.add).toHaveBeenCalledWith(expect.any(Function));
+        expect(mockSurveyModel.onValueChanged.add).toHaveBeenCalledWith(expect.any(Function));
+        expect(mockSurveyModel.onCurrentPageChanged.add).toHaveBeenCalledWith(expect.any(Function));
+      });
     });
   });
 });

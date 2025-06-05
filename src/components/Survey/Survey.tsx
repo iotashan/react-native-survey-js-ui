@@ -7,16 +7,27 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import type { SurveyModel } from '../../types';
+import type { 
+  SurveyModel, 
+  SurveyValueChangedHandler, 
+  SurveyCurrentPageChangedHandler
+} from '../../types';
 import { useSurveyModel, useSurveyState } from '../../hooks';
 import { QuestionFactory } from '../Questions';
 
 export interface SurveyProps {
   model: SurveyModel;
   onComplete?: (result: any) => void;
+  onValueChanged?: SurveyValueChangedHandler;
+  onCurrentPageChanged?: SurveyCurrentPageChangedHandler;
 }
 
-export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
+export const Survey: React.FC<SurveyProps> = ({ 
+  model, 
+  onComplete, 
+  onValueChanged, 
+  onCurrentPageChanged 
+}) => {
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
   const [questionValues, setQuestionValues] = useState<Record<string, any>>({});
@@ -38,6 +49,58 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
     }
     return undefined;
   }, [surveyModel, onComplete, model]);
+
+  // Handle value changed events
+  useEffect(() => {
+    if (surveyModel && onValueChanged) {
+      const handleValueChanged = (sender: any, options: any) => {
+        try {
+          // survey-core passes the event data as the second parameter or directly on sender
+          const eventData = options || sender;
+          onValueChanged({
+            name: eventData?.name || '',
+            value: eventData?.value,
+            oldValue: eventData?.oldValue,
+            question: eventData?.question,
+          });
+        } catch (error) {
+          console.error('Error in onValueChanged handler:', error);
+        }
+      };
+
+      surveyModel.onValueChanged.add(handleValueChanged);
+      return () => {
+        surveyModel.onValueChanged.remove(handleValueChanged);
+      };
+    }
+    return undefined;
+  }, [surveyModel, onValueChanged]);
+
+  // Handle page changed events
+  useEffect(() => {
+    if (surveyModel && onCurrentPageChanged) {
+      const handleCurrentPageChanged = (sender: any, options: any) => {
+        try {
+          // survey-core passes the event data as the second parameter or directly on sender
+          const eventData = options || sender;
+          onCurrentPageChanged({
+            oldCurrentPage: eventData?.oldCurrentPage,
+            newCurrentPage: eventData?.newCurrentPage,
+            isNextPage: eventData?.isNextPage,
+            isPrevPage: eventData?.isPrevPage,
+          });
+        } catch (error) {
+          console.error('Error in onCurrentPageChanged handler:', error);
+        }
+      };
+
+      surveyModel.onCurrentPageChanged.add(handleCurrentPageChanged);
+      return () => {
+        surveyModel.onCurrentPageChanged.remove(handleCurrentPageChanged);
+      };
+    }
+    return undefined;
+  }, [surveyModel, onCurrentPageChanged]);
 
   if (isLoading) {
     return (
@@ -76,7 +139,7 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
     }
   };
 
-  const showProgressBar = surveyModel?.showProgressBar === true;
+  const showProgressBar = surveyModel?.showProgressBar !== false;
   const progressPercentage =
     surveyState.pageCount > 0
       ? ((surveyState.currentPageNo + 1) / surveyState.pageCount) * 100
@@ -105,7 +168,7 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
           surveyState.questions.map((question) => (
             <QuestionFactory
               key={question.name}
-              question={question}
+              question={{ ...question, type: question.type || 'text' }}
               value={questionValues[question.name]}
               onChange={(value) => {
                 setQuestionValues((prev) => ({

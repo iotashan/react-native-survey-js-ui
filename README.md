@@ -42,6 +42,26 @@ const surveyModel: SurveyModel = {
 <Survey model={surveyModel} />
 ```
 
+## Event Handling
+
+The Survey component supports event handlers to respond to user interactions:
+
+```js
+<Survey 
+  model={surveyModel}
+  onComplete={(result) => console.log('Survey completed:', result)}
+  onValueChanged={(event) => console.log('Value changed:', event)}
+  onCurrentPageChanged={(event) => console.log('Page changed:', event)}
+/>
+```
+
+For detailed event documentation and examples, see [Event System Documentation](docs/EVENTS.md).
+
+## Documentation
+
+- [Event System](docs/EVENTS.md) - Comprehensive guide to handling survey events
+- [Development Guide](docs/DEVELOPMENT.md) - Development workflow and best practices
+- [Build Guide](docs/BUILD.md) - Building and releasing the library
 
 ## Contributing
 
