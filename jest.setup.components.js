@@ -61,7 +61,7 @@ global.componentTestUtils = {
     // This would typically wrap with theme providers, navigation context, etc.
     return component;
   },
-  
+
   // Helper to simulate user interactions
   userEvent: {
     press: jest.fn(),

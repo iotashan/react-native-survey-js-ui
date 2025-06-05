@@ -16,7 +16,9 @@ afterEach(() => {
   // Log slow tests for performance optimization
   const testDuration = Date.now() - jest.testStartTime;
   if (testDuration > slowTestThreshold) {
-    console.warn(`⚠️  Slow test detected: ${expect.getState().currentTestName} took ${testDuration}ms`);
+    console.warn(
+      `⚠️  Slow test detected: ${expect.getState().currentTestName} took ${testDuration}ms`
+    );
   }
 });
 
@@ -28,7 +30,7 @@ console.error = (...args) => {
   if (
     typeof message === 'string' &&
     (message.includes('Warning: ReactDOM.render is no longer supported') ||
-     message.includes('Warning: componentWillReceiveProps has been renamed'))
+      message.includes('Warning: componentWillReceiveProps has been renamed'))
   ) {
     return;
   }
@@ -38,7 +40,7 @@ console.error = (...args) => {
 // Global test utilities
 global.testUtils = {
   // Utility to wait for async operations
-  waitFor: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
+  waitFor: (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   
   // Utility to create mock survey models
   createMockSurveyModel: (overrides = {}) => ({
