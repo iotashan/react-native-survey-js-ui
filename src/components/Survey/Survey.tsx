@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import type { SurveyModel } from '../../types';
 import { useSurveyModel, useSurveyState } from '../../hooks';
+import { QuestionFactory } from '../Questions';
 
 export interface SurveyProps {
   model: SurveyModel;
@@ -18,6 +19,7 @@ export interface SurveyProps {
 export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
+  const [questionValues, setQuestionValues] = useState<Record<string, any>>({});
 
   useEffect(() => {
     if (surveyModel && onComplete) {
@@ -98,19 +100,37 @@ export const Survey: React.FC<SurveyProps> = ({ model, onComplete }) => {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {model.title && <Text style={styles.title}>{model.title}</Text>}
 
-        <Text style={styles.placeholder}>
-          Survey-core integration active. Full rendering in future sprints.
-        </Text>
-
-        <Text style={styles.info}>
-          Current Page: {surveyState.currentPageNo + 1}
-        </Text>
-        <Text style={styles.info}>
-          Questions: {surveyState.questions.length}
-        </Text>
-        <Text style={styles.info}>
-          Completed: {surveyState.isCompleted ? 'Yes' : 'No'}
-        </Text>
+        {/* Render questions from current page */}
+        {surveyState.questions.length > 0 ? (
+          surveyState.questions.map((question) => (
+            <QuestionFactory
+              key={question.name}
+              question={question}
+              value={questionValues[question.name]}
+              onChange={(value) => {
+                setQuestionValues((prev) => ({ ...prev, [question.name]: value }));
+                if (surveyModel) {
+                  surveyModel.setValue(question.name, value);
+                }
+              }}
+            />
+          ))
+        ) : (
+          <View style={styles.placeholderContainer}>
+            <Text style={styles.placeholder}>
+              Survey-core integration active. Full rendering in future sprints.
+            </Text>
+            <Text style={styles.info}>
+              Current Page: {surveyState.currentPageNo + 1}
+            </Text>
+            <Text style={styles.info}>
+              Questions: {surveyState.questions.length}
+            </Text>
+            <Text style={styles.info}>
+              Completed: {surveyState.isCompleted ? 'Yes' : 'No'}
+            </Text>
+          </View>
+        )}
       </ScrollView>
 
       <View style={styles.navigationContainer}>
@@ -174,6 +194,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+  },
+  placeholderContainer: {
+    paddingVertical: 20,
   },
   placeholder: {
     fontSize: 14,

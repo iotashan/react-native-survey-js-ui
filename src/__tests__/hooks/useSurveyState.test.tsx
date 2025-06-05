@@ -15,6 +15,9 @@ describe('useSurveyState', () => {
     mockModel = {
       data: { name: 'John', age: 30 },
       currentPageNo: 0,
+      pageCount: 1,
+      isFirstPage: true,
+      isLastPage: false,
       isCompleted: false,
       getPropertyValue: jest.fn((prop) => {
         if (prop === 'isCompleted') return false;
@@ -54,6 +57,9 @@ describe('useSurveyState', () => {
     expect(result.current).toEqual({
       data: { name: 'John', age: 30 },
       currentPageNo: 0,
+      pageCount: 1,
+      isFirstPage: true,
+      isLastPage: false,
       isCompleted: false,
       questions: [
         { name: 'question1', value: 'answer1' },
@@ -68,6 +74,9 @@ describe('useSurveyState', () => {
     expect(result.current).toEqual({
       data: {},
       currentPageNo: 0,
+      pageCount: 1,
+      isFirstPage: true,
+      isLastPage: false,
       isCompleted: false,
       questions: [],
     });

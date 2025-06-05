@@ -597,4 +597,77 @@ describe('Survey Component', () => {
       expect(getByText('Invalid survey model')).toBeTruthy();
     });
   });
+
+  describe('Question Rendering', () => {
+    it('should render questions using QuestionFactory', () => {
+      const mockModel = {
+        pages: [
+          {
+            name: 'page1',
+            elements: [
+              {
+                type: 'text',
+                name: 'name',
+                title: 'What is your name?',
+              },
+            ],
+          },
+        ],
+      };
+
+      const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+      mockUseSurveyModel.mockReturnValue({
+        model: {
+          currentPageNo: 0,
+          pageCount: 1,
+          isFirstPage: true,
+          isLastPage: true,
+          isCompleted: false,
+          nextPage: jest.fn(),
+          prevPage: jest.fn(),
+          doComplete: jest.fn(),
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          getProgressInfo: jest.fn(() => ({ currentPageNo: 0, pageCount: 1 })),
+          showProgressBar: true,
+          currentPage: {
+            name: 'page1',
+            questions: [
+              {
+                type: 'text',
+                name: 'name',
+                title: 'What is your name?',
+                value: '',
+                visible: true,
+                isRequired: false,
+              },
+            ],
+          },
+        },
+        isLoading: false,
+        error: null,
+      });
+
+      const mockUseSurveyState = require('../../hooks').useSurveyState;
+      mockUseSurveyState.mockReturnValue({
+        currentPageNo: 0,
+        pageCount: 1,
+        isFirstPage: true,
+        isLastPage: true,
+        isCompleted: false,
+        questions: [
+          {
+            type: 'text',
+            name: 'name',
+            title: 'What is your name?',
+            value: '',
+            visible: true,
+            isRequired: false,
+          },
+        ],
+      });
+
+      const { getByText } = render(<Survey model={mockModel} />);
+      expect(getByText('What is your name?')).toBeTruthy();
+    });
+  });
 });
