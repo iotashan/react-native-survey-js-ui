@@ -1,6 +1,6 @@
 # react-native-survey-js-ui
 
-React Native UI components for SurveyJS Form Library
+Native mobile UI components for SurveyJS Form Library - iOS and Android only, no WebView dependencies
 
 ## Installation
 
@@ -8,15 +8,38 @@ React Native UI components for SurveyJS Form Library
 npm install react-native-survey-js-ui
 ```
 
+### Peer Dependencies
+
+This library requires the following peer dependencies to be installed in your React Native project:
+
+- `react` (any version)
+- `react-native` (any version)
+
+These dependencies are not bundled with the library and must be provided by your application.
+
 ## Usage
 
-
 ```js
-import { multiply } from 'react-native-survey-js-ui';
+import { Survey } from 'react-native-survey-js-ui';
+import type { SurveyModel } from 'react-native-survey-js-ui';
 
-// ...
+const surveyModel: SurveyModel = {
+  pages: [
+    {
+      name: 'page1',
+      elements: [
+        {
+          type: 'text',
+          name: 'question1',
+          title: 'What is your name?',
+        },
+      ],
+    },
+  ],
+};
 
-const result = await multiply(3, 7);
+// In your component
+<Survey model={surveyModel} />
 ```
 
 

@@ -35,7 +35,7 @@ This project follows a milestone-based development approach with strict TDD requ
 ✅ T02: Configure package.json for npm distribution and TypeScript setup
 ✅ T03: Set up TypeScript configuration for library development
 ✅ T04: Create src/ directory structure with main exports
-📋 T05: Configure peer dependencies (React, React Native)
+✅ T05: Configure peer dependencies (React, React Native)
 📋 T06: Establish basic library build process
 
 ### S02 Development Environment Setup (📋 PLANNED)
