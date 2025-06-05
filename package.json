@@ -41,8 +41,12 @@
   "scripts": {
     "example": "yarn workspace react-native-survey-js-ui-example",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint:fix": "eslint \"**/*.{js,ts,tsx}\" --fix",
     "clean": "del-cli lib",
     "prepare": "bob build",
     "release": "release-it --only-version",
@@ -51,7 +55,15 @@
     "build:prod": "yarn clean && yarn typecheck && bob build",
     "validate": "yarn typecheck && yarn lint && yarn test",
     "validate:build": "node scripts/validate-build.js",
-    "prepublishOnly": "yarn build:prod && yarn validate"
+    "prepublishOnly": "yarn build:prod && yarn validate",
+    "dev": "yarn build:dev",
+    "dev:ios": "cd example && yarn ios",
+    "dev:android": "cd example && yarn android",
+    "check": "yarn typecheck && yarn lint",
+    "check:all": "yarn validate && yarn validate:build",
+    "reset": "yarn clean && rm -rf node_modules && yarn install",
+    "reset:cache": "cd example && yarn start --reset-cache",
+    "info": "yarn info react-native && cd example && npx react-native info"
   },
   "keywords": [
     "react-native",
