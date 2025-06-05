@@ -7,10 +7,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import type { 
-  SurveyModel, 
-  SurveyValueChangedHandler, 
-  SurveyCurrentPageChangedHandler
+import type {
+  SurveyModel,
+  SurveyValueChangedHandler,
+  SurveyCurrentPageChangedHandler,
 } from '../../types';
 import { useSurveyModel, useSurveyState } from '../../hooks';
 import { QuestionFactory } from '../Questions';
@@ -22,11 +22,11 @@ export interface SurveyProps {
   onCurrentPageChanged?: SurveyCurrentPageChangedHandler;
 }
 
-export const Survey: React.FC<SurveyProps> = ({ 
-  model, 
-  onComplete, 
-  onValueChanged, 
-  onCurrentPageChanged 
+export const Survey: React.FC<SurveyProps> = ({
+  model,
+  onComplete,
+  onValueChanged,
+  onCurrentPageChanged,
 }) => {
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
@@ -37,7 +37,7 @@ export const Survey: React.FC<SurveyProps> = ({
       const handleComplete = (sender: any) => {
         onComplete({
           timestamp: new Date().toISOString(),
-          surveyId: model['id'] || 'survey',
+          surveyId: model.id || 'survey',
           data: sender.data,
         });
       };
@@ -139,7 +139,8 @@ export const Survey: React.FC<SurveyProps> = ({
     }
   };
 
-  const showProgressBar = surveyModel?.showProgressBar !== false;
+  const showProgressBar =
+    surveyModel?.showProgressBar && surveyModel.showProgressBar !== 'off';
   const progressPercentage =
     surveyState.pageCount > 0
       ? ((surveyState.currentPageNo + 1) / surveyState.pageCount) * 100
@@ -168,7 +169,7 @@ export const Survey: React.FC<SurveyProps> = ({
           surveyState.questions.map((question) => (
             <QuestionFactory
               key={question.name}
-              question={{ ...question, type: question.type || 'text' }}
+              question={{ name: question.name, type: question.type }}
               value={questionValues[question.name]}
               onChange={(value) => {
                 setQuestionValues((prev) => ({

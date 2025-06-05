@@ -702,7 +702,7 @@ describe('Survey Component', () => {
       it('should register onValueChanged event handler', () => {
         const mockOnValueChanged = jest.fn();
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onValueChanged: {
@@ -714,14 +714,16 @@ describe('Survey Component', () => {
           onComplete: { add: jest.fn(), remove: jest.fn() },
           onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
           error: null,
         });
 
-        render(<Survey model={mockModel} onValueChanged={mockOnValueChanged} />);
+        render(
+          <Survey model={mockModel} onValueChanged={mockOnValueChanged} />
+        );
 
         expect(mockSurveyModel.onValueChanged.add).toHaveBeenCalledWith(
           expect.any(Function)
@@ -731,7 +733,7 @@ describe('Survey Component', () => {
       it('should call onValueChanged when question value changes', () => {
         const mockOnValueChanged = jest.fn();
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onValueChanged: {
@@ -743,7 +745,7 @@ describe('Survey Component', () => {
                   name: 'question1',
                   value: 'new value',
                   oldValue: 'old value',
-                  question: { name: 'question1', type: 'text' }
+                  question: { name: 'question1', type: 'text' },
                 });
               }, 0);
             }),
@@ -752,21 +754,23 @@ describe('Survey Component', () => {
           onComplete: { add: jest.fn(), remove: jest.fn() },
           onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
           error: null,
         });
 
-        render(<Survey model={mockModel} onValueChanged={mockOnValueChanged} />);
+        render(
+          <Survey model={mockModel} onValueChanged={mockOnValueChanged} />
+        );
 
         return waitFor(() => {
           expect(mockOnValueChanged).toHaveBeenCalledWith({
             name: 'question1',
             value: 'new value',
             oldValue: 'old value',
-            question: { name: 'question1', type: 'text' }
+            question: { name: 'question1', type: 'text' },
           });
         });
       });
@@ -776,7 +780,7 @@ describe('Survey Component', () => {
           throw new Error('Handler error');
         });
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onValueChanged: {
@@ -798,19 +802,21 @@ describe('Survey Component', () => {
           onComplete: { add: jest.fn(), remove: jest.fn() },
           onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
           error: null,
         });
 
-        render(<Survey model={mockModel} onValueChanged={mockOnValueChanged} />);
+        render(
+          <Survey model={mockModel} onValueChanged={mockOnValueChanged} />
+        );
       });
 
       it('should not register onValueChanged when handler not provided', () => {
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onValueChanged: {
@@ -820,7 +826,7 @@ describe('Survey Component', () => {
           onComplete: { add: jest.fn(), remove: jest.fn() },
           onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
@@ -837,7 +843,7 @@ describe('Survey Component', () => {
       it('should register onCurrentPageChanged event handler', () => {
         const mockOnCurrentPageChanged = jest.fn();
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onCurrentPageChanged: {
@@ -849,14 +855,19 @@ describe('Survey Component', () => {
           onComplete: { add: jest.fn(), remove: jest.fn() },
           onValueChanged: { add: jest.fn(), remove: jest.fn() },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
           error: null,
         });
 
-        render(<Survey model={mockModel} onCurrentPageChanged={mockOnCurrentPageChanged} />);
+        render(
+          <Survey
+            model={mockModel}
+            onCurrentPageChanged={mockOnCurrentPageChanged}
+          />
+        );
 
         expect(mockSurveyModel.onCurrentPageChanged.add).toHaveBeenCalledWith(
           expect.any(Function)
@@ -866,7 +877,7 @@ describe('Survey Component', () => {
       it('should call onCurrentPageChanged when page changes', () => {
         const mockOnCurrentPageChanged = jest.fn();
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onCurrentPageChanged: {
@@ -887,14 +898,19 @@ describe('Survey Component', () => {
           onComplete: { add: jest.fn(), remove: jest.fn() },
           onValueChanged: { add: jest.fn(), remove: jest.fn() },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
           error: null,
         });
 
-        render(<Survey model={mockModel} onCurrentPageChanged={mockOnCurrentPageChanged} />);
+        render(
+          <Survey
+            model={mockModel}
+            onCurrentPageChanged={mockOnCurrentPageChanged}
+          />
+        );
 
         return waitFor(() => {
           expect(mockOnCurrentPageChanged).toHaveBeenCalledWith({
@@ -908,7 +924,7 @@ describe('Survey Component', () => {
 
       it('should not register onCurrentPageChanged when handler not provided', () => {
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onCurrentPageChanged: {
@@ -918,7 +934,7 @@ describe('Survey Component', () => {
           onComplete: { add: jest.fn(), remove: jest.fn() },
           onValueChanged: { add: jest.fn(), remove: jest.fn() },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
@@ -937,7 +953,7 @@ describe('Survey Component', () => {
         const mockOnValueChanged = jest.fn();
         const mockOnCurrentPageChanged = jest.fn();
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onComplete: {
@@ -953,7 +969,7 @@ describe('Survey Component', () => {
             remove: jest.fn(),
           },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
@@ -961,8 +977,8 @@ describe('Survey Component', () => {
         });
 
         const { unmount } = render(
-          <Survey 
-            model={mockModel} 
+          <Survey
+            model={mockModel}
             onComplete={mockOnComplete}
             onValueChanged={mockOnValueChanged}
             onCurrentPageChanged={mockOnCurrentPageChanged}
@@ -979,7 +995,7 @@ describe('Survey Component', () => {
       it('should handle cleanup when survey model is null', () => {
         const mockOnComplete = jest.fn();
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         mockUseSurveyModel.mockReturnValue({
           model: null,
@@ -1001,7 +1017,7 @@ describe('Survey Component', () => {
         const mockOnValueChanged = jest.fn();
         const mockOnCurrentPageChanged = jest.fn();
         const mockModel = { id: 'test-survey' };
-        
+
         const mockUseSurveyModel = require('../../hooks').useSurveyModel;
         const mockSurveyModel = {
           onComplete: {
@@ -1017,7 +1033,7 @@ describe('Survey Component', () => {
             remove: jest.fn(),
           },
         };
-        
+
         mockUseSurveyModel.mockReturnValue({
           model: mockSurveyModel,
           isLoading: false,
@@ -1025,17 +1041,23 @@ describe('Survey Component', () => {
         });
 
         render(
-          <Survey 
-            model={mockModel} 
+          <Survey
+            model={mockModel}
             onComplete={mockOnComplete}
             onValueChanged={mockOnValueChanged}
             onCurrentPageChanged={mockOnCurrentPageChanged}
           />
         );
 
-        expect(mockSurveyModel.onComplete.add).toHaveBeenCalledWith(expect.any(Function));
-        expect(mockSurveyModel.onValueChanged.add).toHaveBeenCalledWith(expect.any(Function));
-        expect(mockSurveyModel.onCurrentPageChanged.add).toHaveBeenCalledWith(expect.any(Function));
+        expect(mockSurveyModel.onComplete.add).toHaveBeenCalledWith(
+          expect.any(Function)
+        );
+        expect(mockSurveyModel.onValueChanged.add).toHaveBeenCalledWith(
+          expect.any(Function)
+        );
+        expect(mockSurveyModel.onCurrentPageChanged.add).toHaveBeenCalledWith(
+          expect.any(Function)
+        );
       });
     });
   });

@@ -304,8 +304,12 @@ export interface SurveyCompleteEvent {
 /**
  * Survey event handler function types
  */
-export type SurveyValueChangedHandler = (event: SurveyValueChangedEvent) => void;
-export type SurveyCurrentPageChangedHandler = (event: SurveyCurrentPageChangedEvent) => void;
+export type SurveyValueChangedHandler = (
+  event: SurveyValueChangedEvent
+) => void;
+export type SurveyCurrentPageChangedHandler = (
+  event: SurveyCurrentPageChangedEvent
+) => void;
 export type SurveyCompleteHandler = (event: SurveyCompleteEvent) => void;
 
 /**

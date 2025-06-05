@@ -50,7 +50,7 @@ export default function SurveyDemoScreen() {
   const addEventLog = (eventType: string, data: any) => {
     const timestamp = new Date().toLocaleTimeString();
     const logEntry = `[${timestamp}] ${eventType}: ${JSON.stringify(data)}`;
-    setEventLogs(prev => [logEntry, ...prev].slice(0, 20)); // Keep only last 20 events
+    setEventLogs((prev) => [logEntry, ...prev].slice(0, 20)); // Keep only last 20 events
   };
 
   const handleExampleSelect = (example: SurveyExample) => {
@@ -159,7 +159,10 @@ export default function SurveyDemoScreen() {
       {eventLogs.length > 0 && (
         <View style={styles.eventLogsContainer}>
           <Text style={styles.eventLogsTitle}>Event Logs (Live Demo)</Text>
-          <ScrollView style={styles.eventLogsScrollView} showsVerticalScrollIndicator={true}>
+          <ScrollView
+            style={styles.eventLogsScrollView}
+            showsVerticalScrollIndicator={true}
+          >
             {eventLogs.map((log, index) => (
               <Text key={index} style={styles.eventLogText}>
                 {log}
