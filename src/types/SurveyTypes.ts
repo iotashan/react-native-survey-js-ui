@@ -454,4 +454,3 @@ export function isQuestionModel(obj: any): obj is QuestionModel {
     typeof obj.type === 'string'
   );
 }
-

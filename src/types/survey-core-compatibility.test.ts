@@ -278,4 +278,3 @@ describe('Survey-Core Compatibility', () => {
     expect(survey.clearInvisibleValues).toBe('onHidden');
   });
 });
-

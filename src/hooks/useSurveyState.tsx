@@ -11,6 +11,18 @@ export interface SurveyState {
    */
   currentPageNo: number;
   /**
+   * Total number of pages
+   */
+  pageCount: number;
+  /**
+   * Whether currently on first page
+   */
+  isFirstPage: boolean;
+  /**
+   * Whether currently on last page
+   */
+  isLastPage: boolean;
+  /**
    * Whether the survey is completed
    */
   isCompleted: boolean;
@@ -30,6 +42,9 @@ export function useSurveyState(model: Model | null): SurveyState {
   const [state, setState] = useState<SurveyState>(() => ({
     data: model?.data || {},
     currentPageNo: model?.currentPageNo || 0,
+    pageCount: model?.pageCount || 1,
+    isFirstPage: model?.isFirstPage ?? true,
+    isLastPage: model?.isLastPage ?? false,
     isCompleted: model ? model.getPropertyValue('isCompleted') === true : false,
     questions: getQuestions(model),
   }));
@@ -39,6 +54,9 @@ export function useSurveyState(model: Model | null): SurveyState {
       setState({
         data: {},
         currentPageNo: 0,
+        pageCount: 1,
+        isFirstPage: true,
+        isLastPage: false,
         isCompleted: false,
         questions: [],
       });
@@ -49,6 +67,9 @@ export function useSurveyState(model: Model | null): SurveyState {
     setState({
       data: model.data || {},
       currentPageNo: model.currentPageNo || 0,
+      pageCount: model.pageCount || 1,
+      isFirstPage: model.isFirstPage,
+      isLastPage: model.isLastPage,
       isCompleted: model.getPropertyValue('isCompleted') === true,
       questions: getQuestions(model),
     });
@@ -66,6 +87,8 @@ export function useSurveyState(model: Model | null): SurveyState {
       setState((prev) => ({
         ...prev,
         currentPageNo: sender.currentPageNo || 0,
+        isFirstPage: sender.isFirstPage,
+        isLastPage: sender.isLastPage,
       }));
     };
 
