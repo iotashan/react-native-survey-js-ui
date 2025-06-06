@@ -1060,5 +1060,88 @@ describe('Survey Component', () => {
         );
       });
     });
+
+    describe('question value management', () => {
+      it('should update question values and call surveyModel.setValue', () => {
+        const mockSetValue = jest.fn();
+        const mockSurveyModel = {
+          data: {},
+          currentPageNo: 0,
+          pageCount: 1,
+          isFirstPage: true,
+          isLastPage: true,
+          isCompleted: false,
+          setValue: mockSetValue,
+          getAllQuestions: jest.fn(() => [
+            { name: 'q1', type: 'text', title: 'What is your name?' },
+          ]),
+          onComplete: { add: jest.fn(), remove: jest.fn() },
+          onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
+          onValueChanged: { add: jest.fn(), remove: jest.fn() },
+          currentPage: {
+            questions: [
+              { name: 'q1', type: 'text', title: 'What is your name?' },
+            ],
+          },
+          showProgressBar: false,
+        };
+
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        mockUseSurveyModel.mockReturnValue({
+          model: mockSurveyModel,
+          isLoading: false,
+          error: null,
+        });
+
+        const mockUseSurveyState = require('../../hooks').useSurveyState;
+        mockUseSurveyState.mockReturnValue({
+          currentPage: {
+            questions: [
+              { name: 'q1', type: 'text', title: 'What is your name?' },
+            ],
+          },
+          questions: [
+            { name: 'q1', type: 'text', title: 'What is your name?' },
+          ],
+          isFirstPage: true,
+          isLastPage: true,
+          pageCount: 1,
+          currentPageNo: 0,
+          progress: 0,
+          canGoNext: true,
+          canGoPrevious: false,
+          isCompleted: false,
+        });
+
+        const { getByTestId } = render(<Survey model={{}} />);
+        const questionInput = getByTestId('text-question-input');
+
+        // Trigger text change
+        fireEvent.changeText(questionInput, 'new value');
+
+        expect(mockSetValue).toHaveBeenCalledWith('q1', 'new value');
+      });
+
+      it('should handle onChange when surveyModel is null', () => {
+        const mockUseSurveyModel = require('../../hooks').useSurveyModel;
+        mockUseSurveyModel.mockReturnValue({
+          model: null,
+          isLoading: false,
+          error: null,
+        });
+
+        const mockModel = {
+          pages: [
+            {
+              name: 'page1',
+              elements: [{ type: 'text', name: 'q1', title: 'Question 1' }],
+            },
+          ],
+        };
+
+        // Should not throw when model is null
+        expect(() => render(<Survey model={mockModel} />)).not.toThrow();
+      });
+    });
   });
 });
