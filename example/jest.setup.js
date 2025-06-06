@@ -1,5 +1,11 @@
-/* eslint-disable eslint-comments/no-unlimited-disable */
+/* eslint-env jest */
 // Removed gesture handler as it's not required
+
+// Set up React Native feature flags before any imports
+global.__fbBatchedBridgeConfig = {
+  remoteModuleConfig: {},
+  localModulesConfig: {},
+};
 
 // Mock React Native's native bridge and modules
 jest.mock('react-native/Libraries/BatchedBridge/NativeModules', () => ({}));
@@ -9,18 +15,21 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => ({
 }));
 
 // Mock React Native Feature Flags
-jest.mock('react-native/src/private/featureflags/specs/NativeReactNativeFeatureFlags', () => ({
-  __esModule: true,
-  default: {},
-}));
+jest.mock(
+  'react-native/src/private/featureflags/specs/NativeReactNativeFeatureFlags',
+  () => ({
+    __esModule: true,
+    default: {},
+  })
+);
 
-jest.mock('react-native/src/private/featureflags/ReactNativeFeatureFlagsBase', () => ({
-  __esModule: true,
-  default: class MockFeatureFlagsBase {},
-}));
-
-// Set up React Native feature flags
-global.__fbBatchedBridgeConfig = {};
+jest.mock(
+  'react-native/src/private/featureflags/ReactNativeFeatureFlagsBase',
+  () => ({
+    __esModule: true,
+    default: class MockFeatureFlagsBase {},
+  })
+);
 
 // Mock react-native-safe-area-context
 jest.mock('react-native-safe-area-context', () => ({

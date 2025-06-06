@@ -1,3 +1,49 @@
+// Mock StyleSheet with multiple possible paths
+jest.doMock('react-native/Libraries/StyleSheet/StyleSheet', () => ({
+  create: (styles: any) => styles,
+  flatten: (style: any) => style,
+  absoluteFill: {},
+  absoluteFillObject: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
+}));
+
+jest.doMock('react-native', () => ({
+  StyleSheet: {
+    create: (styles: any) => styles,
+    flatten: (style: any) => style,
+    absoluteFill: {},
+    absoluteFillObject: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+    },
+  },
+  View: 'View',
+  Text: 'Text',
+  ScrollView: 'ScrollView',
+  FlatList: 'FlatList',
+  TouchableOpacity: 'TouchableOpacity',
+  TextInput: 'TextInput',
+}));
+
+// Mock the library import before importing the screen
+jest.mock('react-native-survey-js-ui', () => ({
+  Survey: () => null,
+  BaseQuestion: () => null,
+  TextQuestion: () => null,
+  QuestionFactory: {
+    registerQuestionType: jest.fn(),
+    getRegisteredTypes: jest.fn(() => []),
+  },
+}));
+
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import ExploreScreen from '../../src/screens/ExploreScreen';

@@ -32,15 +32,15 @@ export const QuestionFactory: React.FC<QuestionFactoryProps> & {
     console.warn(
       `Unknown question type: ${question.type}. Falling back to BaseQuestion.`
     );
-    return <BaseQuestion question={question} error={error} />;
+    return <BaseQuestion question={question} {...(error && { error })} />;
   }
 
   return (
     <QuestionComponent
       question={question}
-      value={value}
-      onChange={onChange}
-      error={error}
+      {...(value !== undefined && { value })}
+      {...(onChange && { onChange })}
+      {...(error && { error })}
     />
   );
 };

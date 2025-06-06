@@ -1,6 +1,5 @@
 const path = require('path');
 const { getDefaultConfig } = require('@expo/metro-config');
-const { withMetroConfig } = require('react-native-monorepo-config');
 
 const root = path.resolve(__dirname, '..');
 const librarySrcPath = path.resolve(root, 'src');
@@ -11,10 +10,14 @@ const librarySrcPath = path.resolve(root, 'src');
  *
  * @type {import('metro-config').MetroConfig}
  */
-const config = withMetroConfig(getDefaultConfig(__dirname), {
-  root,
-  dirname: __dirname,
-});
+const config = getDefaultConfig(__dirname);
+
+// Configure for monorepo setup
+config.watchFolders = [root];
+config.resolver.nodeModulesPaths = [
+  path.resolve(__dirname, 'node_modules'),
+  path.resolve(root, 'node_modules'),
+];
 
 // Enhanced resolver configuration for library development
 config.resolver.unstable_enablePackageExports = true;
@@ -31,16 +34,17 @@ config.watchFolders = [
 // Configure source maps for debugging
 config.serializer = {
   ...config.serializer,
-  createModuleIdFactory: function () {
-    return function (path) {
-      // Use stable module IDs for better debugging
-      return require('crypto')
-        .createHash('sha1')
-        .update(path)
-        .digest('hex')
-        .substring(0, 8);
-    };
-  },
+  // Temporarily disable custom module IDs to fix Hermes compatibility
+  // createModuleIdFactory: function () {
+  //   return function (path) {
+  //     // Use stable module IDs for better debugging
+  //     return require('crypto')
+  //       .createHash('sha1')
+  //       .update(path)
+  //       .digest('hex')
+  //       .substring(0, 8);
+  //   };
+  // },
 };
 
 // Optimize transformer for TypeScript and library development

@@ -29,7 +29,12 @@ export interface SurveyState {
   /**
    * All questions with their current values
    */
-  questions: Array<{ name: string; value: any }>;
+  questions: Array<{
+    name: string;
+    value: any;
+    type: string;
+    [key: string]: any;
+  }>;
 }
 
 /**
@@ -120,7 +125,7 @@ export function useSurveyState(model: Model | null): SurveyState {
  */
 function getQuestions(
   model: Model | null
-): Array<{ name: string; value: any }> {
+): Array<{ name: string; value: any; type: string; [key: string]: any }> {
   if (!model) {
     return [];
   }
@@ -129,5 +134,11 @@ function getQuestions(
   return questions.map((q: any) => ({
     name: q.name,
     value: q.value,
+    type: q.getType(),
+    title: q.title,
+    description: q.description,
+    isRequired: q.isRequired,
+    visible: q.visible,
+    readOnly: q.readOnly,
   }));
 }

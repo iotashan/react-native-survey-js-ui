@@ -1,7 +1,7 @@
 ---
 task_id: T03_S03
 sprint_sequence_id: S03
-status: completed
+status: open
 complexity: Medium
 last_updated: 2025-06-05T09:48:00-05:00
 ---

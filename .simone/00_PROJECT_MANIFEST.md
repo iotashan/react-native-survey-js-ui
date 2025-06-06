@@ -2,9 +2,9 @@
 project_name: react-native-survey-js-ui
 current_milestone_id: M01
 highest_sprint_in_milestone: S05
-current_sprint_id: S02
+current_sprint_id: S04
 status: active
-last_updated: 2025-06-05T06:06:00-05:00
+last_updated: 2025-06-06T18:23:00Z
 ---
 
 # Project Manifest: react-native-survey-js-ui
@@ -26,7 +26,7 @@ This project follows a milestone-based development approach with strict TDD requ
 ## 2. Current Focus
 
 - **Milestone:** M01 - Foundation & Testing Infrastructure
-- **Sprint:** S02 - Development Environment Setup
+- **Sprint:** S04 - TDD Infrastructure
 
 ## 3. Sprints in Current Milestone
 
@@ -45,17 +45,21 @@ This project follows a milestone-based development approach with strict TDD requ
 ✅ T04: Implement Explore Tab (Medium) - COMPLETED
 ✅ T05: Establish Development Workflow (Low) - COMPLETED
 
-### S03 Core Survey Integration (📋 PLANNED)
-📋 Create main Survey component with survey-core integration
-📋 Implement base question architecture foundation
-📋 Define TypeScript interfaces for SurveyJS models
-📋 Create basic survey demo in example app tabs
+### S03 Core Survey Integration (✅ COMPLETED) - 6 Tasks
+✅ T01: Define TypeScript Interfaces for SurveyJS Models (Low) - COMPLETED
+✅ T02: Integrate Survey-Core Dependency (Medium) - COMPLETED
+✅ T03: Create Main Survey Component (Medium) - COMPLETED
+✅ T04: Implement Base Question Architecture (Medium) - COMPLETED
+✅ T05: Establish Event System Foundation (Low) - COMPLETED
+✅ T06: Create Basic Survey Demo in Example App (Low) - COMPLETED
 
-### S04 TDD Infrastructure (📋 PLANNED)
-📋 Configure Jest and React Native Testing Library
-📋 Create comprehensive unit and integration tests
-📋 Set up mock utilities and achieve >90% code coverage
-📋 Establish TDD workflow for future development
+### S04 TDD Infrastructure (🔄 IN PROGRESS) - 6 Tasks
+✅ T01: Enhanced Jest Configuration and CI Optimization (Medium) - COMPLETED
+✅ T02: Comprehensive Unit Test Coverage for Core Components (Medium) - COMPLETED
+✅ T03: Advanced Mocking Infrastructure for Survey Core (Medium) - COMPLETED
+📋 T04: Integration Test Expansion for Example App (Medium)
+📋 T05: Coverage Optimization and Reporting Setup (Low)
+📋 T06: TDD Workflow Documentation and Best Practices (Low)
 
 ### S05 CI/CD and Final Integration (📋 PLANNED)
 📋 Set up automated testing pipeline for cross-platform
@@ -63,20 +67,25 @@ This project follows a milestone-based development approach with strict TDD requ
 📋 Create library documentation and final integration testing
 📋 Complete M01 milestone validation
 
-## 4. Key Documentation
+## 4. General Tasks
+
+- [✅] T001: [Validate Example App Simulator Setup](./04_GENERAL_TASKS/TX001_Validate_Example_App_Simulator_Setup.md) - Status: Completed
+- [📋] T002: [Fix React Native Metro Hermes Module Resolution Error](./04_GENERAL_TASKS/T002_Fix_React_Native_Metro_Hermes_Module_Resolution_Error.md) - Status: Open
+
+## 5. Key Documentation
 
 - [Architecture Documentation](./01_PROJECT_DOCS/ARCHITECTURE.md)
 - [Current Milestone Requirements](./02_REQUIREMENTS/M01_Foundation_and_Testing/)
 - [General Tasks](./04_GENERAL_TASKS/)
 
-## 5. Quick Links
+## 6. Quick Links
 
-- **Current Sprint:** [S01 Sprint Folder](./03_SPRINTS/S01_M01_Library_Foundation/)
+- **Current Sprint:** [S02 Sprint Folder](./03_SPRINTS/S02_M01_Development_Environment/)
 - **All M01 Sprints:** [Sprint Directory](./03_SPRINTS/)
-- **Active Tasks:** Check sprint folder for T##_S01_*.md files
+- **Active Tasks:** Check sprint folder for T##_S02_*.md files
 - **Project Reviews:** [Latest Review](./10_STATE_OF_PROJECT/)
 
-## 6. Development Principles
+## 7. Development Principles
 
 ### TDD Requirements
 - **CRITICAL**: All coding follows Test-Driven Development

@@ -30,7 +30,7 @@ export const TextQuestion: React.FC<QuestionComponentProps> = ({
 
   return (
     <View testID="text-question-container">
-      <BaseQuestion question={question} error={error}>
+      <BaseQuestion question={question} {...(error && { error })}>
         <TextInput
           testID="text-question-input"
           style={[

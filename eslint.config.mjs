@@ -35,7 +35,17 @@ export default defineConfig([
   {
     ignores: [
       'node_modules/',
-      'lib/'
+      'lib/',
+      'example/jest.setup.js',
+      'jest.setup.js',
+      'jest.setup.after.js',
+      'jest.setup.components.js',
+      'coverage/',
+      'example/ios/',
+      'example/android/',
+      'example/survey-core-source/',
+      'survey-library-fork/',
+      'survey-core-rn/'
     ],
   },
 ]);

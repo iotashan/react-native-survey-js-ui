@@ -32,3 +32,11 @@ global.window = {
     },
   },
 };
+
+// Configure manual mocks
+jest.mock('survey-core', () => require('./src/__mocks__/survey-core'));
+
+// Mock React Native components if not in React Native environment
+if (!global.__DEV__) {
+  jest.mock('react-native', () => require('./src/__mocks__/react-native'));
+}

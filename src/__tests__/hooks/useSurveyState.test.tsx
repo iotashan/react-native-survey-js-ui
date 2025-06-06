@@ -24,8 +24,8 @@ describe('useSurveyState', () => {
         return null;
       }),
       getAllQuestions: jest.fn().mockReturnValue([
-        { name: 'question1', value: 'answer1' },
-        { name: 'question2', value: 'answer2' },
+        { name: 'question1', value: 'answer1', getType: () => 'text' },
+        { name: 'question2', value: 'answer2', getType: () => 'text' },
       ]),
       onValueChanged: {
         add: jest.fn((cb) => valueChangedCallbacks.push(cb)),
@@ -62,8 +62,8 @@ describe('useSurveyState', () => {
       isLastPage: false,
       isCompleted: false,
       questions: [
-        { name: 'question1', value: 'answer1' },
-        { name: 'question2', value: 'answer2' },
+        { name: 'question1', value: 'answer1', type: 'text' },
+        { name: 'question2', value: 'answer2', type: 'text' },
       ],
     });
   });
@@ -137,8 +137,8 @@ describe('useSurveyState', () => {
 
     // Update questions mock
     mockModel.getAllQuestions.mockReturnValue([
-      { name: 'question1', value: 'updated answer' },
-      { name: 'question2', value: 'answer2' },
+      { name: 'question1', value: 'updated answer', getType: () => 'text' },
+      { name: 'question2', value: 'answer2', getType: () => 'text' },
     ]);
 
     // Simulate value change
@@ -149,8 +149,26 @@ describe('useSurveyState', () => {
     });
 
     expect(result.current.questions).toEqual([
-      { name: 'question1', value: 'updated answer' },
-      { name: 'question2', value: 'answer2' },
+      {
+        name: 'question1',
+        value: 'updated answer',
+        type: 'text',
+        title: undefined,
+        description: undefined,
+        isRequired: undefined,
+        visible: undefined,
+        readOnly: undefined,
+      },
+      {
+        name: 'question2',
+        value: 'answer2',
+        type: 'text',
+        title: undefined,
+        description: undefined,
+        isRequired: undefined,
+        visible: undefined,
+        readOnly: undefined,
+      },
     ]);
   });
 

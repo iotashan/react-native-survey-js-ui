@@ -37,7 +37,7 @@ export const Survey: React.FC<SurveyProps> = ({
       const handleComplete = (sender: any) => {
         onComplete({
           timestamp: new Date().toISOString(),
-          surveyId: model.id || 'survey',
+          surveyId: model['id'] || 'survey',
           data: sender.data,
         });
       };
@@ -169,7 +169,7 @@ export const Survey: React.FC<SurveyProps> = ({
           surveyState.questions.map((question) => (
             <QuestionFactory
               key={question.name}
-              question={{ name: question.name, type: question.type }}
+              question={question}
               value={questionValues[question.name]}
               onChange={(value) => {
                 setQuestionValues((prev) => ({

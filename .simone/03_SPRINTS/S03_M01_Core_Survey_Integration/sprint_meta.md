@@ -29,6 +29,26 @@ Build main Survey component with survey-core integration that renders SurveyJS m
 - Both tabs demonstrate library capabilities (demo + exploration)
 - Component exports correctly from library main index
 
+## Tasks
+
+### T01_S03 - Define TypeScript Interfaces for SurveyJS Models (Low)
+Extend and refine TypeScript interfaces to comprehensively cover core SurveyJS model types, ensuring full compatibility with survey-core.
+
+### T02_S03 - Integrate Survey-Core Dependency (Medium)
+Create integration layer between survey-core library and React Native components, handling platform-specific differences and state management.
+
+### T03_S03 - Create Main Survey Component (Medium)
+Transform placeholder Survey component into fully functional implementation with survey-core integration, navigation, and completion handling.
+
+### T04_S03 - Implement Base Question Architecture (Medium)
+Establish foundational architecture for question types with BaseQuestion component, question factory pattern, and common functionality.
+
+### T05_S03 - Establish Event System Foundation (Low)
+Create event system bridging survey-core events with React components, handling lifecycle events and establishing event patterns.
+
+### T06_S03 - Create Basic Survey Demo in Example App (Low)
+Update Survey Demo tab with meaningful examples showcasing library functionality, event handling, and proper usage patterns.
+
 ## Notes / Retrospective Points
 - This sprint delivers the core library functionality
 - Focus on proper survey-core integration patterns

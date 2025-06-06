@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
@@ -19,7 +19,8 @@
     "react-native": "0.79.2",
     "react-native-safe-area-context": "^5.0.1",
     "react-native-screens": "^4.5.1",
-    "react-native-survey-js-ui": "link:.."
+    "react-native-survey-js-ui": "link:..",
+    "survey-core": "file:../survey-core-rn"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
