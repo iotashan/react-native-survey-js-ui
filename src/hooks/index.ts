@@ -1,8 +1,14 @@
-export { useSurveyModel } from './useSurveyModel';
+// Export the fixed versions as the main hooks to solve React null error
+export { useSurveyModelFixed as useSurveyModel } from './useSurveyModelFixed';
 export type {
   UseSurveyModelOptions,
   UseSurveyModelResult,
-} from './useSurveyModel';
+} from './useSurveyModelFixed';
 
-export { useSurveyState } from './useSurveyState';
-export type { SurveyState } from './useSurveyState';
+// Also export the fixed versions under their own names for backward compatibility
+export { useSurveyModelFixed } from './useSurveyModelFixed';
+
+export { useSurveyStateFixed as useSurveyState } from './useSurveyStateFixed';
+export type { SurveyState } from './useSurveyStateFixed';
+
+export { useSurveyStateFixed } from './useSurveyStateFixed';

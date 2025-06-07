@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Survey, validateSurveyModel } from 'react-native-survey-js-ui';
 import { surveyExamples, type SurveyExample } from '../data/surveyExamples';
+import TestFixedHooks from './TestFixedHooks';
 
 export default function SurveyDemoScreen() {
   const [selectedExample, setSelectedExample] = useState<SurveyExample>(

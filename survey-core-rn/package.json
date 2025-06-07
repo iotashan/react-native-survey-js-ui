@@ -1,0 +1,7 @@
+{
+  "name": "survey-core",
+  "version": "1.0.0",
+  "description": "React Native wrapper for survey-core",
+  "main": "index.js",
+  "private": true
+}

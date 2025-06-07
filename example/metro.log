@@ -1,0 +1,48 @@
+
+                        ▒▒▓▓▓▓▒▒
+                     ▒▓▓▓▒▒░░▒▒▓▓▓▒
+                  ▒▓▓▓▓░░░▒▒▒▒░░░▓▓▓▓▒
+                 ▓▓▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▓
+                 ▓▓░░░░░▒▓▓▓▓▓▓▒░░░░░▓▓
+                 ▓▓░░▓▓▒░░░▒▒░░░▒▓▒░░▓▓
+                 ▓▓░░▓▓▓▓▓▒▒▒▒▓▓▓▓▒░░▓▓
+                 ▓▓░░▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░▓▓
+                 ▓▓▒░░▒▒▓▓▓▓▓▓▓▓▒░░░▒▓▓
+                  ▒▓▓▓▒░░░▒▓▓▒░░░▒▓▓▓▒
+                     ▒▓▓▓▒░░░░▒▓▓▓▒
+                        ▒▒▓▓▓▓▒▒
+
+
+ WARN  the transform cache was reset.
+                Welcome to Metro v0.82.4
+              Fast - Scalable - Integrated
+
+
+ BUNDLE  ./index.js ░░░░░░░░░░░░░░░░ 0.0% (0/1)
+ BUNDLE  ./index.js ▓▓░░░░░░░░░░░░░░ 17.3% (138/332)
+ BUNDLE  ./index.js ▓▓▓▓▓▓▓▓▓▓▓▓▓░░░ 83.9% (642/703)
+ BUNDLE  ./index.js 
+ ERROR  Error: Unable to resolve module react-native-survey-js-ui from /Users/shan/react-native-survey-js-ui/example/src/screens/SurveyDemoScreen.tsx: react-native-survey-js-ui could not be found within the project or in these directories:
+  node_modules
+  ../node_modules
+  node_modules
+  ../node_modules
+   8 |   Modal,
+   9 | } from 'react-native';
+> 10 | import { Survey, validateSurveyModel } from 'react-native-survey-js-ui';
+     |                                              ^
+  11 | import { surveyExamples, type SurveyExample } from '../data/surveyExamples';
+  12 |
+  13 | export default function SurveyDemoScreen() {
+    at ModuleResolver.resolveDependency (/Users/shan/react-native-survey-js-ui/node_modules/metro/src/node-haste/DependencyGraph/ModuleResolution.js:150:15)
+    at DependencyGraph.resolveDependency (/Users/shan/react-native-survey-js-ui/node_modules/metro/src/node-haste/DependencyGraph.js:239:43)
+    at /Users/shan/react-native-survey-js-ui/node_modules/metro/src/lib/transformHelpers.js:165:21
+    at resolveDependencies (/Users/shan/react-native-survey-js-ui/node_modules/metro/src/DeltaBundler/buildSubgraph.js:42:25)
+    at visit (/Users/shan/react-native-survey-js-ui/node_modules/metro/src/DeltaBundler/buildSubgraph.js:83:30)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Promise.all (index 1)
+    at async visit (/Users/shan/react-native-survey-js-ui/node_modules/metro/src/DeltaBundler/buildSubgraph.js:92:5)
+    at async Promise.all (index 3)
+    at async visit (/Users/shan/react-native-survey-js-ui/node_modules/metro/src/DeltaBundler/buildSubgraph.js:92:5)
+ BUNDLE  ./index.js ░░░░░░░░░░░░░░░░ 0.0% (0/1)
+ BUNDLE  ./index.js 

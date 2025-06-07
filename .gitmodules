@@ -1,0 +1,3 @@
+[submodule "example/survey-core-source"]
+	path = example/survey-core-source
+	url = https://github.com/surveyjs/survey-library.git

@@ -23,6 +23,18 @@ config.resolver.nodeModulesPaths = [
 config.resolver.unstable_enablePackageExports = true;
 config.resolver.sourceExts = [...config.resolver.sourceExts, 'ts', 'tsx'];
 
+// Force React to resolve to the app's React instance to prevent multiple React instances
+config.resolver.alias = {
+  'react': path.resolve(__dirname, 'node_modules/react'),
+  'react-native': path.resolve(__dirname, 'node_modules/react-native'),
+};
+
+// Ensure the library uses the example's React instance
+config.resolver.extraNodeModules = {
+  'react': path.resolve(__dirname, 'node_modules/react'),
+  'react-native': path.resolve(__dirname, 'node_modules/react-native'),
+};
+
 // Optimize watch folders for library development
 config.watchFolders = [
   root,

@@ -1,0 +1,24 @@
+metro serve
+
+Starts Metro on the given port, building bundles on the fly
+
+Options:
+      --help                   Show help                               [boolean]
+      --version                Show version number                     [boolean]
+  -P, --project-roots                                                    [array]
+  -h, --host                                     [string] [default: "localhost"]
+  -p, --port                                            [number] [default: 8081]
+  -j, --max-workers                                                     [number]
+      --secure                 (deprecated)                            [boolean]
+      --secure-key             (deprecated)                             [string]
+      --secure-cert            (deprecated)                             [string]
+  -s, --secure-server-options  Use dot notation for object path         [string]
+      --hmr-enabled, --hmr                                             [boolean]
+  -c, --config                                                          [string]
+      --reset-cache                                                    [boolean]
+
+Examples:
+  secure-server-options  -s.cert="$(cat path/to/cert)" -s.key="$(cat
+                         path/to/key")
+
+Unknown argument: projectRoot

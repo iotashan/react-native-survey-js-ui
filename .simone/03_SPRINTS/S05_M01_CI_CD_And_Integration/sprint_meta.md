@@ -5,13 +5,22 @@ milestone_id: M01
 title: Sprint 5 - CI/CD and Final Integration
 status: planned
 goal: Complete M01 with automated testing pipeline and deployment readiness
-last_updated: 2025-01-06T00:00:00Z
+last_updated: 2025-06-06T19:48:00Z
 ---
 
 # Sprint: CI/CD and Final Integration (S05)
 
 ## Sprint Goal
 Complete M01 with automated testing pipeline and deployment readiness
+
+## Tasks in this Sprint
+1. **T01_S05**: GitHub Actions CI/CD Pipeline Setup (Medium) - Set up automated testing pipeline for library and example app
+2. **T02_S05**: Cross Platform Testing Configuration (Medium) - Configure iOS/Android testing in CI environment  
+3. **T03_S05**: Library Build Verification System (Low) - Automated build validation for distribution
+4. **T04_S05**: TypeScript Compilation Validation (Low) - CI validation of TypeScript compilation
+5. **T05_S05**: Comprehensive Library Documentation (Medium) - Create README and usage documentation
+6. **T06_S05**: Final M01 Integration Testing (Medium) - Complete milestone validation testing
+7. **T07_S05**: NPM Distribution Preparation (Low) - Prepare library for npm publication
 
 ## Scope & Key Deliverables
 - Set up CI/CD pipeline for automated testing

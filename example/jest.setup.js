@@ -92,4 +92,12 @@ jest.mock('react-native/Libraries/StyleSheet/StyleSheet', () => ({
   },
 }));
 
+// Mock @expo/vector-icons
+jest.mock('@expo/vector-icons', () => ({
+  Ionicons: 'Ionicons',
+  MaterialIcons: 'MaterialIcons',
+  FontAwesome: 'FontAwesome',
+  Feather: 'Feather',
+}));
+
 // Library mock will be handled per test file

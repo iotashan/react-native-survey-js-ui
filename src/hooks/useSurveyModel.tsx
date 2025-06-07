@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import * as React from 'react';
+const { useEffect, useState, useRef, useCallback } = React;
 import { Model } from 'survey-core';
 import { SurveyModelManager } from '../utils/surveyCore';
 

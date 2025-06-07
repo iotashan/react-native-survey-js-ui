@@ -4,7 +4,7 @@ current_milestone_id: M01
 highest_sprint_in_milestone: S05
 current_sprint_id: S04
 status: active
-last_updated: 2025-06-06T19:48:00Z
+last_updated: 2025-06-07T10:46:00Z
 ---
 
 # Project Manifest: react-native-survey-js-ui
@@ -70,7 +70,10 @@ This project follows a milestone-based development approach with strict TDD requ
 ## 4. General Tasks
 
 - [✅] T001: [Validate Example App Simulator Setup](./04_GENERAL_TASKS/TX001_Validate_Example_App_Simulator_Setup.md) - Status: Completed
-- [📋] T002: [Fix React Native Metro Hermes Module Resolution Error](./04_GENERAL_TASKS/T002_Fix_React_Native_Metro_Hermes_Module_Resolution_Error.md) - Status: Open
+- [✅] T002: [Fix React Native Metro Hermes Module Resolution Error](./04_GENERAL_TASKS/T002_Fix_React_Native_Metro_Hermes_Module_Resolution_Error.md) - Status: Closed
+- [✅] T003: [Fix React Native Expo iOS Runtime Errors](./04_GENERAL_TASKS/TX003_Fix_React_Native_Expo_iOS_Runtime_Errors.md) - Status: Completed (2025-06-07 10:24)
+- [🔄] T004: [Add Expo Icons to Example App Tabs](./04_GENERAL_TASKS/T004_Add_Expo_Icons_to_Example_App_Tabs.md) - Status: In Progress (2025-06-07 10:46)
+- [⚠️] TX004: [Fix React Hooks Null Error in Library Build](./04_GENERAL_TASKS/TX004_Fix_React_Hooks_Null_Error_Library_Build.md) - Status: Partially Complete (2025-06-07 10:00)
 
 ## 5. Key Documentation
 

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ActivityIndicator,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
@@ -12,7 +11,8 @@ import type {
   SurveyValueChangedHandler,
   SurveyCurrentPageChangedHandler,
 } from '../../types';
-import { useSurveyModel, useSurveyState } from '../../hooks';
+import { useSurveyModel } from '../../hooks';
+import { useSurveyState } from '../../hooks';
 import { QuestionFactory } from '../Questions';
 
 export interface SurveyProps {
@@ -30,9 +30,10 @@ export const Survey: React.FC<SurveyProps> = ({
 }) => {
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
-  const [questionValues, setQuestionValues] = useState<Record<string, any>>({});
+  const questionValuesState = React.useState<Record<string, any>>({});
+  const [questionValues, setQuestionValues] = questionValuesState;
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (surveyModel && onComplete) {
       const handleComplete = (sender: any) => {
         onComplete({
@@ -51,7 +52,7 @@ export const Survey: React.FC<SurveyProps> = ({
   }, [surveyModel, onComplete, model]);
 
   // Handle value changed events
-  useEffect(() => {
+  React.useEffect(() => {
     if (surveyModel && onValueChanged) {
       const handleValueChanged = (sender: any, options: any) => {
         try {
@@ -77,7 +78,7 @@ export const Survey: React.FC<SurveyProps> = ({
   }, [surveyModel, onValueChanged]);
 
   // Handle page changed events
-  useEffect(() => {
+  React.useEffect(() => {
     if (surveyModel && onCurrentPageChanged) {
       const handleCurrentPageChanged = (sender: any, options: any) => {
         try {
@@ -105,7 +106,6 @@ export const Survey: React.FC<SurveyProps> = ({
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#2196F3" />
         <Text style={styles.loadingText}>Loading survey...</Text>
       </View>
     );
