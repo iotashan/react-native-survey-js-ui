@@ -59,9 +59,30 @@ For detailed event documentation and examples, see [Event System Documentation](
 
 ## Documentation
 
+### User Documentation
 - [Event System](docs/EVENTS.md) - Comprehensive guide to handling survey events
+
+### Developer Documentation
 - [Development Guide](docs/DEVELOPMENT.md) - Development workflow and best practices
 - [Build Guide](docs/BUILD.md) - Building and releasing the library
+
+### Testing and TDD Documentation
+This project follows strict Test-Driven Development (TDD) practices. All contributions must adhere to TDD principles:
+
+- **[TDD Workflow Guide](docs/TDD_WORKFLOW.md)** - Complete TDD process and principles
+- **[TDD Integration Guide](docs/TDD_INTEGRATION_GUIDE.md)** - Integrating TDD into development workflow
+- **[React Native Testing Best Practices](docs/REACT_NATIVE_TESTING_BEST_PRACTICES.md)** - Library-specific testing patterns
+- **[Mock Usage Guide](docs/MOCK_USAGE_GUIDE.md)** - Comprehensive mocking strategies
+- **[Test Organization Conventions](docs/TEST_ORGANIZATION_CONVENTIONS.md)** - Structure and naming standards
+- **[Test Templates](docs/TEST_TEMPLATES.md)** - Ready-to-use test templates
+- **[TDD Code Review Checklist](docs/TDD_CODE_REVIEW_CHECKLIST.md)** - Ensuring TDD compliance
+- **[Testing Troubleshooting FAQ](docs/TESTING_TROUBLESHOOTING_FAQ.md)** - Common issues and solutions
+
+### TDD Requirements
+- **CRITICAL**: All code must follow the Red-Green-Refactor cycle
+- **Coverage**: >90% code coverage required for all new code
+- **Tests First**: No implementation without corresponding tests
+- **Quality**: Tests must validate behavior, not just achieve coverage
 
 ## Contributing
 

@@ -160,9 +160,18 @@ When developing new features:
 
 ### Test-Driven Development (TDD)
 
-This project follows strict TDD practices:
+This project follows strict TDD practices. See our comprehensive TDD documentation:
 
-1. **Write Test First**:
+- **[TDD Workflow Guide](./TDD_WORKFLOW.md)** - Complete TDD process and principles
+- **[React Native Testing Best Practices](./REACT_NATIVE_TESTING_BEST_PRACTICES.md)** - Library-specific testing patterns
+- **[Mock Usage Guide](./MOCK_USAGE_GUIDE.md)** - Comprehensive mocking strategies
+- **[Test Organization Conventions](./TEST_ORGANIZATION_CONVENTIONS.md)** - Structure and naming standards
+- **[Test Templates](./TEST_TEMPLATES.md)** - Ready-to-use test templates
+- **[Testing Troubleshooting FAQ](./TESTING_TROUBLESHOOTING_FAQ.md)** - Common issues and solutions
+
+### Quick TDD Workflow
+
+1. **Write Test First** (Red Phase):
    ```typescript
    // src/components/MyComponent/MyComponent.test.tsx
    describe('MyComponent', () => {
@@ -173,12 +182,12 @@ This project follows strict TDD practices:
    });
    ```
 
-2. **Run Test (Should Fail)**:
+2. **Run Test (Should Fail)** (Red Phase):
    ```bash
    yarn test MyComponent
    ```
 
-3. **Implement Code**:
+3. **Implement Code** (Green Phase):
    ```typescript
    // src/components/MyComponent/MyComponent.tsx
    export const MyComponent: React.FC<{ text: string }> = ({ text }) => {
@@ -186,12 +195,19 @@ This project follows strict TDD practices:
    };
    ```
 
-4. **Run Test (Should Pass)**:
+4. **Run Test (Should Pass)** (Green Phase):
    ```bash
    yarn test MyComponent
    ```
 
-5. **Refactor** (if needed) while keeping tests green
+5. **Refactor** (Refactor Phase) while keeping tests green
+
+### TDD Requirements
+
+- **CRITICAL**: All code must follow Red-Green-Refactor cycle
+- **Coverage**: >90% code coverage for all new code
+- **Tests First**: No implementation without corresponding tests
+- **Quality**: Tests must be meaningful, not just coverage padding
 
 ### Testing Commands
 
