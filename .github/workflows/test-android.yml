@@ -1,0 +1,105 @@
+name: Android Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-android:
+    name: Test Android Platform
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup
+        uses: ./.github/actions/setup
+        
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Build library
+        run: yarn build
+        
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-api-31-${{ runner.os }}
+          
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+          
+      - name: Build Android app for testing
+        working-directory: example
+        run: |
+          npx expo prebuild --platform android
+          cd android
+          ./gradlew assembleRelease assembleAndroidTest
+          
+      - name: Run Android unit tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            cd example/android
+            ./gradlew connectedAndroidTest
+            
+      - name: Install Detox dependencies
+        working-directory: example
+        run: |
+          yarn add --dev detox @types/detox jest-circus
+          
+      - name: Build app for Detox
+        working-directory: example
+        run: yarn detox build --configuration android.emu.release
+        
+      - name: Run Detox E2E tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: |
+            cd example
+            yarn detox test --configuration android.emu.release --cleanup --headless --loglevel verbose
+            
+      - name: Upload Android test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: android-test-results
+          path: |
+            example/android/app/build/reports/
+            example/android/app/build/outputs/androidTest-results/
+            example/artifacts/

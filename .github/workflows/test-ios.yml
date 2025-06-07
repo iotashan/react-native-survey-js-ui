@@ -1,0 +1,91 @@
+name: iOS Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-ios:
+    name: Test iOS Platform
+    runs-on: macos-latest
+    timeout-minutes: 45
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup
+        uses: ./.github/actions/setup
+        
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
+          
+      - name: Build library
+        run: yarn build
+        
+      - name: Install iOS dependencies
+        working-directory: example/ios
+        run: |
+          bundle install
+          pod install
+          
+      - name: Build iOS app for testing
+        working-directory: example
+        run: |
+          npx expo prebuild --platform ios
+          cd ios
+          xcodebuild -workspace example.xcworkspace \
+            -scheme example \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=17.5' \
+            -derivedDataPath build \
+            build-for-testing
+            
+      - name: Run iOS unit tests
+        working-directory: example
+        run: |
+          cd ios
+          xcodebuild test-without-building \
+            -workspace example.xcworkspace \
+            -scheme example \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=17.5' \
+            -derivedDataPath build \
+            -resultBundlePath ../test-results/ios-unit-tests.xcresult
+            
+      - name: Install Detox dependencies
+        working-directory: example
+        run: |
+          yarn add --dev detox @types/detox jest-circus
+          yarn detox clean-framework-cache
+          yarn detox build-framework-cache
+          
+      - name: Build app for Detox
+        working-directory: example
+        run: yarn detox build --configuration ios.sim.release
+        
+      - name: Run Detox E2E tests
+        working-directory: example
+        run: yarn detox test --configuration ios.sim.release --cleanup --headless --loglevel verbose
+        
+      - name: Upload iOS test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ios-test-results
+          path: |
+            example/test-results/
+            example/artifacts/

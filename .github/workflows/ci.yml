@@ -107,10 +107,18 @@ jobs:
           name: build-output
           path: lib/
           
+  test-ios:
+    name: iOS Platform Tests
+    uses: ./.github/workflows/test-ios.yml
+    
+  test-android:
+    name: Android Platform Tests  
+    uses: ./.github/workflows/test-android.yml
+
   check-all:
     name: All Checks Pass
     runs-on: ubuntu-latest
-    needs: [test-library, test-example, build-library]
+    needs: [test-library, test-example, build-library, test-ios, test-android]
     if: always()
     
     steps:
@@ -118,7 +126,9 @@ jobs:
         run: |
           if [[ "${{ needs.test-library.result }}" != "success" || 
                 "${{ needs.test-example.result }}" != "success" || 
-                "${{ needs.build-library.result }}" != "success" ]]; then
+                "${{ needs.build-library.result }}" != "success" || 
+                "${{ needs.test-ios.result }}" != "success" || 
+                "${{ needs.test-android.result }}" != "success" ]]; then
             echo "One or more jobs failed"
             exit 1
           fi

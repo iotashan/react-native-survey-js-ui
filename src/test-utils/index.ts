@@ -12,6 +12,9 @@ export * from './mockEventSystem';
 // Re-export mock scenarios
 export * from './mockScenarios';
 
+// Re-export platform utilities
+export * from './platformUtils';
+
 // Re-export mocks
 export { MockSurveyModel } from '../__mocks__/survey-core/Model.mock';
 
