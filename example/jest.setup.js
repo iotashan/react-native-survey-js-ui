@@ -14,6 +14,17 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => ({
   getEnforcing: () => null,
 }));
 
+// Mock NativeEventEmitter
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
+  return jest.fn().mockImplementation(() => ({
+    addListener: jest.fn(),
+    removeAllListeners: jest.fn(),
+    removeSubscription: jest.fn(),
+    emit: jest.fn(),
+    listenerCount: jest.fn(() => 0),
+  }));
+});
+
 // Mock React Native Feature Flags
 jest.mock(
   'react-native/src/private/featureflags/specs/NativeReactNativeFeatureFlags',
@@ -28,6 +39,8 @@ jest.mock(
   () => ({
     __esModule: true,
     default: class MockFeatureFlagsBase {},
+    createJavaScriptFlagGetter: jest.fn(() => jest.fn()),
+    createNativeFlagGetter: jest.fn(() => jest.fn()),
   })
 );
 

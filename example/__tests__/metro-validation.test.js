@@ -68,20 +68,11 @@ describe('Metro Configuration Validation', () => {
   });
 
   describe('Library Development Support', () => {
-    it('should have stable module ID generation for debugging', () => {
-      expect(metroConfig.serializer.createModuleIdFactory).toBeDefined();
-      expect(typeof metroConfig.serializer.createModuleIdFactory).toBe(
-        'function'
-      );
-
-      const moduleIdFactory = metroConfig.serializer.createModuleIdFactory();
-      const testPath = '/test/path.js';
-      const id1 = moduleIdFactory(testPath);
-      const id2 = moduleIdFactory(testPath);
-
-      expect(id1).toBe(id2); // Should be deterministic
-      expect(typeof id1).toBe('string');
-      expect(id1.length).toBe(8);
+    // Test removed: createModuleIdFactory was commented out in T002 for Hermes compatibility
+    it('should have serializer configuration', () => {
+      expect(metroConfig.serializer).toBeDefined();
+      // createModuleIdFactory is intentionally undefined after T002 fix
+      expect(metroConfig.serializer.createModuleIdFactory).toBeUndefined();
     });
 
     it('should use Expo babel transformer for compatibility', () => {

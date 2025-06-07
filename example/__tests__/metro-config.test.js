@@ -94,17 +94,7 @@ describe('Metro Configuration', () => {
       );
     });
 
-    it('should generate stable module IDs', () => {
-      const moduleIdFactory = metroConfig.serializer.createModuleIdFactory();
-      const testPath = '/some/test/path.js';
-
-      const id1 = moduleIdFactory(testPath);
-      const id2 = moduleIdFactory(testPath);
-
-      expect(id1).toBe(id2); // Should be deterministic
-      expect(typeof id1).toBe('string');
-      expect(id1.length).toBe(8); // Should be 8 characters from SHA1 hash
-    });
+    // Test removed: createModuleIdFactory was commented out in T002 for Hermes compatibility
   });
 
   describe('Library Integration', () => {
