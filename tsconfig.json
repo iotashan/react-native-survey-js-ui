@@ -72,6 +72,8 @@
     "**/*.spec.ts",
     "**/*.test.ts",
     "**/*.spec.tsx",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "example/survey-core-source/**/*",
+    "survey-library-fork/**/*"
   ]
 }

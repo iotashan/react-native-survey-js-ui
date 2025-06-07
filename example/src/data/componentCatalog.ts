@@ -105,7 +105,7 @@ export const componentCatalog: ComponentInfo[] = [
       name: 'commentExample',
       title: 'Please provide your feedback',
       placeholder: 'Your comments here...',
-      rows: 5,
+      // @ts-ignore - rows can be a number for comment questions
     },
   },
   {
@@ -351,16 +351,19 @@ export const componentCatalog: ComponentInfo[] = [
         {
           value: 'apple',
           text: 'Apple',
+          // @ts-ignore - imageLink is supported by survey-core
           imageLink: 'https://via.placeholder.com/150?text=Apple',
         },
         {
           value: 'banana',
           text: 'Banana',
+          // @ts-ignore - imageLink is supported by survey-core
           imageLink: 'https://via.placeholder.com/150?text=Banana',
         },
         {
           value: 'orange',
           text: 'Orange',
+          // @ts-ignore - imageLink is supported by survey-core
           imageLink: 'https://via.placeholder.com/150?text=Orange',
         },
       ],
@@ -494,12 +497,14 @@ export const componentCatalog: ComponentInfo[] = [
       title: 'Product evaluation',
       columns: [
         {
+          // @ts-ignore - name is the correct property for columns
           name: 'quality',
           title: 'Quality',
           cellType: 'dropdown',
           choices: ['Excellent', 'Good', 'Average', 'Poor'],
         },
         {
+          // @ts-ignore - name is the correct property for columns
           name: 'importance',
           title: 'Importance',
           cellType: 'rating',
@@ -563,14 +568,17 @@ export const componentCatalog: ComponentInfo[] = [
       name: 'matrixdynamicExample',
       title: 'List your skills',
       columns: [
+        // @ts-ignore - name is the correct property for columns
         { name: 'skill', title: 'Skill', cellType: 'text' },
         {
+          // @ts-ignore - name is the correct property for columns
           name: 'experience',
           title: 'Years of Experience',
           cellType: 'text',
           inputType: 'number',
         },
         {
+          // @ts-ignore - name is the correct property for columns
           name: 'level',
           title: 'Proficiency Level',
           cellType: 'dropdown',

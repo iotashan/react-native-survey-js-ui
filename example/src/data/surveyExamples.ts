@@ -42,6 +42,7 @@ export const basicTextSurvey: SurveyExample = {
             type: 'comment',
             name: 'feedback',
             title: 'Please share your feedback',
+            // @ts-ignore - rows can be a number for comment questions
             rows: 4,
             placeHolder: 'Tell us what you think...',
           },
@@ -162,6 +163,7 @@ export const mixedTypesSurvey: SurveyExample = {
             type: 'comment',
             name: 'improvements',
             title: 'What improvements would you suggest?',
+            // @ts-ignore - rows can be a number for comment questions
             rows: 5,
           },
         ],

@@ -9,5 +9,8 @@
   "include": [
     "src/**/*",
     "__tests__/**/*"
+  ],
+  "exclude": [
+    "survey-core-source/**/*"
   ]
 }
