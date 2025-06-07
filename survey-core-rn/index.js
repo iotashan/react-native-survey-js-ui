@@ -37,6 +37,17 @@ if (typeof global !== 'undefined') {
       querySelectorAll: function() { return []; }
     };
   }
+  
+  // Add navigator stub if it doesn't exist
+  if (!global.navigator) {
+    global.navigator = {
+      userAgent: 'ReactNative',
+      platform: 'ReactNative',
+      maxTouchPoints: 1,
+      language: 'en-US',
+      languages: ['en-US']
+    };
+  }
 }
 
 // Now it's safe to require survey-core

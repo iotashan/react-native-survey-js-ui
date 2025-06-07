@@ -30,6 +30,8 @@
     "**/__tests__/**/*",
     "**/__mocks__/**/*",
     "**/polyfills.ts",
-    "**/test-utils/**/*"
+    "**/test-utils/**/*",
+    "src/__tests__/**/*",
+    "src/test-utils/**/*"
   ]
 }

@@ -4,8 +4,8 @@
  */
 
 // Components
-export { Survey } from './components/Survey';
-export type { SurveyProps } from './components/Survey';
+export { Survey, SimpleSurvey } from './components/Survey';
+export type { SurveyProps, SimpleSurveyProps } from './components/Survey';
 export { BaseQuestion } from './components/Questions';
 export type { BaseQuestionProps } from './components/Questions';
 

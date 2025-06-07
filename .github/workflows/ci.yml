@@ -101,6 +101,9 @@ jobs:
       - name: Validate build output
         run: yarn validate:build
         
+      - name: Run build verification
+        run: yarn build:verify
+        
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
