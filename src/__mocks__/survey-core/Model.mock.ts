@@ -4,8 +4,8 @@
  */
 
 interface MockEventHandler<T = any> {
-  add: jest.Mock<void, [(handler: T) => void]>;
-  remove: jest.Mock<void, [(handler: T) => void]>;
+  add: jest.Mock<void, [T]>;
+  remove: jest.Mock<void, [T]>;
   fire: jest.Mock<void, any[]>;
   hasHandlers: jest.Mock<boolean, []>;
   _handlers: T[];
@@ -36,11 +36,11 @@ export class MockSurveyModel {
   private _questions: MockQuestion[] = [];
 
   // Event handlers
-  public onComplete: MockEventHandler;
-  public onValueChanged: MockEventHandler;
-  public onCurrentPageChanged: MockEventHandler;
-  public onPageVisibleChanged: MockEventHandler;
-  public onQuestionVisibleChanged: MockEventHandler;
+  public onComplete: MockEventHandler = this._createEventHandler();
+  public onValueChanged: MockEventHandler = this._createEventHandler();
+  public onCurrentPageChanged: MockEventHandler = this._createEventHandler();
+  public onPageVisibleChanged: MockEventHandler = this._createEventHandler();
+  public onQuestionVisibleChanged: MockEventHandler = this._createEventHandler();
 
   constructor(json?: any) {
     this._json = json || {};

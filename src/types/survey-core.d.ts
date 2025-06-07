@@ -12,6 +12,9 @@ declare module 'survey-core' {
     currentPageNo: number;
     pageCount: number;
     visiblePageCount: number;
+    isFirstPage: boolean;
+    isLastPage: boolean;
+    isCompleted: boolean;
     
     // Methods
     doComplete(): void;
@@ -19,6 +22,9 @@ declare module 'survey-core' {
     prevPage(): boolean;
     setValue(name: string, value: any): void;
     getValue(name: string): any;
+    dispose(): void;
+    getPropertyValue(name: string): any;
+    getAllQuestions(): any[];
     
     // Events
     onComplete: IEvent<any>;

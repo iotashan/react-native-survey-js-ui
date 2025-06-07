@@ -28,6 +28,8 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "**/__tests__/**/*",
-    "**/__mocks__/**/*"
+    "**/__mocks__/**/*",
+    "**/polyfills.ts",
+    "**/test-utils/**/*"
   ]
 }

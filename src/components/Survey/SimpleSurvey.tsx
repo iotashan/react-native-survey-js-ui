@@ -7,7 +7,7 @@ export interface SimpleSurveyProps {
 }
 
 export class SimpleSurvey extends React.Component<SimpleSurveyProps> {
-  render() {
+  override render() {
     const { model } = this.props;
     
     return (
