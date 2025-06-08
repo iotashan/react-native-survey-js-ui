@@ -3816,25 +3816,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:^12.7.2":
-  version: 12.9.0
-  resolution: "@testing-library/react-native@npm:12.9.0"
-  dependencies:
-    jest-matcher-utils: ^29.7.0
-    pretty-format: ^29.7.0
-    redent: ^3.0.0
-  peerDependencies:
-    jest: ">=28.0.0"
-    react: ">=16.8.0"
-    react-native: ">=0.59"
-    react-test-renderer: ">=16.8.0"
-  peerDependenciesMeta:
-    jest:
-      optional: true
-  checksum: 88115b22c127f39b2e1e8098dc1c93ea9c7393800a24f4f380bed64425cc685f98cad5b56b9cb48d85f0dbed1f0f208d0de44137c6e789c98161ff2715f70646
-  languageName: node
-  linkType: hard
-
 "@testing-library/react-native@npm:^13.2.0":
   version: 13.2.0
   resolution: "@testing-library/react-native@npm:13.2.0"
@@ -12934,7 +12915,8 @@ __metadata:
     "@expo/vector-icons": ^14.1.0
     "@react-navigation/bottom-tabs": ^7.1.1
     "@react-navigation/native": ^7.0.17
-    "@testing-library/react-native": ^12.7.2
+    "@testing-library/jest-native": ^5.4.3
+    "@testing-library/react-native": ^13.2.0
     "@types/react": ~18.3.12
     "@types/react-navigation": ^3.4.0
     expo: ~52.0.0
@@ -14610,15 +14592,15 @@ __metadata:
 
 "survey-core@file:../survey-core-rn::locator=react-native-survey-js-ui-example%40workspace%3Aexample":
   version: 1.0.0
-  resolution: "survey-core@file:../survey-core-rn#../survey-core-rn::hash=d3dbc1&locator=react-native-survey-js-ui-example%40workspace%3Aexample"
-  checksum: 71e890e9d87abac91dd88a3d18e6eb58a06b0e9123ac900b98b96bd7415dff42f351f6f50e9d1db1a4d77642340ec0441ee8bfdea0ad6d26b75ed60b1276276c
+  resolution: "survey-core@file:../survey-core-rn#../survey-core-rn::hash=98de7d&locator=react-native-survey-js-ui-example%40workspace%3Aexample"
+  checksum: f908791b2a3e216790249e90a635445e9282d31d826e98c75c4ce4806ff236079b7de3fb91835843ba7470720508b76d32b22ee6384e4c5a1411ed56b14c65f1
   languageName: node
   linkType: hard
 
 "survey-core@file:./survey-core-rn::locator=react-native-survey-js-ui%40workspace%3A.":
   version: 1.0.0
-  resolution: "survey-core@file:./survey-core-rn#./survey-core-rn::hash=d3dbc1&locator=react-native-survey-js-ui%40workspace%3A."
-  checksum: 71e890e9d87abac91dd88a3d18e6eb58a06b0e9123ac900b98b96bd7415dff42f351f6f50e9d1db1a4d77642340ec0441ee8bfdea0ad6d26b75ed60b1276276c
+  resolution: "survey-core@file:./survey-core-rn#./survey-core-rn::hash=98de7d&locator=react-native-survey-js-ui%40workspace%3A."
+  checksum: f908791b2a3e216790249e90a635445e9282d31d826e98c75c4ce4806ff236079b7de3fb91835843ba7470720508b76d32b22ee6384e4c5a1411ed56b14c65f1
   languageName: node
   linkType: hard
 

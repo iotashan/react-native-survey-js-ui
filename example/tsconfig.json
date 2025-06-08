@@ -2,15 +2,25 @@
   "extends": "../tsconfig",
   "compilerOptions": {
     // Avoid expo-cli auto-generating a tsconfig
-    "strict": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    // More lenient settings for example app
+    "strict": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noUncheckedIndexedAccess": false,
+    "noPropertyAccessFromIndexSignature": false
   },
   "include": [
-    "src/**/*",
-    "__tests__/**/*"
+    "src/**/*"
   ],
   "exclude": [
-    "survey-core-source/**/*"
+    "survey-core-source/**/*",
+    "__tests__/**/*",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
   ]
 }

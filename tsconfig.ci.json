@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    /* CI-optimized TypeScript settings for faster compilation */
+    "incremental": true,
+    "tsBuildInfoFile": "./lib/.tsbuildinfo",
+    "skipLibCheck": true,
+    "assumeChangesOnlyAffectDirectDependencies": true,
+    
+    /* Disable source maps for faster compilation */
+    "sourceMap": false,
+    "declarationMap": false,
+    
+    /* Only emit for type checking, don't generate files */
+    "noEmit": true,
+    "declaration": false
+  }
+}

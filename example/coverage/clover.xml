@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1749309623845" clover="3.2.0">
-  <project timestamp="1749309623845" name="All files">
-    <metrics statements="101" coveredstatements="25" conditionals="56" coveredconditionals="7" methods="42" coveredmethods="10" elements="199" coveredelements="42" complexity="0" loc="101" ncloc="101" packages="4" files="9" classes="9"/>
+<coverage generated="1749341862768" clover="3.2.0">
+  <project timestamp="1749341862768" name="All files">
+    <metrics statements="103" coveredstatements="27" conditionals="56" coveredconditionals="7" methods="44" coveredmethods="10" elements="203" coveredelements="44" complexity="0" loc="103" ncloc="103" packages="4" files="7" classes="7"/>
     <package name="src">
       <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <file name="App.tsx" path="/Users/shan/react-native-survey-js-ui/example/src/App.tsx">
@@ -14,7 +14,7 @@
       <metrics statements="24" coveredstatements="24" conditionals="8" coveredconditionals="7" methods="10" coveredmethods="10"/>
       <file name="componentCatalog.ts" path="/Users/shan/react-native-survey-js-ui/example/src/data/componentCatalog.ts">
         <metrics statements="16" coveredstatements="16" conditionals="8" coveredconditionals="7" methods="8" coveredmethods="8"/>
-        <line num="32" count="2" type="stmt"/>
+        <line num="32" count="3" type="stmt"/>
         <line num="799" count="2" type="stmt"/>
         <line num="801" count="2" type="stmt"/>
         <line num="802" count="12" type="stmt"/>
@@ -33,29 +33,28 @@
       </file>
       <file name="surveyExamples.ts" path="/Users/shan/react-native-survey-js-ui/example/src/data/surveyExamples.ts">
         <metrics statements="8" coveredstatements="8" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
-        <line num="11" count="2" type="stmt"/>
-        <line num="56" count="2" type="stmt"/>
-        <line num="107" count="2" type="stmt"/>
-        <line num="176" count="2" type="stmt"/>
-        <line num="249" count="2" type="stmt"/>
-        <line num="260" count="2" type="stmt"/>
-        <line num="268" count="2" type="stmt"/>
+        <line num="11" count="3" type="stmt"/>
+        <line num="56" count="3" type="stmt"/>
+        <line num="107" count="3" type="stmt"/>
+        <line num="176" count="3" type="stmt"/>
+        <line num="249" count="3" type="stmt"/>
+        <line num="260" count="3" type="stmt"/>
+        <line num="268" count="3" type="stmt"/>
         <line num="269" count="37" type="stmt"/>
       </file>
     </package>
     <package name="src.navigation">
-      <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <metrics statements="4" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
       <file name="TabNavigator.tsx" path="/Users/shan/react-native-survey-js-ui/example/src/navigation/TabNavigator.tsx">
-        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-      </file>
-      <file name="index.ts" path="/Users/shan/react-native-survey-js-ui/example/src/navigation/index.ts">
-        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <metrics statements="4" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
       </file>
     </package>
     <package name="src.screens">
-      <metrics statements="73" coveredstatements="1" conditionals="48" coveredconditionals="0" methods="30" coveredmethods="0"/>
+      <metrics statements="73" coveredstatements="2" conditionals="48" coveredconditionals="0" methods="30" coveredmethods="0"/>
       <file name="ExploreScreen.tsx" path="/Users/shan/react-native-survey-js-ui/example/src/screens/ExploreScreen.tsx">
         <metrics statements="27" coveredstatements="1" conditionals="14" coveredconditionals="0" methods="14" coveredmethods="0"/>
         <line num="24" count="0" type="stmt"/>
@@ -84,10 +83,10 @@
         <line num="143" count="0" type="stmt"/>
         <line num="160" count="0" type="stmt"/>
         <line num="174" count="0" type="stmt"/>
-        <line num="185" count="1" type="stmt"/>
+        <line num="185" count="2" type="stmt"/>
       </file>
       <file name="SurveyDemoScreen.tsx" path="/Users/shan/react-native-survey-js-ui/example/src/screens/SurveyDemoScreen.tsx">
-        <metrics statements="40" coveredstatements="0" conditionals="26" coveredconditionals="0" methods="15" coveredmethods="0"/>
+        <metrics statements="40" coveredstatements="1" conditionals="26" coveredconditionals="0" methods="15" coveredmethods="0"/>
         <line num="15" count="0" type="stmt"/>
         <line num="18" count="0" type="stmt"/>
         <line num="19" count="0" type="stmt"/>
@@ -127,7 +126,7 @@
         <line num="224" count="0" type="stmt"/>
         <line num="231" count="0" type="stmt"/>
         <line num="243" count="0" type="stmt"/>
-        <line num="254" count="0" type="stmt"/>
+        <line num="254" count="1" type="stmt"/>
       </file>
       <file name="TestFixedHooks.tsx" path="/Users/shan/react-native-survey-js-ui/example/src/screens/TestFixedHooks.tsx">
         <metrics statements="6" coveredstatements="0" conditionals="8" coveredconditionals="0" methods="1" coveredmethods="0"/>
@@ -137,9 +136,6 @@
         <line num="19" count="0" type="stmt"/>
         <line num="21" count="0" type="stmt"/>
         <line num="31" count="0" type="stmt"/>
-      </file>
-      <file name="index.ts" path="/Users/shan/react-native-survey-js-ui/example/src/screens/index.ts">
-        <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       </file>
     </package>
   </project>
