@@ -4,6 +4,7 @@
 - There was another attempt at what this project is supposed to do at https://github.com/shiftsmartinc/surveyjs-react-native remember to review what they did in case there's any useful tricks.
 - Be sure to always get your task branch merged back in to the main branch before moving on to the next task.
 - iTerm isn't responding well to control-c to exit metro. You're better off using "kill" in bash to stop metro in iTerm
+- If you haven't made any changes to the native side (installed a native module, etc) then you can just run "yarn start" instead of "yarn ios" and then launch the app in the simulator. That way you don't have to recompile the binary every time.
 
 ## Survey-Core React Native Integration
 
@@ -27,4 +28,3 @@ npm run build
 
 The fork is at: https://github.com/iotashan/survey-library
 Upstream remote is also configured for future PR submission.
-```
