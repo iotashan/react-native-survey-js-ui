@@ -35,6 +35,11 @@ config.resolver.extraNodeModules = {
   'react-native': path.resolve(__dirname, 'node_modules/react-native'),
 };
 
+// Block parent React resolution explicitly
+config.resolver.blockList = [
+  new RegExp(path.resolve(root, 'node_modules/react/') + '/.*'),
+];
+
 // Optimize watch folders for library development
 config.watchFolders = [
   root,
