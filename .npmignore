@@ -1,0 +1,74 @@
+# Source files (we ship compiled versions)
+*.ts
+*.tsx
+!*.d.ts
+
+# Test files
+__tests__
+__mocks__
+__fixtures__
+*.test.js
+*.test.ts
+*.test.tsx
+*.test.js.map
+*.test.d.ts
+*.test.d.ts.map
+test-utils
+*.spec.js
+*.spec.ts
+jest.config.js
+jest.setup*.js
+
+# Development files
+.vscode
+.idea
+.editorconfig
+.eslintrc*
+.prettierrc*
+.gitignore
+.npmignore
+.simone
+tsconfig*.json
+!tsconfig.json
+babel.config.js
+eslint.config.mjs
+lefthook.yml
+
+# Build artifacts
+coverage
+*.log
+.turbo
+.yarn
+node_modules
+
+# Example app
+example
+
+# Documentation
+docs
+*.md
+!README.md
+!CHANGELOG.md
+!LICENSE
+
+# CI/CD
+.github
+.circleci
+.travis.yml
+
+# Scripts
+scripts
+
+# Platform specific
+.DS_Store
+Thumbs.db
+
+# Survey library fork
+survey-library-fork
+survey-core-rn
+example/survey-core-source
+
+# Coverage files
+coverage-check
+lcov-report
+*.lcov
