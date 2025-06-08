@@ -5,42 +5,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 import App from '../../src/App';
 import SurveyDemoScreen from '../../src/screens/SurveyDemoScreen';
-
-// Mock navigation
-jest.mock('@react-navigation/native', () => {
-  const actualNav = jest.requireActual('@react-navigation/native');
-  return {
-    ...actualNav,
-    useNavigation: () => ({
-      navigate: jest.fn(),
-      goBack: jest.fn(),
-    }),
-    useRoute: () => ({
-      params: {},
-    }),
-  };
-});
-
-// Mock safe area
-jest.mock('react-native-safe-area-context', () => ({
-  SafeAreaProvider: ({ children }: any) => children,
-  useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
-}));
-
 // Mock the survey library
 jest.mock('react-native-survey-js-ui');
-
-// Mock React Native components
-jest.mock('react-native', () => {
-  const RN = jest.requireActual('react-native');
-  return {
-    ...RN,
-    StyleSheet: {
-      create: (styles: any) => styles,
-      flatten: (style: any) => style,
-    },
-  };
-});
 
 describe('Cross-Platform Integration Tests', () => {
   // Store original platform

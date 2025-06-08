@@ -25,7 +25,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@testing-library/react-native": "^12.7.2",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^13.2.0",
     "@types/react": "~18.3.12",
     "@types/react-navigation": "^3.4.0",
     "flow-parser": "^0.273.0",
