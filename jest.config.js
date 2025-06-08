@@ -76,6 +76,8 @@ module.exports = {
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.{js,ts,tsx}',
     '<rootDir>/src/**/*.test.{js,ts,tsx}',
+    '<rootDir>/scripts/**/__tests__/**/*.{js,ts}',
+    '<rootDir>/scripts/**/*.test.{js,ts}',
   ],
 
   // Module name mapping for library imports
@@ -85,7 +87,7 @@ module.exports = {
   },
   
   // Roots for Jest to search
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/scripts'],
 
   // Cache configuration for performance
   cacheDirectory: '<rootDir>/node_modules/.cache/jest',

@@ -11,19 +11,19 @@ const chalk = require('chalk');
 const checks = [
   {
     name: 'Library TypeScript Check',
-    command: 'tsc --project tsconfig.build.json',
+    command: 'npx tsc --project tsconfig.build.json',
     description:
       'Validates library source code with strict TypeScript checking',
   },
   {
     name: 'Example App TypeScript Check',
-    command: 'cd example && tsc --noEmit',
+    command: 'cd example && npx tsc --noEmit',
     description: 'Validates example app TypeScript code',
   },
   {
     name: 'TypeScript Declaration Validation',
     command:
-      'tsc --noEmit --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports lib/typescript/module/index.d.ts',
+      'npx tsc --noEmit --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports lib/typescript/module/index.d.ts',
     description: 'Validates generated TypeScript declaration files',
     requiresBuild: true,
   },
