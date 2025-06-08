@@ -62,3 +62,17 @@ coverage/
 # Survey-core development files
 survey-library-fork/
 example/survey-core-source/
+
+# Build outputs
+lib/
+
+# Expo
+.expo/
+example/.expo/
+dist/
+web-build/
+
+# Logs
+*.log
+metro.log
+metro-startup.log
