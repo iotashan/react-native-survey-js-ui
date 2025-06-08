@@ -18,6 +18,16 @@ export * from './platformUtils';
 // Re-export mocks
 export { MockSurveyModel } from '../__mocks__/survey-core/Model.mock';
 
+// Additional mock utilities
+import { MockSurveyModel } from '../__mocks__/survey-core/Model.mock';
+
+/**
+ * Create a mock survey model for testing
+ */
+export function createMockSurveyModel(json?: any): MockSurveyModel {
+  return new MockSurveyModel(json);
+}
+
 // Additional test utilities
 import { render, RenderOptions } from '@testing-library/react-native';
 import React from 'react';
