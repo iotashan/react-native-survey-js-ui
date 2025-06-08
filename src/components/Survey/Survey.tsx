@@ -13,7 +13,7 @@ import type {
 } from '../../types';
 import { useSurveyModel } from '../../hooks';
 import { useSurveyState } from '../../hooks';
-import { QuestionFactory } from '../Questions';
+import { SurveyPage } from './SurveyPage';
 
 export interface SurveyProps {
   model: SurveyModel;
@@ -30,8 +30,6 @@ export const Survey: React.FC<SurveyProps> = ({
 }) => {
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
-  const questionValuesState = React.useState<Record<string, any>>({});
-  const [questionValues, setQuestionValues] = questionValuesState;
 
   React.useEffect(() => {
     if (surveyModel && onComplete) {
@@ -164,37 +162,19 @@ export const Survey: React.FC<SurveyProps> = ({
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {model.title && <Text style={styles.title}>{model.title}</Text>}
 
-        {/* Render questions from current page */}
-        {surveyState.questions.length > 0 ? (
-          surveyState.questions.map((question) => (
-            <QuestionFactory
-              key={question.name}
-              question={question}
-              value={questionValues[question.name]}
-              onChange={(value) => {
-                setQuestionValues((prev) => ({
-                  ...prev,
-                  [question.name]: value,
-                }));
-                if (surveyModel) {
-                  surveyModel.setValue(question.name, value);
-                }
-              }}
-            />
-          ))
+        {/* Render current page using SurveyPage component */}
+        {surveyModel && surveyModel.currentPage ? (
+          <SurveyPage 
+            page={surveyModel.currentPage} 
+            surveyId={model['id'] || 'survey'}
+            onQuestionValueChange={(name, value) => {
+              surveyModel.setValue(name, value);
+            }}
+          />
         ) : (
           <View style={styles.placeholderContainer}>
             <Text style={styles.placeholder}>
-              Survey-core integration active. Full rendering in future sprints.
-            </Text>
-            <Text style={styles.info}>
-              Current Page: {surveyState.currentPageNo + 1}
-            </Text>
-            <Text style={styles.info}>
-              Questions: {surveyState.questions.length}
-            </Text>
-            <Text style={styles.info}>
-              Completed: {surveyState.isCompleted ? 'Yes' : 'No'}
+              No page to display
             </Text>
           </View>
         )}
@@ -293,12 +273,6 @@ const styles = StyleSheet.create({
   errorDetail: {
     fontSize: 14,
     color: '#666',
-    textAlign: 'center',
-  },
-  info: {
-    fontSize: 14,
-    color: '#333',
-    marginVertical: 4,
     textAlign: 'center',
   },
   progressContainer: {

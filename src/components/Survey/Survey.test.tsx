@@ -1,8 +1,48 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { View, Text, TextInput } from 'react-native';
 import { Survey } from './Survey';
 
 // Mock survey-core
+// Mock SurveyPage component
+jest.mock('./SurveyPage', () => ({
+  SurveyPage: jest.fn((props: any) => {
+    const React = require('react');
+    const { View, Text, TextInput } = require('react-native');
+    const { page, onQuestionValueChange } = props;
+    
+    if (!page || !page.questions || page.questions.length === 0) {
+      return (
+        <View testID="survey-page">
+          <Text>No questions available</Text>
+        </View>
+      );
+    }
+    
+    return (
+      <View testID="survey-page">
+        {page.questions.map((q: any) => (
+          <View key={q.name} testID={`question-${q.name}`}>
+            <Text>{q.title}</Text>
+            {q.type === 'text' && (
+              <TextInput
+                testID="text-question-input"
+                value={q.value || ''}
+                onChangeText={(value) => {
+                  // Call the prop callback
+                  if (onQuestionValueChange) {
+                    onQuestionValueChange(q.name, value);
+                  }
+                }}
+              />
+            )}
+          </View>
+        ))}
+      </View>
+    );
+  }),
+}));
+
 jest.mock('survey-core', () => ({
   Model: jest.fn().mockImplementation((json) => ({
     data: {},
@@ -98,6 +138,11 @@ jest.mock('../../hooks', () => ({
     isLastPage: surveyModel?.isLastPage ?? false,
     isCompleted: surveyModel?.isCompleted ?? false,
     questions: [],
+    updateQuestionValue: jest.fn((name, value) => {
+      if (surveyModel && surveyModel.setValue) {
+        surveyModel.setValue(name, value);
+      }
+    }),
   })),
 }));
 
@@ -123,13 +168,9 @@ describe('Survey Component', () => {
     expect(getByText('Test Survey')).toBeTruthy();
   });
 
-  it('should render survey-core integration text', () => {
+  it('should render no page message when no currentPage', () => {
     const { getByText } = render(<Survey model={{}} />);
-    expect(
-      getByText(
-        'Survey-core integration active. Full rendering in future sprints.'
-      )
-    ).toBeTruthy();
+    expect(getByText('No page to display')).toBeTruthy();
   });
 
   it('should render complete button', () => {
@@ -238,11 +279,9 @@ describe('Survey Component', () => {
 
   it('should not render title when not provided', () => {
     const { queryByText } = render(<Survey model={{}} />);
-    // Check that no title is rendered (placeholder text should still be there)
-    const placeholderText = queryByText(
-      'Survey-core integration active. Full rendering in future sprints.'
-    );
-    expect(placeholderText).toBeTruthy();
+    // Check that no title is rendered (the page should show no page message)
+    const noPageText = queryByText('No page to display');
+    expect(noPageText).toBeTruthy();
   });
 
   describe('Survey Navigation', () => {
@@ -1106,6 +1145,9 @@ describe('Survey Component', () => {
           isFirstPage: true,
           isLastPage: true,
           pageCount: 1,
+          updateQuestionValue: jest.fn((name, value) => {
+            mockSetValue(name, value);
+          }),
           currentPageNo: 0,
           progress: 0,
           canGoNext: true,

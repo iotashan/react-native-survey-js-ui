@@ -15,6 +15,7 @@ declare module 'survey-core' {
     isFirstPage: boolean;
     isLastPage: boolean;
     isCompleted: boolean;
+    currentPage?: PageModel;
 
     // Methods
     doComplete(): void;
@@ -43,6 +44,21 @@ declare module 'survey-core' {
 
     // Configuration
     showProgressBar?: boolean | 'off' | 'top' | 'bottom';
+  }
+
+  export interface Question {
+    name: string;
+    title?: string;
+    type: string;
+    visible: boolean;
+    value: any;
+  }
+
+  export interface PageModel {
+    name: string;
+    title?: string;
+    description?: string;
+    questions: Question[];
   }
 
   export const settings: {
