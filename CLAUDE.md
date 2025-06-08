@@ -2,6 +2,8 @@
 - You can start the WebDriverAgent yourself, it's in /Users/shan/WebDriverAgent
 - Survey-core works as a node module on API backends, so there's no fundamental reason it can't work in React Native - it just needs proper polyfills for browser APIs.
 - There was another attempt at what this project is supposed to do at https://github.com/shiftsmartinc/surveyjs-react-native remember to review what they did in case there's any useful tricks.
+- Be sure to always get your task branch merged back in to the main branch before moving on to the next task.
+- iTerm isn't responding well to control-c to exit metro. You're better off using "kill" in bash to stop metro in iTerm
 
 ## Survey-Core React Native Integration
 
