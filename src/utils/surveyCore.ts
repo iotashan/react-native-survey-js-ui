@@ -1,23 +1,18 @@
 import { Model } from 'survey-core';
+import { applyPolyfills } from './polyfills';
 
 /**
  * Initialize survey-core for React Native environment
  * Handles platform-specific configuration
  */
 export function initializeSurveyCore(): { platform: string; error?: boolean } {
-  try {
-    // Platform-specific initialization if needed
-    // For now, we just return a configuration object
-    return {
-      platform: 'react-native',
-    };
-  } catch (error) {
-    console.warn('Survey-core initialization failed:', error);
-    return {
-      platform: 'react-native',
-      error: true,
-    };
-  }
+  // Apply polyfills before any survey-core usage
+  applyPolyfills();
+
+  // For now, we just return a configuration object
+  return {
+    platform: 'react-native',
+  };
 }
 
 /**

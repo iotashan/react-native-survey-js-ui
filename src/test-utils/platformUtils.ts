@@ -64,10 +64,13 @@ export const setupPlatformMocks = () => {
 
   if (isAndroid()) {
     // Android-specific mocks
-    jest.mock('react-native/Libraries/PermissionsAndroid/PermissionsAndroid', () => ({
-      request: jest.fn(() => Promise.resolve('granted')),
-      check: jest.fn(() => Promise.resolve(true)),
-    }));
+    jest.mock(
+      'react-native/Libraries/PermissionsAndroid/PermissionsAndroid',
+      () => ({
+        request: jest.fn(() => Promise.resolve('granted')),
+        check: jest.fn(() => Promise.resolve(true)),
+      })
+    );
   }
 };
 
@@ -94,7 +97,9 @@ export const PLATFORM_TIMEOUTS = {
   },
 };
 
-export const getPlatformTimeout = (type: 'short' | 'medium' | 'long'): number => {
+export const getPlatformTimeout = (
+  type: 'short' | 'medium' | 'long'
+): number => {
   const platform = isIOS() ? 'ios' : 'android';
   return PLATFORM_TIMEOUTS[platform][type];
 };

@@ -92,7 +92,7 @@ describe('Survey Component - Platform Tests', () => {
     it('should handle survey data consistently', () => {
       const survey = createBasicSurvey();
       const { getByTestId } = render(<Survey model={survey} />);
-      
+
       // Both platforms should show the same survey structure
       expect(getByTestId('survey-container')).toBeTruthy();
     });
@@ -102,7 +102,7 @@ describe('Survey Component - Platform Tests', () => {
     it('should apply iOS-specific styles', () => {
       const { getByTestId } = render(<Survey model={defaultSurvey} />);
       const container = getByTestId('survey-container');
-      
+
       // iOS-specific style assertions
       expect(container.props.style).toMatchObject(
         expect.objectContaining({
@@ -116,7 +116,7 @@ describe('Survey Component - Platform Tests', () => {
       // iOS-specific keyboard handling test
       const survey = createBasicSurvey();
       const { getByTestId } = render(<Survey model={survey} />);
-      
+
       // Simulate iOS keyboard behavior
       expect(getByTestId('survey-container')).toBeTruthy();
     });
@@ -126,7 +126,7 @@ describe('Survey Component - Platform Tests', () => {
     it('should apply Android-specific styles', () => {
       const { getByTestId } = render(<Survey model={defaultSurvey} />);
       const container = getByTestId('survey-container');
-      
+
       // Android-specific style assertions
       expect(container.props.style).toBeTruthy();
     });
@@ -135,9 +135,9 @@ describe('Survey Component - Platform Tests', () => {
       // Android-specific back button handling
       const survey = createBasicSurvey();
       const onComplete = jest.fn();
-      
+
       render(<Survey model={survey} onComplete={onComplete} />);
-      
+
       // Simulate Android back button press
       // This would be handled by navigation in a real app
       expect(onComplete).not.toHaveBeenCalled();
@@ -148,11 +148,11 @@ describe('Survey Component - Platform Tests', () => {
     it('should use platform-appropriate test data', () => {
       const iosData = { title: 'iOS Survey' };
       const androidData = { title: 'Android Survey' };
-      
+
       const platformData = getPlatformTestData(iosData, androidData);
       const survey = createBasicSurvey();
       survey.title = platformData.title;
-      
+
       const { getByText } = render(<Survey model={survey} />);
       expect(getByText(platformData.title)).toBeTruthy();
     });
@@ -162,7 +162,7 @@ describe('Survey Component - Platform Tests', () => {
   testIOS('should handle iOS safe area insets', () => {
     const { getByTestId } = render(<Survey model={defaultSurvey} />);
     const container = getByTestId('survey-container');
-    
+
     // iOS safe area handling
     expect(container).toBeTruthy();
   });
@@ -170,7 +170,7 @@ describe('Survey Component - Platform Tests', () => {
   testAndroid('should handle Android status bar', () => {
     const { getByTestId } = render(<Survey model={defaultSurvey} />);
     const container = getByTestId('survey-container');
-    
+
     // Android status bar handling
     expect(container).toBeTruthy();
   });
@@ -179,11 +179,11 @@ describe('Survey Component - Platform Tests', () => {
     it('should handle errors consistently across platforms', () => {
       const survey = createBasicSurvey();
       const onError = jest.fn();
-      
+
       // Note: onError prop doesn't exist on Survey component
       // This test is checking that the component handles model properly
       const { getByTestId } = render(<Survey model={survey} />);
-      
+
       // Both platforms should render without errors
       expect(getByTestId('survey-container')).toBeTruthy();
     });
@@ -205,18 +205,18 @@ describe('Survey Component - Platform Tests', () => {
           ],
         });
       }
-      
+
       const largeSurvey = {
         title: 'Large Survey',
         pages,
       };
-      
+
       const startTime = Date.now();
       const { getByTestId } = render(<Survey model={largeSurvey} />);
       const renderTime = Date.now() - startTime;
-      
+
       expect(getByTestId('survey-container')).toBeTruthy();
-      
+
       // Performance should be reasonable on both platforms
       expect(renderTime).toBeLessThan(1000); // 1 second max
     });

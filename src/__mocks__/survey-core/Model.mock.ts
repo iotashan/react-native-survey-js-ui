@@ -40,7 +40,8 @@ export class MockSurveyModel {
   public onValueChanged: MockEventHandler = this._createEventHandler();
   public onCurrentPageChanged: MockEventHandler = this._createEventHandler();
   public onPageVisibleChanged: MockEventHandler = this._createEventHandler();
-  public onQuestionVisibleChanged: MockEventHandler = this._createEventHandler();
+  public onQuestionVisibleChanged: MockEventHandler =
+    this._createEventHandler();
 
   constructor(json?: any) {
     this._json = json || {};

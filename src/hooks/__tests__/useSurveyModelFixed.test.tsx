@@ -65,9 +65,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'test-model' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { result } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { result } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       expect(result.current.model).toBeDefined();
       expect(result.current.isLoading).toBe(false);
@@ -80,9 +78,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'test-model' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { result } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { result } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       expect(() => {
         // Should not throw when React references are accessed
@@ -96,9 +92,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'test-model' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { result } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { result } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       expect(SurveyModelManager.create).toHaveBeenCalledWith(
         expect.any(String), // modelId
@@ -115,9 +109,7 @@ describe('useSurveyModelFixed', () => {
         throw testError;
       });
 
-      const { result } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { result } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       expect(result.current.model).toBeNull();
       expect(result.current.isLoading).toBe(false);
@@ -129,9 +121,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'test-model' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { result } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { result } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       // After synchronous creation, loading should be false
       expect(result.current.isLoading).toBe(false);
@@ -143,13 +133,13 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'test-model' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { unmount } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { unmount } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       unmount();
 
-      expect(SurveyModelManager.dispose).toHaveBeenCalledWith(expect.any(String));
+      expect(SurveyModelManager.dispose).toHaveBeenCalledWith(
+        expect.any(String)
+      );
     });
   });
 
@@ -157,7 +147,7 @@ describe('useSurveyModelFixed', () => {
     it('should recreate model when survey JSON changes', () => {
       const mockModel1 = { id: 'model-1' };
       const mockModel2 = { id: 'model-2' };
-      
+
       (SurveyModelManager.create as jest.Mock)
         .mockReturnValueOnce(mockModel1)
         .mockReturnValueOnce(mockModel2);
@@ -178,7 +168,9 @@ describe('useSurveyModelFixed', () => {
 
       rerender({ json: updatedJson });
 
-      expect(SurveyModelManager.dispose).toHaveBeenCalledWith(expect.any(String));
+      expect(SurveyModelManager.dispose).toHaveBeenCalledWith(
+        expect.any(String)
+      );
       expect(SurveyModelManager.create).toHaveBeenCalledWith(
         expect.any(String),
         updatedJson
@@ -265,12 +257,9 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'test-model' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { rerender } = renderHook(
-        ({ json }) => useSurveyModelFixed(json),
-        {
-          initialProps: { json: mockSurveyJson },
-        }
-      );
+      const { rerender } = renderHook(({ json }) => useSurveyModelFixed(json), {
+        initialProps: { json: mockSurveyJson },
+      });
 
       // Re-render with the same JSON
       rerender({ json: mockSurveyJson });
@@ -283,9 +272,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'cleanup-test' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { unmount } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { unmount } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       expect(SurveyModelManager.create).toHaveBeenCalledWith(
         expect.any(String),
@@ -294,7 +281,9 @@ describe('useSurveyModelFixed', () => {
 
       unmount();
 
-      expect(SurveyModelManager.dispose).toHaveBeenCalledWith(expect.any(String));
+      expect(SurveyModelManager.dispose).toHaveBeenCalledWith(
+        expect.any(String)
+      );
     });
   });
 
@@ -303,9 +292,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'test-model' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { result } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { result } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       expect(typeof result.current.refresh).toBe('function');
 
@@ -344,9 +331,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'integration-test' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { unmount } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { unmount } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       expect(SurveyModelManager.create).toHaveBeenCalledWith(
         expect.any(String),
@@ -356,7 +341,9 @@ describe('useSurveyModelFixed', () => {
 
       unmount();
 
-      expect(SurveyModelManager.dispose).toHaveBeenCalledWith(expect.any(String));
+      expect(SurveyModelManager.dispose).toHaveBeenCalledWith(
+        expect.any(String)
+      );
       expect(SurveyModelManager.dispose).toHaveBeenCalledTimes(1);
     });
 
@@ -378,9 +365,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'pattern-test' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { result } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { result } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       // The hook should work and return the expected interface
       expect(result.current).toEqual({
@@ -395,9 +380,7 @@ describe('useSurveyModelFixed', () => {
       const mockModel = { id: 'state-test' };
       (SurveyModelManager.create as jest.Mock).mockReturnValue(mockModel);
 
-      const { result } = renderHook(() =>
-        useSurveyModelFixed(mockSurveyJson)
-      );
+      const { result } = renderHook(() => useSurveyModelFixed(mockSurveyJson));
 
       // Initial state should be correct
       expect(result.current.isLoading).toBe(false);

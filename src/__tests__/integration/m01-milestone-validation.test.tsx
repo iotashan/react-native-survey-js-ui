@@ -1,9 +1,9 @@
 /**
  * M01 Milestone Integration Tests
- * 
+ *
  * Comprehensive integration test suite that validates all M01 milestone requirements
  * are met and the react-native-survey-js-ui library is ready for production use.
- * 
+ *
  * This test suite follows TDD principles and ensures >90% code coverage while
  * validating end-to-end functionality.
  */
@@ -34,7 +34,7 @@ describe('M01 Milestone Integration Tests', () => {
       // Test library structure and exports
       expect(Survey).toBeDefined();
       expect(typeof Survey).toBe('function');
-      
+
       // Verify main library export exists and is React component
       const surveyModel = createMockSurveyModel({
         pages: [
@@ -44,11 +44,11 @@ describe('M01 Milestone Integration Tests', () => {
               {
                 type: 'text',
                 name: 'question1',
-                title: 'What is your name?'
-              }
-            ]
-          }
-        ]
+                title: 'What is your name?',
+              },
+            ],
+          },
+        ],
       });
 
       const { getByTestId } = render(<Survey model={surveyModel} />);
@@ -60,12 +60,12 @@ describe('M01 Milestone Integration Tests', () => {
       expect(Survey).toBeDefined();
       expect(useSurveyModel).toBeDefined();
       expect(useSurveyState).toBeDefined();
-      
+
       // Test exports are the correct types
       expect(typeof Survey).toBe('function');
       expect(typeof useSurveyModel).toBe('function');
       expect(typeof useSurveyState).toBe('function');
-      
+
       // Test basic Survey component can be imported and used
       const surveyModel = createMockSurveyModel();
       expect(() => {
@@ -79,7 +79,7 @@ describe('M01 Milestone Integration Tests', () => {
       expect(createMockSurveyModel).toBeDefined();
       expect(mockEventSystem).toBeDefined();
       expect(mockEventSystem.clearAll).toBeDefined();
-      
+
       // Test that mocking works correctly
       const mockModel = createMockSurveyModel();
       expect(mockModel).toBeDefined();
@@ -95,15 +95,15 @@ describe('M01 Milestone Integration Tests', () => {
               {
                 type: 'text',
                 name: 'name',
-                title: 'Enter your name'
-              }
-            ]
-          }
-        ]
+                title: 'Enter your name',
+              },
+            ],
+          },
+        ],
       });
 
       const { getByTestId } = render(<Survey model={surveyModel} />);
-      
+
       // Verify core survey structure
       expect(getByTestId('survey-container')).toBeDefined();
       expect(getByTestId('survey-page-0')).toBeDefined();
@@ -119,18 +119,18 @@ describe('M01 Milestone Integration Tests', () => {
                 type: 'text',
                 name: 'email',
                 title: 'Enter your email',
-                isRequired: true
-              }
-            ]
-          }
-        ]
+                isRequired: true,
+              },
+            ],
+          },
+        ],
       });
 
       const { getByTestId } = render(<Survey model={surveyModel} />);
-      
+
       // Verify survey-core integration
       expect(getByTestId('survey-container')).toBeDefined();
-      
+
       // Test that survey model properties are accessible
       await waitFor(() => {
         expect(getByTestId('survey-page-0')).toBeDefined();
@@ -144,7 +144,7 @@ describe('M01 Milestone Integration Tests', () => {
       expect(Survey).toBeDefined();
       expect(useSurveyModel).toBeDefined();
       expect(useSurveyState).toBeDefined();
-      
+
       // Verify exports are the correct types
       expect(typeof Survey).toBe('function');
       expect(typeof useSurveyModel).toBe('function');
@@ -160,37 +160,37 @@ describe('M01 Milestone Integration Tests', () => {
               {
                 type: 'text',
                 name: 'question1',
-                title: 'Test question'
-              }
-            ]
-          }
-        ]
+                title: 'Test question',
+              },
+            ],
+          },
+        ],
       });
 
       const { getByTestId } = render(<Survey model={surveyModel} />);
-      
+
       // Test that component hierarchy is correctly structured
       const container = getByTestId('survey-container');
       expect(container).toBeDefined();
-      
+
       const page = getByTestId('survey-page-0');
       expect(page).toBeDefined();
     });
 
     test('Event system foundation working', () => {
       const surveyModel = createMockSurveyModel();
-      
+
       // Test event system is available and functional
       expect(mockEventSystem).toBeDefined();
       expect(mockEventSystem.on).toBeDefined();
       expect(mockEventSystem.off).toBeDefined();
       expect(mockEventSystem.fireEvent).toBeDefined();
-      
+
       // Test event registration works
       const mockHandler = jest.fn();
       mockEventSystem.on('test-event', mockHandler);
       mockEventSystem.fireEvent('test-event', null, { data: 'test' });
-      
+
       expect(mockHandler).toHaveBeenCalledWith(null, { data: 'test' });
     });
   });
@@ -200,7 +200,7 @@ describe('M01 Milestone Integration Tests', () => {
       // Test that hooks are properly exported and can be used
       expect(useSurveyModel).toBeDefined();
       expect(useSurveyState).toBeDefined();
-      
+
       // Test that Survey component can work with mock model directly
       const surveyModel = createMockSurveyModel({
         pages: [
@@ -210,11 +210,11 @@ describe('M01 Milestone Integration Tests', () => {
               {
                 type: 'text',
                 name: 'name',
-                title: 'What is your name?'
-              }
-            ]
-          }
-        ]
+                title: 'What is your name?',
+              },
+            ],
+          },
+        ],
       });
 
       // Test that Survey can render without throwing
@@ -226,16 +226,16 @@ describe('M01 Milestone Integration Tests', () => {
     test('TypeScript integration and type safety', () => {
       // Test TypeScript types are working correctly
       const surveyModel: SurveyModel = createMockSurveyModel();
-      
+
       // Test that the model is properly typed
       expect(surveyModel).toBeDefined();
       expect(typeof surveyModel).toBe('object');
-      
+
       // Test that Survey component accepts the typed model
       expect(() => {
         render(<Survey model={surveyModel} />);
       }).not.toThrow();
-      
+
       // This demonstrates TypeScript integration is working
       // since this code compiles without errors
     });
@@ -251,26 +251,26 @@ describe('M01 Milestone Integration Tests', () => {
               {
                 type: 'text',
                 name: 'platform_test',
-                title: 'Platform compatibility test'
-              }
-            ]
-          }
-        ]
+                title: 'Platform compatibility test',
+              },
+            ],
+          },
+        ],
       });
 
       // Test that Survey component renders without platform-specific issues
       const { getByTestId } = render(<Survey model={surveyModel} />);
-      
+
       expect(getByTestId('survey-container')).toBeDefined();
       expect(getByTestId('survey-page-0')).toBeDefined();
-      
+
       // Should render successfully on any React Native platform
     });
 
     test('Survey-core polyfills working for React Native environment', () => {
       // Test that survey-core integration works in React Native
       const surveyModel = createMockSurveyModel();
-      
+
       // Should not throw errors related to browser APIs
       expect(() => {
         render(<Survey model={surveyModel} />);
@@ -292,7 +292,7 @@ describe('M01 Milestone Integration Tests', () => {
 
     test('Handles empty survey gracefully', () => {
       const emptySurveyModel = createMockSurveyModel({
-        pages: []
+        pages: [],
       });
 
       expect(() => {
@@ -308,11 +308,11 @@ describe('M01 Milestone Integration Tests', () => {
             elements: [
               {
                 type: 'invalid_type' as any,
-                name: 'invalid_question'
-              }
-            ]
-          }
-        ]
+                name: 'invalid_question',
+              },
+            ],
+          },
+        ],
       });
 
       expect(() => {
@@ -324,7 +324,7 @@ describe('M01 Milestone Integration Tests', () => {
   describe('Performance Validation', () => {
     test('Survey renders efficiently with reasonable performance', async () => {
       const startTime = Date.now();
-      
+
       const surveyModel = createMockSurveyModel({
         pages: [
           {
@@ -332,20 +332,20 @@ describe('M01 Milestone Integration Tests', () => {
             elements: Array.from({ length: 10 }, (_, i) => ({
               type: 'text',
               name: `question_${i}`,
-              title: `Question ${i + 1}`
-            }))
-          }
-        ]
+              title: `Question ${i + 1}`,
+            })),
+          },
+        ],
       });
 
       const { getByTestId } = render(<Survey model={surveyModel} />);
-      
+
       await waitFor(() => {
         expect(getByTestId('survey-container')).toBeDefined();
       });
-      
+
       const renderTime = Date.now() - startTime;
-      
+
       // Should render within reasonable time (less than 1 second for test environment)
       expect(renderTime).toBeLessThan(1000);
     });
@@ -358,9 +358,9 @@ describe('M01 Milestone Integration Tests', () => {
           elements: Array.from({ length: 20 }, (_, questionIndex) => ({
             type: 'text',
             name: `question_${pageIndex}_${questionIndex}`,
-            title: `Page ${pageIndex + 1} Question ${questionIndex + 1}`
-          }))
-        }))
+            title: `Page ${pageIndex + 1} Question ${questionIndex + 1}`,
+          })),
+        })),
       });
 
       expect(() => {

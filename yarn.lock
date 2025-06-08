@@ -5821,6 +5821,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"conventional-changelog-cli@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "conventional-changelog-cli@npm:5.0.0"
+  dependencies:
+    add-stream: ^1.0.0
+    conventional-changelog: ^6.0.0
+    meow: ^13.0.0
+    tempfile: ^5.0.0
+  bin:
+    conventional-changelog: cli.js
+  checksum: 9be15470c292b3742ae86491f3f72c63ff3018229c5ea971517007e9a724d293dd9344913be0efc6fb4466162c81dae8aa2b68b54709ad04fb5944f33dd9eb2d
+  languageName: node
+  linkType: hard
+
 "conventional-changelog-codemirror@npm:^5.0.0":
   version: 5.0.0
   resolution: "conventional-changelog-codemirror@npm:5.0.0"
@@ -12960,6 +12974,7 @@ __metadata:
     "@types/js-yaml": ^4.0.9
     "@types/react": ^18.3.12
     commitlint: ^19.6.1
+    conventional-changelog-cli: ^5.0.0
     del-cli: ^5.1.0
     eslint: ^9.22.0
     eslint-config-prettier: ^10.1.1
@@ -14655,12 +14670,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"temp-dir@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "temp-dir@npm:3.0.0"
+  checksum: 577211e995d1d584dd60f1469351d45e8a5b4524e4a9e42d3bdd12cfde1d0bb8f5898311bef24e02aaafb69514c1feb58c7b4c33dcec7129da3b0861a4ca935b
+  languageName: node
+  linkType: hard
+
 "temp@npm:^0.8.4":
   version: 0.8.4
   resolution: "temp@npm:0.8.4"
   dependencies:
     rimraf: ~2.6.2
   checksum: f35bed78565355dfdf95f730b7b489728bd6b7e35071bcc6497af7c827fb6c111fbe9063afc7b8cbc19522a072c278679f9a0ee81e684aa2c8617cc0f2e9c191
+  languageName: node
+  linkType: hard
+
+"tempfile@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "tempfile@npm:5.0.0"
+  dependencies:
+    temp-dir: ^3.0.0
+  checksum: c1c1a2c0944aade54b28c7b1d4c07b9d527c5a8d7d67c3a9faa39a34b31569d1c4992ac36c35f5379114e11f30efd654458cec9edaaa21dad73ac374c9b4c655
   languageName: node
   linkType: hard
 

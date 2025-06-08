@@ -41,16 +41,18 @@ describe('TabNavigator', () => {
       '../../src/navigation/TabNavigator.tsx'
     );
     const componentSource = fs.readFileSync(componentPath, 'utf8');
-    
+
     // Check for Ionicons import
-    expect(componentSource).toMatch(/import.*Ionicons.*from.*@expo\/vector-icons/);
-    
+    expect(componentSource).toMatch(
+      /import.*Ionicons.*from.*@expo\/vector-icons/
+    );
+
     // Check for tabBarIcon configuration in Survey Demo
     expect(componentSource).toContain('clipboard-outline');
-    
+
     // Check for tabBarIcon configuration in Explore
     expect(componentSource).toContain('grid-outline');
-    
+
     // Check for proper tabBarIcon function signature
     expect(componentSource).toContain('tabBarIcon: ({ color, size })');
   });
@@ -63,7 +65,7 @@ describe('TabNavigator', () => {
       '../../src/navigation/TabNavigator.tsx'
     );
     const componentSource = fs.readFileSync(componentPath, 'utf8');
-    
+
     // Check for proper active/inactive colors
     expect(componentSource).toMatch(/#007AFF/); // Active color
     expect(componentSource).toMatch(/#8E8E93/); // Inactive color

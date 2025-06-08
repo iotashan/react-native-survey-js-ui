@@ -4,6 +4,5 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import App from '../../src/App';
 
-
 // Mock the survey library
 jest.mock('react-native-survey-js-ui');

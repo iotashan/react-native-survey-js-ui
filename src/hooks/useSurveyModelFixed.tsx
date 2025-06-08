@@ -44,15 +44,15 @@ export function useSurveyModelFixed(
   const modelState = React.useState<Model | null>(null);
   const model = modelState[0];
   const setModel = modelState[1];
-  
+
   const loadingState = React.useState(true);
   const isLoading = loadingState[0];
   const setIsLoading = loadingState[1];
-  
+
   const errorState = React.useState<Error | null>(null);
   const error = errorState[0];
   const setError = errorState[1];
-  
+
   const modelIdRef = React.useRef(options.modelId || generateModelId());
   const jsonRef = React.useRef(json);
 

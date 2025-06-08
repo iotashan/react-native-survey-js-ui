@@ -152,15 +152,23 @@ describe('useSurveyStateFixed', () => {
     it('should unregister event listeners on unmount', () => {
       const { unmount } = renderHook(() => useSurveyStateFixed(mockModel));
 
-      const valueChangedCallback = mockModel.onValueChanged.add.mock.calls[0][0];
-      const pageChangedCallback = mockModel.onCurrentPageChanged.add.mock.calls[0][0];
+      const valueChangedCallback =
+        mockModel.onValueChanged.add.mock.calls[0][0];
+      const pageChangedCallback =
+        mockModel.onCurrentPageChanged.add.mock.calls[0][0];
       const completeCallback = mockModel.onComplete.add.mock.calls[0][0];
 
       unmount();
 
-      expect(mockModel.onValueChanged.remove).toHaveBeenCalledWith(valueChangedCallback);
-      expect(mockModel.onCurrentPageChanged.remove).toHaveBeenCalledWith(pageChangedCallback);
-      expect(mockModel.onComplete.remove).toHaveBeenCalledWith(completeCallback);
+      expect(mockModel.onValueChanged.remove).toHaveBeenCalledWith(
+        valueChangedCallback
+      );
+      expect(mockModel.onCurrentPageChanged.remove).toHaveBeenCalledWith(
+        pageChangedCallback
+      );
+      expect(mockModel.onComplete.remove).toHaveBeenCalledWith(
+        completeCallback
+      );
     });
 
     it('should update state on value changed event', () => {
@@ -261,8 +269,10 @@ describe('useSurveyStateFixed', () => {
         }
       );
 
-      const valueChangedCallback = mockModel.onValueChanged.add.mock.calls[0][0];
-      const pageChangedCallback = mockModel.onCurrentPageChanged.add.mock.calls[0][0];
+      const valueChangedCallback =
+        mockModel.onValueChanged.add.mock.calls[0][0];
+      const pageChangedCallback =
+        mockModel.onCurrentPageChanged.add.mock.calls[0][0];
       const completeCallback = mockModel.onComplete.add.mock.calls[0][0];
 
       const newMockModel = {
@@ -284,9 +294,15 @@ describe('useSurveyStateFixed', () => {
 
       rerender({ model: newMockModel });
 
-      expect(mockModel.onValueChanged.remove).toHaveBeenCalledWith(valueChangedCallback);
-      expect(mockModel.onCurrentPageChanged.remove).toHaveBeenCalledWith(pageChangedCallback);
-      expect(mockModel.onComplete.remove).toHaveBeenCalledWith(completeCallback);
+      expect(mockModel.onValueChanged.remove).toHaveBeenCalledWith(
+        valueChangedCallback
+      );
+      expect(mockModel.onCurrentPageChanged.remove).toHaveBeenCalledWith(
+        pageChangedCallback
+      );
+      expect(mockModel.onComplete.remove).toHaveBeenCalledWith(
+        completeCallback
+      );
     });
   });
 
@@ -326,9 +342,7 @@ describe('useSurveyStateFixed', () => {
       expect(() => {
         act(() => {
           // Send malformed event data
-          valueChangedCallbacks.forEach((cb) =>
-            cb(mockModel, null)
-          );
+          valueChangedCallbacks.forEach((cb) => cb(mockModel, null));
         });
       }).not.toThrow();
 
@@ -401,8 +415,12 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should handle multiple hook instances with the same model', () => {
-      const { unmount: unmount1 } = renderHook(() => useSurveyStateFixed(mockModel));
-      const { unmount: unmount2 } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { unmount: unmount1 } = renderHook(() =>
+        useSurveyStateFixed(mockModel)
+      );
+      const { unmount: unmount2 } = renderHook(() =>
+        useSurveyStateFixed(mockModel)
+      );
 
       // Both hooks should register listeners
       expect(valueChangedCallbacks.length).toBe(2);
@@ -421,7 +439,9 @@ describe('useSurveyStateFixed', () => {
 
   describe('State Consistency and Synchronization', () => {
     it('should maintain state consistency across re-renders', () => {
-      const { result, rerender } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result, rerender } = renderHook(() =>
+        useSurveyStateFixed(mockModel)
+      );
 
       const initialState = result.current;
 
@@ -472,7 +492,7 @@ describe('useSurveyStateFixed', () => {
 
     it('should handle React render cycles correctly', () => {
       let renderCount = 0;
-      
+
       const { result, rerender } = renderHook(() => {
         renderCount++;
         return useSurveyStateFixed(mockModel);

@@ -34,7 +34,7 @@ describe('CI Workflow Configuration', () => {
 
     const testJob = workflow.jobs['test-library'];
     expect(testJob).toBeDefined();
-    
+
     // Verify required steps exist
     const stepNames = testJob.steps.map((step: any) => step.name);
     expect(stepNames).toContain('Checkout code');
@@ -51,7 +51,7 @@ describe('CI Workflow Configuration', () => {
 
     const exampleJob = workflow.jobs['test-example'];
     expect(exampleJob).toBeDefined();
-    
+
     // Verify example app test steps
     const stepNames = exampleJob.steps.map((step: any) => step.name);
     expect(stepNames).toContain('Run example app tests');
@@ -63,7 +63,7 @@ describe('CI Workflow Configuration', () => {
 
     const buildJob = workflow.jobs['build-library'];
     expect(buildJob).toBeDefined();
-    
+
     // Verify build steps
     const stepNames = buildJob.steps.map((step: any) => step.name);
     expect(stepNames).toContain('Build library');
@@ -76,8 +76,9 @@ describe('CI Workflow Configuration', () => {
 
     // Check that at least one job uses caching via setup action
     const testJob = workflow.jobs['test-library'];
-    const setupStep = testJob.steps.find((step: any) => 
-      step.uses?.includes('.github/actions/setup') || step.name === 'Setup'
+    const setupStep = testJob.steps.find(
+      (step: any) =>
+        step.uses?.includes('.github/actions/setup') || step.name === 'Setup'
     );
     expect(setupStep).toBeDefined();
   });
@@ -87,8 +88,8 @@ describe('CI Workflow Configuration', () => {
     const workflow = yaml.load(workflowContent) as any;
 
     // Check that jobs have timeout settings
-    const jobsWithTimeout = Object.values(workflow.jobs).filter((job: any) => 
-      job['timeout-minutes'] !== undefined
+    const jobsWithTimeout = Object.values(workflow.jobs).filter(
+      (job: any) => job['timeout-minutes'] !== undefined
     );
     expect(jobsWithTimeout.length).toBeGreaterThan(0);
     jobsWithTimeout.forEach((job: any) => {
@@ -102,7 +103,7 @@ describe('CI Workflow Configuration', () => {
 
     // Check for artifact upload in test job
     const testJob = workflow.jobs['test-library'];
-    const artifactStep = testJob.steps.find((step: any) => 
+    const artifactStep = testJob.steps.find((step: any) =>
       step.uses?.includes('actions/upload-artifact')
     );
     expect(artifactStep).toBeDefined();

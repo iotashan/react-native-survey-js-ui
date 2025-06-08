@@ -9,11 +9,13 @@ export interface SimpleSurveyProps {
 export class SimpleSurvey extends React.Component<SimpleSurveyProps> {
   override render() {
     const { model } = this.props;
-    
+
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Simple Survey Component (No Hooks)</Text>
-        <Text style={styles.debug}>React version: {React.version || 'undefined'}</Text>
+        <Text style={styles.debug}>
+          React version: {React.version || 'undefined'}
+        </Text>
         <Text style={styles.debug}>Model type: {typeof model}</Text>
         <Text style={styles.debug}>Component rendered successfully!</Text>
         {model && model.title && (

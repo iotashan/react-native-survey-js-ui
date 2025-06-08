@@ -16,5 +16,3 @@ import SurveyDemoScreen from '../../src/screens/SurveyDemoScreen';
 
 // Mock the survey library
 jest.mock('react-native-survey-js-ui');
-
-

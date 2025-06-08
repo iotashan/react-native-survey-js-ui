@@ -53,7 +53,7 @@ describe('Platform Utilities', () => {
   describe('Platform-specific describe blocks', () => {
     const mockDescribe = jest.fn();
     const mockDescribeSkip = jest.fn();
-    
+
     beforeAll(() => {
       (global as any).describe = mockDescribe;
       (global as any).describe.skip = mockDescribeSkip;
@@ -68,7 +68,7 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'ios';
       const testFn = jest.fn();
       describeIOS('iOS test', testFn);
-      
+
       expect(mockDescribe).toHaveBeenCalledWith('[iOS] iOS test', testFn);
       expect(mockDescribeSkip).not.toHaveBeenCalled();
     });
@@ -77,7 +77,7 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'android';
       const testFn = jest.fn();
       describeIOS('iOS test', testFn);
-      
+
       expect(mockDescribe).not.toHaveBeenCalled();
       expect(mockDescribeSkip).toHaveBeenCalledWith('[iOS] iOS test', testFn);
     });
@@ -86,8 +86,11 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'android';
       const testFn = jest.fn();
       describeAndroid('Android test', testFn);
-      
-      expect(mockDescribe).toHaveBeenCalledWith('[Android] Android test', testFn);
+
+      expect(mockDescribe).toHaveBeenCalledWith(
+        '[Android] Android test',
+        testFn
+      );
       expect(mockDescribeSkip).not.toHaveBeenCalled();
     });
 
@@ -95,23 +98,29 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'ios';
       const testFn = jest.fn();
       describeAndroid('Android test', testFn);
-      
+
       expect(mockDescribe).not.toHaveBeenCalled();
-      expect(mockDescribeSkip).toHaveBeenCalledWith('[Android] Android test', testFn);
+      expect(mockDescribeSkip).toHaveBeenCalledWith(
+        '[Android] Android test',
+        testFn
+      );
     });
 
     it('should always run cross-platform describe blocks', () => {
       const testFn = jest.fn();
       describeCrossPlatform('Cross-platform test', testFn);
-      
-      expect(mockDescribe).toHaveBeenCalledWith('[Cross-Platform] Cross-platform test', testFn);
+
+      expect(mockDescribe).toHaveBeenCalledWith(
+        '[Cross-Platform] Cross-platform test',
+        testFn
+      );
     });
   });
 
   describe('Platform-specific test blocks', () => {
     const mockTest = jest.fn();
     const mockTestSkip = jest.fn();
-    
+
     beforeAll(() => {
       (global as any).test = mockTest;
       (global as any).test.skip = mockTestSkip;
@@ -126,7 +135,7 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'ios';
       const testFn = jest.fn();
       testIOS('iOS specific test', testFn);
-      
+
       expect(mockTest).toHaveBeenCalledWith('[iOS] iOS specific test', testFn);
       expect(mockTestSkip).not.toHaveBeenCalled();
     });
@@ -135,17 +144,23 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'android';
       const testFn = jest.fn();
       testIOS('iOS specific test', testFn);
-      
+
       expect(mockTest).not.toHaveBeenCalled();
-      expect(mockTestSkip).toHaveBeenCalledWith('[iOS] iOS specific test', testFn);
+      expect(mockTestSkip).toHaveBeenCalledWith(
+        '[iOS] iOS specific test',
+        testFn
+      );
     });
 
     it('should run Android test on Android platform', () => {
       (Platform as any).OS = 'android';
       const testFn = jest.fn();
       testAndroid('Android specific test', testFn);
-      
-      expect(mockTest).toHaveBeenCalledWith('[Android] Android specific test', testFn);
+
+      expect(mockTest).toHaveBeenCalledWith(
+        '[Android] Android specific test',
+        testFn
+      );
       expect(mockTestSkip).not.toHaveBeenCalled();
     });
 
@@ -153,9 +168,12 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'ios';
       const testFn = jest.fn();
       testAndroid('Android specific test', testFn);
-      
+
       expect(mockTest).not.toHaveBeenCalled();
-      expect(mockTestSkip).toHaveBeenCalledWith('[Android] Android specific test', testFn);
+      expect(mockTestSkip).toHaveBeenCalledWith(
+        '[Android] Android specific test',
+        testFn
+      );
     });
   });
 
@@ -164,7 +182,7 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'ios';
       const iosData = { value: 'iOS' };
       const androidData = { value: 'Android' };
-      
+
       expect(getPlatformTestData(iosData, androidData)).toBe(iosData);
     });
 
@@ -172,7 +190,7 @@ describe('Platform Utilities', () => {
       (Platform as any).OS = 'android';
       const iosData = { value: 'iOS' };
       const androidData = { value: 'Android' };
-      
+
       expect(getPlatformTestData(iosData, androidData)).toBe(androidData);
     });
   });
@@ -180,7 +198,7 @@ describe('Platform Utilities', () => {
   describe('Platform-specific timeouts', () => {
     it('should return iOS timeouts on iOS platform', () => {
       (Platform as any).OS = 'ios';
-      
+
       expect(getPlatformTimeout('short')).toBe(PLATFORM_TIMEOUTS.ios.short);
       expect(getPlatformTimeout('medium')).toBe(PLATFORM_TIMEOUTS.ios.medium);
       expect(getPlatformTimeout('long')).toBe(PLATFORM_TIMEOUTS.ios.long);
@@ -188,9 +206,11 @@ describe('Platform Utilities', () => {
 
     it('should return Android timeouts on Android platform', () => {
       (Platform as any).OS = 'android';
-      
+
       expect(getPlatformTimeout('short')).toBe(PLATFORM_TIMEOUTS.android.short);
-      expect(getPlatformTimeout('medium')).toBe(PLATFORM_TIMEOUTS.android.medium);
+      expect(getPlatformTimeout('medium')).toBe(
+        PLATFORM_TIMEOUTS.android.medium
+      );
       expect(getPlatformTimeout('long')).toBe(PLATFORM_TIMEOUTS.android.long);
     });
   });
@@ -203,7 +223,7 @@ describe('Platform Utilities', () => {
     it('should set up iOS-specific mocks on iOS platform', () => {
       (Platform as any).OS = 'ios';
       setupPlatformMocks();
-      
+
       // Verify iOS mocks are set
       const settingsMock = require('react-native/Libraries/Settings/Settings');
       expect(settingsMock.get).toBeDefined();
@@ -213,7 +233,7 @@ describe('Platform Utilities', () => {
     it('should set up Android-specific mocks on Android platform', () => {
       (Platform as any).OS = 'android';
       setupPlatformMocks();
-      
+
       // Verify Android mocks are set
       const permissionsMock = require('react-native/Libraries/PermissionsAndroid/PermissionsAndroid');
       expect(permissionsMock.request).toBeDefined();

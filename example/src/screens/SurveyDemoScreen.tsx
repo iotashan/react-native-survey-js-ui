@@ -73,182 +73,182 @@ export default function SurveyDemoScreen() {
   return (
     <SafeAreaView style={styles.container} testID="survey-demo-screen">
       <ScrollView style={styles.scrollContainer}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Survey Demo</Text>
-        <Text style={styles.subtitle}>
-          Demonstration of react-native-survey-js-ui library
-        </Text>
-      </View>
-
-      {/* Example Selector */}
-      <View style={styles.selectorContainer}>
-        <Text style={styles.sectionTitle}>Current Example:</Text>
-        <TouchableOpacity
-          style={styles.selectorButton}
-          onPress={() => setShowExampleSelector(true)}
-          testID="example-selector-button"
-        >
-          <View>
-            <Text style={styles.exampleTitle}>{selectedExample.title}</Text>
-            <Text style={styles.exampleDescription}>
-              {selectedExample.description}
-            </Text>
-          </View>
-          <Text style={styles.chevron}>▼</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Validation Status */}
-      <View
-        style={[
-          styles.status,
-          { backgroundColor: isValid ? '#e8f5e8' : '#ffebee' },
-        ]}
-      >
-        <Text
-          style={[
-            styles.statusText,
-            { color: isValid ? '#2e7d32' : '#d32f2f' },
-          ]}
-        >
-          Survey model valid: {isValid ? 'Yes ✓' : 'No ✗'}
-        </Text>
-        {!isValid && (
-          <Text style={styles.errorText}>
-            This example demonstrates error handling for invalid models
+        <View style={styles.header}>
+          <Text style={styles.title}>Survey Demo</Text>
+          <Text style={styles.subtitle}>
+            Demonstration of react-native-survey-js-ui library
           </Text>
-        )}
-      </View>
+        </View>
 
-      {/* Action Buttons */}
-      <View style={styles.actionButtons}>
-        <TouchableOpacity
-          style={[styles.actionButton, styles.codeButton]}
-          onPress={() => setShowCode(!showCode)}
-          testID="show-code-button"
-        >
-          <Text style={styles.actionButtonText}>
-            {showCode ? 'Hide' : 'Show'} JSON Model
-          </Text>
-        </TouchableOpacity>
-        {showResults && (
+        {/* Example Selector */}
+        <View style={styles.selectorContainer}>
+          <Text style={styles.sectionTitle}>Current Example:</Text>
           <TouchableOpacity
-            style={[styles.actionButton, styles.resetButton]}
-            onPress={resetSurvey}
-            testID="reset-survey-button"
+            style={styles.selectorButton}
+            onPress={() => setShowExampleSelector(true)}
+            testID="example-selector-button"
           >
-            <Text style={styles.actionButtonText}>Reset Survey</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-
-      {/* Code Display */}
-      {showCode && (
-        <View style={styles.codeContainer}>
-          <Text style={styles.codeTitle}>Survey JSON Model:</Text>
-          <ScrollView
-            horizontal
-            style={styles.codeScrollView}
-            showsHorizontalScrollIndicator={true}
-          >
-            <Text style={styles.codeText}>
-              {JSON.stringify(selectedExample.model, null, 2)}
-            </Text>
-          </ScrollView>
-        </View>
-      )}
-
-      {/* Event Logs Section */}
-      {eventLogs.length > 0 && (
-        <View style={styles.eventLogsContainer}>
-          <Text style={styles.eventLogsTitle}>Event Logs (Live Demo)</Text>
-          <ScrollView
-            style={styles.eventLogsScrollView}
-            showsVerticalScrollIndicator={true}
-          >
-            {eventLogs.map((log, index) => (
-              <Text key={index} style={styles.eventLogText}>
-                {log}
-              </Text>
-            ))}
-          </ScrollView>
-        </View>
-      )}
-
-      {/* Survey or Results */}
-      {showResults ? (
-        <View style={styles.resultsContainer}>
-          <Text style={styles.resultsTitle}>Survey Completed!</Text>
-          <Text style={styles.resultsSubtitle}>Submission Data:</Text>
-          <ScrollView
-            style={styles.resultsScrollView}
-            showsVerticalScrollIndicator={true}
-          >
-            <Text style={styles.resultsText}>
-              {JSON.stringify(surveyResults, null, 2)}
-            </Text>
-          </ScrollView>
-        </View>
-      ) : (
-        <View style={styles.surveyContainer}>
-          {isValid ? (
-            <Survey
-              key={selectedExample.id}
-              model={selectedExample.model}
-              onComplete={handleSurveyComplete}
-              onValueChanged={handleValueChanged}
-              onCurrentPageChanged={handleCurrentPageChanged}
-            />
-          ) : (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorTitle}>Invalid Survey Model</Text>
-              <Text style={styles.errorDescription}>
-                The survey model is invalid and cannot be rendered. This
-                demonstrates the library's error handling capabilities.
+            <View>
+              <Text style={styles.exampleTitle}>{selectedExample.title}</Text>
+              <Text style={styles.exampleDescription}>
+                {selectedExample.description}
               </Text>
             </View>
+            <Text style={styles.chevron}>▼</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Validation Status */}
+        <View
+          style={[
+            styles.status,
+            { backgroundColor: isValid ? '#e8f5e8' : '#ffebee' },
+          ]}
+        >
+          <Text
+            style={[
+              styles.statusText,
+              { color: isValid ? '#2e7d32' : '#d32f2f' },
+            ]}
+          >
+            Survey model valid: {isValid ? 'Yes ✓' : 'No ✗'}
+          </Text>
+          {!isValid && (
+            <Text style={styles.errorText}>
+              This example demonstrates error handling for invalid models
+            </Text>
           )}
         </View>
-      )}
 
-      {/* Example Selector Modal */}
-      <Modal
-        visible={showExampleSelector}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setShowExampleSelector(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Survey Example</Text>
-            <ScrollView style={styles.exampleList}>
-              {surveyExamples.map((example) => (
-                <TouchableOpacity
-                  key={example.id}
-                  style={[
-                    styles.exampleItem,
-                    selectedExample.id === example.id &&
-                      styles.selectedExampleItem,
-                  ]}
-                  onPress={() => handleExampleSelect(example)}
-                  testID={`example-${example.id}`}
-                >
-                  <Text style={styles.exampleItemTitle}>{example.title}</Text>
-                  <Text style={styles.exampleItemDescription}>
-                    {example.description}
-                  </Text>
-                </TouchableOpacity>
+        {/* Action Buttons */}
+        <View style={styles.actionButtons}>
+          <TouchableOpacity
+            style={[styles.actionButton, styles.codeButton]}
+            onPress={() => setShowCode(!showCode)}
+            testID="show-code-button"
+          >
+            <Text style={styles.actionButtonText}>
+              {showCode ? 'Hide' : 'Show'} JSON Model
+            </Text>
+          </TouchableOpacity>
+          {showResults && (
+            <TouchableOpacity
+              style={[styles.actionButton, styles.resetButton]}
+              onPress={resetSurvey}
+              testID="reset-survey-button"
+            >
+              <Text style={styles.actionButtonText}>Reset Survey</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Code Display */}
+        {showCode && (
+          <View style={styles.codeContainer}>
+            <Text style={styles.codeTitle}>Survey JSON Model:</Text>
+            <ScrollView
+              horizontal
+              style={styles.codeScrollView}
+              showsHorizontalScrollIndicator={true}
+            >
+              <Text style={styles.codeText}>
+                {JSON.stringify(selectedExample.model, null, 2)}
+              </Text>
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Event Logs Section */}
+        {eventLogs.length > 0 && (
+          <View style={styles.eventLogsContainer}>
+            <Text style={styles.eventLogsTitle}>Event Logs (Live Demo)</Text>
+            <ScrollView
+              style={styles.eventLogsScrollView}
+              showsVerticalScrollIndicator={true}
+            >
+              {eventLogs.map((log, index) => (
+                <Text key={index} style={styles.eventLogText}>
+                  {log}
+                </Text>
               ))}
             </ScrollView>
-            <TouchableOpacity
-              style={styles.modalCloseButton}
-              onPress={() => setShowExampleSelector(false)}
-            >
-              <Text style={styles.modalCloseButtonText}>Cancel</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
+        )}
+
+        {/* Survey or Results */}
+        {showResults ? (
+          <View style={styles.resultsContainer}>
+            <Text style={styles.resultsTitle}>Survey Completed!</Text>
+            <Text style={styles.resultsSubtitle}>Submission Data:</Text>
+            <ScrollView
+              style={styles.resultsScrollView}
+              showsVerticalScrollIndicator={true}
+            >
+              <Text style={styles.resultsText}>
+                {JSON.stringify(surveyResults, null, 2)}
+              </Text>
+            </ScrollView>
+          </View>
+        ) : (
+          <View style={styles.surveyContainer}>
+            {isValid ? (
+              <Survey
+                key={selectedExample.id}
+                model={selectedExample.model}
+                onComplete={handleSurveyComplete}
+                onValueChanged={handleValueChanged}
+                onCurrentPageChanged={handleCurrentPageChanged}
+              />
+            ) : (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorTitle}>Invalid Survey Model</Text>
+                <Text style={styles.errorDescription}>
+                  The survey model is invalid and cannot be rendered. This
+                  demonstrates the library's error handling capabilities.
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* Example Selector Modal */}
+        <Modal
+          visible={showExampleSelector}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowExampleSelector(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Select Survey Example</Text>
+              <ScrollView style={styles.exampleList}>
+                {surveyExamples.map((example) => (
+                  <TouchableOpacity
+                    key={example.id}
+                    style={[
+                      styles.exampleItem,
+                      selectedExample.id === example.id &&
+                        styles.selectedExampleItem,
+                    ]}
+                    onPress={() => handleExampleSelect(example)}
+                    testID={`example-${example.id}`}
+                  >
+                    <Text style={styles.exampleItemTitle}>{example.title}</Text>
+                    <Text style={styles.exampleItemDescription}>
+                      {example.description}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+              <TouchableOpacity
+                style={styles.modalCloseButton}
+                onPress={() => setShowExampleSelector(false)}
+              >
+                <Text style={styles.modalCloseButtonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );

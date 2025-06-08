@@ -1,16 +1,23 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { useSurveyModelFixed, useSurveyStateFixed } from 'react-native-survey-js-ui';
+import {
+  useSurveyModelFixed,
+  useSurveyStateFixed,
+} from 'react-native-survey-js-ui';
 
 export default function TestFixedHooks() {
   const testModel = {
-    pages: [{
-      elements: [{
-        type: "text",
-        name: "name",
-        title: "What is your name?"
-      }]
-    }]
+    pages: [
+      {
+        elements: [
+          {
+            type: 'text',
+            name: 'name',
+            title: 'What is your name?',
+          },
+        ],
+      },
+    ],
   };
 
   try {

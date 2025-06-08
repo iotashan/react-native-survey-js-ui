@@ -7,4 +7,3 @@ import { surveyExamples } from '../../src/data/surveyExamples';
 
 // Mock the survey library
 jest.mock('react-native-survey-js-ui');
-
