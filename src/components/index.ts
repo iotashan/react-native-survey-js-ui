@@ -4,3 +4,5 @@ export { BaseQuestion } from './Questions';
 export type { BaseQuestionProps } from './Questions';
 export { PageNavigation } from './PageNavigation';
 export type { PageNavigationProps } from './PageNavigation';
+export { ProgressIndicator } from './ProgressIndicator';
+export type { ProgressIndicatorProps, ProgressIndicatorMode } from './ProgressIndicator';

@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 import type {
   SurveyModel,
@@ -13,6 +12,9 @@ import type {
 } from '../../types';
 import { useSurveyModel } from '../../hooks';
 import { useSurveyState } from '../../hooks';
+import { usePageNavigation } from '../../hooks';
+import { PageNavigation } from '../PageNavigation';
+import { ProgressIndicator } from '../ProgressIndicator';
 import { SurveyPage } from './SurveyPage';
 
 export interface SurveyProps {
@@ -30,6 +32,7 @@ export const Survey: React.FC<SurveyProps> = ({
 }) => {
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
+  const { navigationState, goToNextPage, goToPreviousPage, completeSurvey } = usePageNavigation(surveyModel);
 
   React.useEffect(() => {
     if (surveyModel && onComplete) {
@@ -118,46 +121,19 @@ export const Survey: React.FC<SurveyProps> = ({
     );
   }
 
-  const handleComplete = () => {
-    if (surveyModel) {
-      // Trigger survey completion
-      surveyModel.doComplete();
-    }
-  };
-
-  const handleNext = () => {
-    if (surveyModel && !surveyState.isLastPage) {
-      surveyModel.nextPage();
-    }
-  };
-
-  const handlePrevious = () => {
-    if (surveyModel && !surveyState.isFirstPage) {
-      surveyModel.prevPage();
-    }
-  };
+  // Navigation is now handled by the usePageNavigation hook
 
   const showProgressBar =
-    surveyModel?.showProgressBar && surveyModel.showProgressBar !== 'off';
-  const progressPercentage =
-    surveyState.pageCount > 0
-      ? ((surveyState.currentPageNo + 1) / surveyState.pageCount) * 100
-      : 0;
+    Boolean(surveyModel?.showProgressBar && surveyModel.showProgressBar !== 'off');
 
   return (
     <View style={styles.container} testID="survey-container">
-      {showProgressBar && (
-        <View style={styles.progressContainer} testID="survey-progress-bar">
-          <View style={styles.progressBar}>
-            <View
-              style={[styles.progressFill, { width: `${progressPercentage}%` }]}
-            />
-          </View>
-          <Text style={styles.progressText}>
-            Page {surveyState.currentPageNo + 1} of {surveyState.pageCount}
-          </Text>
-        </View>
-      )}
+      <ProgressIndicator
+        currentPage={surveyState.currentPageNo}
+        totalPages={surveyState.pageCount}
+        mode="both"
+        visible={showProgressBar}
+      />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {model.title && <Text style={styles.title}>{model.title}</Text>}
@@ -180,51 +156,20 @@ export const Survey: React.FC<SurveyProps> = ({
         )}
       </ScrollView>
 
-      <View style={styles.navigationContainer}>
-        {!surveyState.isCompleted && (
-          <View style={styles.navigationButtons}>
-            <TouchableOpacity
-              style={[
-                styles.navButton,
-                surveyState.isFirstPage && styles.navButtonDisabled,
-              ]}
-              onPress={handlePrevious}
-              disabled={surveyState.isFirstPage}
-              accessibilityState={{ disabled: surveyState.isFirstPage }}
-            >
-              <Text
-                style={[
-                  styles.navButtonText,
-                  surveyState.isFirstPage && styles.navButtonTextDisabled,
-                ]}
-              >
-                Previous
-              </Text>
-            </TouchableOpacity>
+      {!surveyState.isCompleted && (
+        <PageNavigation
+          navigationState={navigationState}
+          onNext={goToNextPage}
+          onPrevious={goToPreviousPage}
+          onComplete={completeSurvey}
+        />
+      )}
 
-            {surveyState.isLastPage ? (
-              <TouchableOpacity
-                style={[styles.navButton, styles.completeButton]}
-                onPress={handleComplete}
-              >
-                <Text style={[styles.navButtonText, styles.completeButtonText]}>
-                  Complete
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity style={styles.navButton} onPress={handleNext}>
-                <Text style={styles.navButtonText}>Next</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-
-        {surveyState.isCompleted && (
-          <View style={styles.completedContainer}>
-            <Text style={styles.completedText}>Survey Completed!</Text>
-          </View>
-        )}
-      </View>
+      {surveyState.isCompleted && (
+        <View style={styles.completedContainer}>
+          <Text style={styles.completedText}>Survey Completed!</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -251,12 +196,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     textAlign: 'center',
   },
-  completeButton: {
-    backgroundColor: '#4CAF50',
-  },
-  completeButtonText: {
-    color: '#fff',
-  },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
@@ -274,57 +213,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
-  },
-  progressContainer: {
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  progressBar: {
-    height: 6,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 3,
-    overflow: 'hidden',
-    marginBottom: 8,
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: '#2196F3',
-  },
-  progressText: {
-    fontSize: 12,
-    color: '#666',
-    textAlign: 'center',
-  },
-  navigationContainer: {
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
-    backgroundColor: '#fff',
-  },
-  navigationButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  navButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    backgroundColor: '#2196F3',
-    borderRadius: 4,
-    minWidth: 100,
-    alignItems: 'center',
-  },
-  navButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  navButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  navButtonTextDisabled: {
-    color: '#999',
   },
   completedContainer: {
     alignItems: 'center',
