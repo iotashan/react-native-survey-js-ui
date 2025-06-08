@@ -2,6 +2,24 @@
 
 Native mobile UI components for SurveyJS Form Library - iOS and Android only, no WebView dependencies
 
+## Version Compatibility
+
+This library includes a custom-built version of survey-core with React Native compatibility fixes. The table below shows which version of survey-core is included with each release:
+
+| react-native-survey-js-ui | survey-core | Release Date | Notes |
+|---------------------------|-------------|--------------|-------|
+| 0.1.0                     | 2.1.1       | 2025-06-07   | Initial release with React Native fixes |
+
+### Survey-Core Compatibility
+
+We maintain our own build of survey-core with the following React Native compatibility fixes:
+- Fixed `window.addEventListener` calls in drag-drop functionality
+- Fixed `document.head` access in settings initialization
+- Added minimal window/document polyfills for React Native environment
+- Ensured proper module resolution for React Native bundlers
+
+**Note**: This library is locked to specific survey-core versions to ensure compatibility. Each release is thoroughly tested with the corresponding survey-core version.
+
 ## Installation
 
 ```sh

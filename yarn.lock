@@ -14591,16 +14591,16 @@ __metadata:
   linkType: hard
 
 "survey-core@file:../survey-core-rn::locator=react-native-survey-js-ui-example%40workspace%3Aexample":
-  version: 1.0.0
-  resolution: "survey-core@file:../survey-core-rn#../survey-core-rn::hash=98de7d&locator=react-native-survey-js-ui-example%40workspace%3Aexample"
-  checksum: f908791b2a3e216790249e90a635445e9282d31d826e98c75c4ce4806ff236079b7de3fb91835843ba7470720508b76d32b22ee6384e4c5a1411ed56b14c65f1
+  version: 2.1.1
+  resolution: "survey-core@file:../survey-core-rn#../survey-core-rn::hash=9b6708&locator=react-native-survey-js-ui-example%40workspace%3Aexample"
+  checksum: a2d16baab3eb3c00d51b96473e3e8f41935c86f65decddc0f6a53a5d7a10a4ba9d6775a0c2f55a045e9583752f5f03cb99afb5c88d12fce74f876f29ed496010
   languageName: node
   linkType: hard
 
 "survey-core@file:./survey-core-rn::locator=react-native-survey-js-ui%40workspace%3A.":
-  version: 1.0.0
-  resolution: "survey-core@file:./survey-core-rn#./survey-core-rn::hash=98de7d&locator=react-native-survey-js-ui%40workspace%3A."
-  checksum: f908791b2a3e216790249e90a635445e9282d31d826e98c75c4ce4806ff236079b7de3fb91835843ba7470720508b76d32b22ee6384e4c5a1411ed56b14c65f1
+  version: 2.1.1
+  resolution: "survey-core@file:./survey-core-rn#./survey-core-rn::hash=9b6708&locator=react-native-survey-js-ui%40workspace%3A."
+  checksum: a2d16baab3eb3c00d51b96473e3e8f41935c86f65decddc0f6a53a5d7a10a4ba9d6775a0c2f55a045e9583752f5f03cb99afb5c88d12fce74f876f29ed496010
   languageName: node
   linkType: hard
 

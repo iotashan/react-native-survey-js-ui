@@ -1,7 +1,14 @@
 {
   "name": "survey-core",
-  "version": "1.0.0",
-  "description": "React Native wrapper for survey-core",
+  "version": "2.1.1",
+  "description": "React Native wrapper for survey-core with React Native compatibility fixes",
   "main": "index.js",
-  "private": true
+  "private": true,
+  "upstreamVersion": "2.1.1",
+  "lastUpdated": "2025-06-07",
+  "reactNativeFixes": [
+    "Fixed window.addEventListener in dragdrop/dom-adapter.ts",
+    "Fixed document.head access in settings.ts",
+    "Added minimal window/document polyfills"
+  ]
 }
