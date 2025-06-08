@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   componentCatalog,
   QuestionCategory,
@@ -114,7 +115,7 @@ export default function ExploreScreen({ navigation }: Props) {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         testID="explore-scroll-view"
@@ -178,7 +179,7 @@ export default function ExploreScreen({ navigation }: Props) {
           />
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

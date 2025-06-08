@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Survey, validateSurveyModel } from 'react-native-survey-js-ui';
 import { surveyExamples, type SurveyExample } from '../data/surveyExamples';
 import TestFixedHooks from './TestFixedHooks';
@@ -70,7 +71,8 @@ export default function SurveyDemoScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} testID="survey-demo-screen">
+    <SafeAreaView style={styles.container} testID="survey-demo-screen">
+      <ScrollView style={styles.scrollContainer}>
       <View style={styles.header}>
         <Text style={styles.title}>Survey Demo</Text>
         <Text style={styles.subtitle}>
@@ -247,7 +249,8 @@ export default function SurveyDemoScreen() {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -255,6 +258,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  scrollContainer: {
+    flex: 1,
   },
   header: {
     padding: 20,
