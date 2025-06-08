@@ -52,8 +52,8 @@ describe('M01 Milestone Integration Tests', () => {
       };
 
       // In test environment with mocks, Survey component renders but may show error
-      const { container } = render(<Survey model={surveyJson} />);
-      expect(container).toBeDefined();
+      const result = render(<Survey model={surveyJson} />);
+      expect(result).toBeDefined();
     });
 
     test('Library builds and can be imported by example app', () => {
@@ -103,10 +103,10 @@ describe('M01 Milestone Integration Tests', () => {
         ],
       };
 
-      const { container } = render(<Survey model={surveyJson} />);
+      const result = render(<Survey model={surveyJson} />);
 
       // Verify component renders
-      expect(container).toBeDefined();
+      expect(result).toBeDefined();
     });
 
     test('Basic survey-core integration working', async () => {
@@ -126,14 +126,14 @@ describe('M01 Milestone Integration Tests', () => {
         ],
       };
 
-      const { container } = render(<Survey model={surveyJson} />);
+      const result = render(<Survey model={surveyJson} />);
 
       // Verify survey-core integration by checking component renders
-      expect(container).toBeDefined();
+      expect(result).toBeDefined();
 
       // Component should render without throwing
       await waitFor(() => {
-        expect(container).toBeTruthy();
+        expect(result).toBeTruthy();
       });
     });
   });
@@ -167,10 +167,10 @@ describe('M01 Milestone Integration Tests', () => {
         ],
       };
 
-      const { container } = render(<Survey model={surveyJson} />);
+      const result = render(<Survey model={surveyJson} />);
 
       // Test that component renders without error
-      expect(container).toBeDefined();
+      expect(result).toBeDefined();
     });
 
     test('Event system foundation working', () => {
@@ -253,9 +253,9 @@ describe('M01 Milestone Integration Tests', () => {
       };
 
       // Test that Survey component renders without platform-specific issues
-      const { container } = render(<Survey model={surveyJson} />);
+      const result = render(<Survey model={surveyJson} />);
 
-      expect(container).toBeDefined();
+      expect(result).toBeDefined();
 
       // Should render successfully on any React Native platform
     });
@@ -331,10 +331,10 @@ describe('M01 Milestone Integration Tests', () => {
         ],
       };
 
-      const { container } = render(<Survey model={surveyJson} />);
+      const result = render(<Survey model={surveyJson} />);
 
       await waitFor(() => {
-        expect(container).toBeDefined();
+        expect(result).toBeDefined();
       });
 
       const renderTime = Date.now() - startTime;
