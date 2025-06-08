@@ -12,3 +12,10 @@ export { useSurveyStateFixed as useSurveyState } from './useSurveyStateFixed';
 export type { SurveyState } from './useSurveyStateFixed';
 
 export { useSurveyStateFixed } from './useSurveyStateFixed';
+
+// Page navigation hook
+export { usePageNavigation } from './usePageNavigation';
+export type { 
+  NavigationState, 
+  UsePageNavigationReturn 
+} from './usePageNavigation';
