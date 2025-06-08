@@ -1,7 +1,7 @@
 ---
 task_id: T02_S02
 sprint_sequence_id: S02
-status: completed
+status: open
 complexity: Low
 last_updated: 2025-06-08T12:10:00Z
 ---

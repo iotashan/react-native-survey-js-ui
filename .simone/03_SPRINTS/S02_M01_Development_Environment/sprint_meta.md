@@ -3,7 +3,7 @@ sprint_folder_name: S02_M01_Development_Environment
 sprint_sequence_id: S02
 milestone_id: M01
 title: Sprint 2 - Development Environment Setup
-status: planned
+status: in_progress
 goal: Create example app and establish seamless local development workflow for library testing
 last_updated: 2025-01-06T00:00:00Z
 ---
