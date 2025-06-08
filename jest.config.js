@@ -16,7 +16,7 @@ module.exports = {
 
   // Transform ignore patterns optimized for React Native and survey-core
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|survey-core|@testing-library)/)',
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?|@testing-library)/)',
   ],
 
   // Coverage configuration with >90% thresholds
@@ -83,6 +83,9 @@ module.exports = {
     '^react-native-survey-js-ui$': '<rootDir>/src/index.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  
+  // Roots for Jest to search
+  roots: ['<rootDir>/src'],
 
   // Cache configuration for performance
   cacheDirectory: '<rootDir>/node_modules/.cache/jest',

@@ -3,7 +3,13 @@
  * Exports all mocked classes and utilities
  */
 
-export { Model, MockSurveyModel } from './Model.mock';
+// Import the mock
+import { MockSurveyModel } from './Model.mock';
+
+
+// Export MockSurveyModel as Model to match survey-core API
+export { MockSurveyModel as Model, MockSurveyModel };
+export default MockSurveyModel;
 
 // Additional survey-core exports that might be needed
 export const SurveyModel = jest.fn();

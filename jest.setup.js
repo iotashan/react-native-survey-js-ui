@@ -34,7 +34,10 @@ global.window = {
 };
 
 // Configure manual mocks
-jest.mock('survey-core', () => require('./src/__mocks__/survey-core'));
+// Mock survey-core for unit tests, but not for integration tests
+if (!process.env.INTEGRATION_TEST) {
+  jest.mock('survey-core');
+}
 
 // Mock React Native components if not in React Native environment
 if (!global.__DEV__) {
