@@ -144,6 +144,22 @@ jest.mock('../../hooks', () => ({
       }
     }),
   })),
+  usePageNavigation: jest.fn(() => ({
+    navigationState: {
+      canGoNext: true,
+      canGoPrevious: false,
+      isOnLastPage: false,
+      currentPageIndex: 0,
+    },
+    goToNextPage: jest.fn(),
+    goToPreviousPage: jest.fn(),
+    completeSurvey: jest.fn(),
+  })),
+  usePageValidation: jest.fn(() => ({
+    validateCurrentPage: jest.fn(() => true),
+    validationErrors: [],
+    isValid: true,
+  })),
 }));
 
 let mockCompleteHandlers: Array<{ model: any; handler: any }> = [];
