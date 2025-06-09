@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  View,
   Text,
   Animated,
   StyleSheet,
@@ -53,7 +52,7 @@ const filterValidErrors = (errors: ValidationErrorType[] | undefined): Validatio
  */
 const generateAccessibilityLabel = (errors: ValidationErrorType[]): string => {
   if (errors.length === 0) return '';
-  if (errors.length === 1) return `Validation error: ${errors[0].message}`;
+  if (errors.length === 1) return `Validation error: ${errors[0]?.message || ''}`;
   return `Validation errors: ${errors.length} errors found`;
 };
 

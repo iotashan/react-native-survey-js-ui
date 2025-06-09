@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import type { PageModel, Question } from 'survey-core';
 import { QuestionFactory } from '../Questions';
+import { useValidation } from '../ValidationContext';
 
 export interface SurveyPageProps {
   page: PageModel;
@@ -10,6 +11,8 @@ export interface SurveyPageProps {
 }
 
 export const SurveyPage: React.FC<SurveyPageProps> = ({ page, onQuestionValueChange }) => {
+  const { validationState } = useValidation();
+  
   if (!page) {
     return null;
   }
@@ -28,6 +31,19 @@ export const SurveyPage: React.FC<SurveyPageProps> = ({ page, onQuestionValueCha
           {page.description}
         </Text>
       )}
+      
+      {/* Validation Summary */}
+      {validationState.showErrors && validationState.hasErrors && (
+        <View style={styles.validationSummary} testID="validation-summary">
+          <Text style={styles.validationSummaryTitle}>Please fix the following errors:</Text>
+          {validationState.validationMessages.map((error, index) => (
+            <Text key={index} style={styles.validationSummaryMessage}>
+              • {error.message}
+            </Text>
+          ))}
+        </View>
+      )}
+      
       <View style={styles.questionsContainer}>
         {visibleQuestions.length > 0 ? (
           visibleQuestions.map((question: Question) => (
@@ -67,6 +83,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 16,
+  },
+  validationSummary: {
+    backgroundColor: '#ffebee',
+    borderColor: '#d32f2f',
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 12,
+    marginBottom: 16,
+  },
+  validationSummaryTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#d32f2f',
+    marginBottom: 8,
+  },
+  validationSummaryMessage: {
+    fontSize: 12,
+    color: '#d32f2f',
+    marginBottom: 4,
   },
   questionsContainer: {
     flex: 1,

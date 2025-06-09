@@ -13,7 +13,7 @@ import { Model } from 'survey-core';
 import { useSurveyModel } from '../../hooks';
 import { useSurveyState } from '../../hooks';
 import { usePageNavigation } from '../../hooks';
-import { usePageValidation } from '../../hooks';
+import { ValidationProvider, useValidation } from '../ValidationContext';
 import { PageNavigation } from '../PageNavigation';
 import { ProgressIndicator } from '../ProgressIndicator';
 import { SurveyPage } from './SurveyPage';
@@ -25,16 +25,26 @@ export interface SurveyProps {
   onCurrentPageChanged?: SurveyCurrentPageChangedHandler;
 }
 
-export const Survey: React.FC<SurveyProps> = ({
+// Internal component that uses validation context
+interface SurveyContentProps {
+  model: any;
+  surveyModel: Model | null;
+  surveyState: any;
+  onComplete?: ((result: any) => void) | undefined;
+  onValueChanged?: SurveyValueChangedHandler | undefined;
+  onCurrentPageChanged?: SurveyCurrentPageChangedHandler | undefined;
+}
+
+const SurveyContent: React.FC<SurveyContentProps> = ({
   model,
+  surveyModel,
+  surveyState,
   onComplete,
   onValueChanged,
   onCurrentPageChanged,
 }) => {
-  const { model: surveyModel, isLoading, error } = useSurveyModel(model);
-  const surveyState = useSurveyState(surveyModel);
+  const { validateAllVisibleQuestions, setShowErrors } = useValidation();
   const { navigationState, goToNextPage, goToPreviousPage, completeSurvey } = usePageNavigation(surveyModel);
-  const { validateCurrentPage } = usePageValidation(surveyModel);
 
   React.useEffect(() => {
     if (surveyModel && onComplete) {
@@ -106,24 +116,11 @@ export const Survey: React.FC<SurveyProps> = ({
     return undefined;
   }, [surveyModel, onCurrentPageChanged]);
 
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loadingText}>Loading survey...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Error loading survey:</Text>
-        <Text style={styles.errorDetail}>{error.message}</Text>
-      </View>
-    );
-  }
-
-  // Navigation is now handled by the usePageNavigation hook
+  // Validation function for navigation
+  const handleValidation = React.useCallback(() => {
+    setShowErrors(true); // Show errors when validating
+    return validateAllVisibleQuestions();
+  }, [validateAllVisibleQuestions, setShowErrors]);
 
   const showProgressBar =
     Boolean(surveyModel?.showProgressBar && surveyModel.showProgressBar !== 'off');
@@ -161,9 +158,9 @@ export const Survey: React.FC<SurveyProps> = ({
       {!surveyState.isCompleted && (
         <PageNavigation
           navigationState={navigationState}
-          onNext={() => goToNextPage(validateCurrentPage)}
+          onNext={() => goToNextPage(handleValidation)}
           onPrevious={goToPreviousPage}
-          onComplete={() => completeSurvey(validateCurrentPage)}
+          onComplete={() => completeSurvey(handleValidation)}
         />
       )}
 
@@ -173,6 +170,46 @@ export const Survey: React.FC<SurveyProps> = ({
         </View>
       )}
     </View>
+  );
+};
+
+export const Survey: React.FC<SurveyProps> = ({
+  model,
+  onComplete,
+  onValueChanged,
+  onCurrentPageChanged,
+}) => {
+  const { model: surveyModel, isLoading, error } = useSurveyModel(model);
+  const surveyState = useSurveyState(surveyModel);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.loadingText}>Loading survey...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Error loading survey:</Text>
+        <Text style={styles.errorDetail}>{error.message}</Text>
+      </View>
+    );
+  }
+
+  return (
+    <ValidationProvider surveyModel={surveyModel}>
+      <SurveyContent
+        model={model}
+        surveyModel={surveyModel}
+        surveyState={surveyState}
+        onComplete={onComplete}
+        onValueChanged={onValueChanged}
+        onCurrentPageChanged={onCurrentPageChanged}
+      />
+    </ValidationProvider>
   );
 };
 

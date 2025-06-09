@@ -10,3 +10,5 @@ export { Panel, PanelHeader } from './Panel';
 export type { PanelProps, PanelHeaderProps } from './Panel';
 export { ValidationError } from './ValidationError';
 export type { ValidationErrorProps } from './ValidationError';
+export { ValidationProvider, useValidation, useQuestionValidation } from './ValidationContext';
+export type { ValidationContextState, ValidationContextValue } from './ValidationContext';
