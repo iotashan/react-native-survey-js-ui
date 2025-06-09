@@ -4,6 +4,7 @@ import {
   multipleChoiceSurvey,
   mixedTypesSurvey,
   validationSurvey,
+  multiPageDemoSurvey,
   invalidModelExample,
   getSurveyExampleById,
 } from '../../src/data/surveyExamples';
@@ -11,11 +12,12 @@ import {
 describe('surveyExamples', () => {
   describe('Survey Examples Structure', () => {
     it('exports all expected survey examples', () => {
-      expect(surveyExamples).toHaveLength(5);
+      expect(surveyExamples).toHaveLength(6);
       expect(surveyExamples).toContain(basicTextSurvey);
       expect(surveyExamples).toContain(multipleChoiceSurvey);
       expect(surveyExamples).toContain(mixedTypesSurvey);
       expect(surveyExamples).toContain(validationSurvey);
+      expect(surveyExamples).toContain(multiPageDemoSurvey);
       expect(surveyExamples).toContain(invalidModelExample);
     });
 
@@ -126,6 +128,41 @@ describe('surveyExamples', () => {
       // Confirm password validation
       expect(elements[3].validators).toBeDefined();
       expect(elements[3].validators[0].type).toBe('expression');
+    });
+  });
+
+  describe('Multi-Page Demo Survey', () => {
+    it('has correct structure and multiple pages', () => {
+      expect(multiPageDemoSurvey.id).toBe('multi-page-demo');
+      expect(multiPageDemoSurvey.title).toBe('Multi-Page Demo Survey');
+      expect(multiPageDemoSurvey.model.title).toBe('Customer Experience Survey');
+      expect(multiPageDemoSurvey.model.pages).toHaveLength(5);
+      expect(multiPageDemoSurvey.model.showProgressBar).toBe('top');
+      expect(multiPageDemoSurvey.model.showQuestionNumbers).toBe('on');
+    });
+
+    it('has properly named pages', () => {
+      const pageNames = multiPageDemoSurvey.model.pages.map(page => page.name);
+      expect(pageNames).toEqual(['welcome', 'demographics', 'experience', 'feedback', 'completion']);
+    });
+
+    it('uses only supported question types', () => {
+      const allElements = multiPageDemoSurvey.model.pages.flatMap(page => page.elements);
+      allElements.forEach(element => {
+        expect(element.type).toBe('text'); // Currently only text type is supported
+      });
+    });
+
+    it('contains validation and required fields', () => {
+      const allElements = multiPageDemoSurvey.model.pages.flatMap(page => page.elements);
+      
+      // Check for required fields
+      const requiredFields = allElements.filter(element => element.isRequired);
+      expect(requiredFields.length).toBeGreaterThan(0);
+
+      // Check for validation
+      const validatedFields = allElements.filter(element => element.validators && element.validators.length > 0);
+      expect(validatedFields.length).toBeGreaterThan(0);
     });
   });
 
