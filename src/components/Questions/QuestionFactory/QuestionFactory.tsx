@@ -2,7 +2,7 @@ import React from 'react';
 import type { QuestionModel } from '../../../types';
 import { BaseQuestion } from '../BaseQuestion';
 import { TextQuestion } from '../TextQuestion';
-import { useQuestionValidation } from '../../ValidationContext';
+import { useValidation } from '../../../contexts/ValidationContext';
 
 export interface QuestionComponentProps {
   question: QuestionModel;
@@ -27,12 +27,13 @@ export const QuestionFactory: React.FC<QuestionFactoryProps> & {
   getRegisteredTypes: () => string[];
   isTypeRegistered: (type: string) => boolean;
 } = ({ question, value, onChange, error }) => {
-  const validation = useQuestionValidation(question.name);
+  const validation = useValidation();
   const QuestionComponent = questionRegistry.get(question.type);
 
   // Use validation errors if available, fallback to passed error prop
-  const displayError = validation.shouldShowErrors && validation.errors.length > 0
-    ? validation.errors[0] // Show first error
+  const questionErrors = validation.getFieldErrors(question.name);
+  const displayError = questionErrors.length > 0
+    ? questionErrors[0] // Show first error
     : error;
 
   // Enhanced onChange handler that includes validation

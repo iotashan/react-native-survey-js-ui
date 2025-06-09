@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import type { PageModel, Question } from 'survey-core';
 import { QuestionFactory } from '../Questions';
-import { useValidation } from '../ValidationContext';
+import { useValidation } from '../../contexts/ValidationContext';
 
 export interface SurveyPageProps {
   page: PageModel;
