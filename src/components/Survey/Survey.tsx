@@ -34,7 +34,7 @@ export const Survey: React.FC<SurveyProps> = ({
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
   const { navigationState, goToNextPage, goToPreviousPage, completeSurvey } = usePageNavigation(surveyModel);
-  const { validationState, validateCurrentPage } = usePageValidation(surveyModel);
+  const { validateCurrentPage } = usePageValidation(surveyModel);
 
   React.useEffect(() => {
     if (surveyModel && onComplete) {
