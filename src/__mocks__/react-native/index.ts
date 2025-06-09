@@ -183,6 +183,61 @@ export const Alert = {
   }),
 };
 
+// Mock Animated
+export const Animated = {
+  Value: jest.fn(function (value: number) {
+    this.value = value;
+    this.setValue = jest.fn((newValue: number) => {
+      this.value = newValue;
+    });
+    this.interpolate = jest.fn((config: any) => ({
+      __getValue: () => this.value,
+    }));
+    this.addListener = jest.fn();
+    this.removeListener = jest.fn();
+    this.removeAllListeners = jest.fn();
+  }),
+  timing: jest.fn(() => ({
+    start: jest.fn((callback) => callback && callback({ finished: true })),
+    stop: jest.fn(),
+    reset: jest.fn(),
+  })),
+  View: View,
+  Text: Text,
+  createAnimatedComponent: jest.fn((component) => component),
+  event: jest.fn(),
+  add: jest.fn((a, b) => a + b),
+  subtract: jest.fn((a, b) => a - b),
+  multiply: jest.fn((a, b) => a * b),
+  divide: jest.fn((a, b) => a / b),
+  modulo: jest.fn((a, b) => a % b),
+  diffClamp: jest.fn(),
+  delay: jest.fn(),
+  sequence: jest.fn(),
+  parallel: jest.fn(),
+  stagger: jest.fn(),
+  loop: jest.fn(),
+  spring: jest.fn(() => ({
+    start: jest.fn((callback) => callback && callback({ finished: true })),
+    stop: jest.fn(),
+    reset: jest.fn(),
+  })),
+};
+
+// Mock AccessibilityInfo
+export const AccessibilityInfo = {
+  isReduceMotionEnabled: jest.fn().mockResolvedValue(false),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  setAccessibilityFocus: jest.fn(),
+  announceForAccessibility: jest.fn(),
+  isScreenReaderEnabled: jest.fn().mockResolvedValue(false),
+  isBoldTextEnabled: jest.fn().mockResolvedValue(false),
+  isGrayscaleEnabled: jest.fn().mockResolvedValue(false),
+  isInvertColorsEnabled: jest.fn().mockResolvedValue(false),
+  isReduceTransparencyEnabled: jest.fn().mockResolvedValue(false),
+};
+
 // Export additional utilities
 export default {
   View,
@@ -201,4 +256,6 @@ export default {
   Dimensions,
   Keyboard,
   Alert,
+  Animated,
+  AccessibilityInfo,
 };
