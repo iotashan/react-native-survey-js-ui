@@ -1,4 +1,5 @@
 import { panelDemoComponents } from './panelExamples';
+import { validationComponentExamples } from './validationComponentExamples';
 import { QuestionCategory, ComponentInfo } from './types';
 
 // Re-export for backward compatibility
@@ -767,10 +768,11 @@ const baseComponentCatalog: ComponentInfo[] = [
   },
 ];
 
-// Merge panel demo components into the main catalog
+// Merge panel demo components and validation examples into the main catalog
 export const componentCatalog: ComponentInfo[] = [
   ...baseComponentCatalog,
   ...panelDemoComponents,
+  ...validationComponentExamples,
 ];
 
 // Helper functions

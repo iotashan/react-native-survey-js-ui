@@ -11,13 +11,22 @@ export interface SurveyPageProps {
 }
 
 export const SurveyPage: React.FC<SurveyPageProps> = ({ page, onQuestionValueChange }) => {
-  const { validationState } = useValidation();
+  const validation = useValidation();
   
   if (!page) {
     return null;
   }
 
   const visibleQuestions = page.questions?.filter((q: Question) => q.visible) || [];
+  
+  // Collect all errors for visible questions on this page
+  const pageErrors: Array<{ field: string; message: string }> = [];
+  visibleQuestions.forEach((question) => {
+    const fieldErrors = validation.getFieldErrors(question.name);
+    fieldErrors.forEach((error) => {
+      pageErrors.push({ field: question.title || question.name, message: error });
+    });
+  });
 
   return (
     <View style={styles.container} testID="survey-page">
@@ -33,12 +42,12 @@ export const SurveyPage: React.FC<SurveyPageProps> = ({ page, onQuestionValueCha
       )}
       
       {/* Validation Summary */}
-      {validationState.showErrors && validationState.hasErrors && (
+      {validation.hasErrors && pageErrors.length > 0 && (
         <View style={styles.validationSummary} testID="validation-summary">
           <Text style={styles.validationSummaryTitle}>Please fix the following errors:</Text>
-          {validationState.validationMessages.map((error, index) => (
+          {pageErrors.map((error, index) => (
             <Text key={index} style={styles.validationSummaryMessage}>
-              • {error.message}
+              • {error.field}: {error.message}
             </Text>
           ))}
         </View>

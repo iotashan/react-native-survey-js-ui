@@ -33,6 +33,8 @@ config.resolver.alias = {
 config.resolver.extraNodeModules = {
   'react': path.resolve(__dirname, 'node_modules/react'),
   'react-native': path.resolve(__dirname, 'node_modules/react-native'),
+  '@react-navigation/stack': path.resolve(__dirname, 'node_modules/@react-navigation/stack'),
+  'react-native-gesture-handler': path.resolve(__dirname, 'node_modules/react-native-gesture-handler'),
 };
 
 // Block parent React resolution explicitly

@@ -1,7 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import { SurveyDemoScreen, ExploreScreen } from '../screens';
+import { SurveyDemoScreen } from '../screens';
+import ExploreStackNavigator from './ExploreStackNavigator';
 
 export type RootTabParamList = {
   SurveyDemo: undefined;
@@ -18,6 +19,7 @@ export default function TabNavigator() {
         tabBarActiveTintColor: '#007AFF',
         tabBarInactiveTintColor: '#8E8E93',
         headerShown: false,
+        tabBarTestID: 'main-tab-bar',
       }}
     >
       <Tab.Screen
@@ -29,17 +31,21 @@ export default function TabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="clipboard-outline" size={size} color={color} />
           ),
+          tabBarTestID: 'tab-survey-demo',
+          tabBarAccessibilityLabel: 'Survey Demo Tab',
         }}
       />
       <Tab.Screen
         name="Explore"
-        component={ExploreScreen}
+        component={ExploreStackNavigator}
         options={{
           title: 'Explore',
           tabBarLabel: 'Explore',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="grid-outline" size={size} color={color} />
           ),
+          tabBarTestID: 'tab-explore',
+          tabBarAccessibilityLabel: 'Explore Components Tab',
         }}
       />
     </Tab.Navigator>

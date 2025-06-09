@@ -17,10 +17,17 @@ import {
   type SubmissionStatus,
 } from 'react-native-survey-js-ui';
 import { surveyExamples, type SurveyExample } from '../data/surveyExamples';
+import { validationExamples } from '../data/validationExamples';
+
+// Combine all examples
+const allExamples: SurveyExample[] = [...surveyExamples, ...validationExamples];
+
+console.log('Total number of examples:', allExamples.length);
+console.log('Validation examples count:', validationExamples.length);
 
 export default function SurveyDemoScreen() {
   const [selectedExample, setSelectedExample] = useState<SurveyExample>(
-    surveyExamples[0]!
+    allExamples[0]!
   );
   const [showExampleSelector, setShowExampleSelector] = useState(false);
   const [surveyResults, setSurveyResults] = useState<any>(null);
@@ -158,29 +165,30 @@ export default function SurveyDemoScreen() {
 
   return (
     <SafeAreaView style={styles.container} testID="survey-demo-screen">
-      <ScrollView style={styles.scrollContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Survey Demo</Text>
-          <Text style={styles.subtitle}>
+      <ScrollView style={styles.scrollContainer} testID="survey-demo-scroll">
+        <View style={styles.header} testID="header-section">
+          <Text style={styles.title} testID="screen-title">Survey Demo</Text>
+          <Text style={styles.subtitle} testID="screen-subtitle">
             Demonstration of react-native-survey-js-ui library
           </Text>
         </View>
 
         {/* Example Selector */}
-        <View style={styles.selectorContainer}>
-          <Text style={styles.sectionTitle}>Current Example:</Text>
+        <View style={styles.selectorContainer} testID="example-selector-section">
+          <Text style={styles.sectionTitle} testID="current-example-label">Current Example:</Text>
           <TouchableOpacity
             style={styles.selectorButton}
             onPress={() => setShowExampleSelector(true)}
             testID="example-selector-button"
+            accessibilityLabel={`Select survey example. Current: ${selectedExample.title}`}
           >
-            <View>
-              <Text style={styles.exampleTitle}>{selectedExample.title}</Text>
-              <Text style={styles.exampleDescription}>
+            <View testID="selected-example-info">
+              <Text style={styles.exampleTitle} testID="selected-example-title">{selectedExample.title}</Text>
+              <Text style={styles.exampleDescription} testID="selected-example-description">
                 {selectedExample.description}
               </Text>
             </View>
-            <Text style={styles.chevron}>▼</Text>
+            <Text style={styles.chevron} testID="selector-chevron">▼</Text>
           </TouchableOpacity>
         </View>
 
@@ -190,30 +198,33 @@ export default function SurveyDemoScreen() {
             styles.status,
             { backgroundColor: isValid ? '#e8f5e8' : '#ffebee' },
           ]}
+          testID="validation-status"
         >
           <Text
             style={[
               styles.statusText,
               { color: isValid ? '#2e7d32' : '#d32f2f' },
             ]}
+            testID="validation-status-text"
           >
             Survey model valid: {isValid ? 'Yes ✓' : 'No ✗'}
           </Text>
           {!isValid && (
-            <Text style={styles.errorText}>
+            <Text style={styles.errorText} testID="validation-error-text">
               This example demonstrates error handling for invalid models
             </Text>
           )}
         </View>
 
         {/* Action Buttons */}
-        <View style={styles.actionButtons}>
+        <View style={styles.actionButtons} testID="action-buttons-container">
           <TouchableOpacity
             style={[styles.actionButton, styles.codeButton]}
             onPress={() => setShowCode(!showCode)}
             testID="show-code-button"
+            accessibilityLabel={showCode ? 'Hide JSON model' : 'Show JSON model'}
           >
-            <Text style={styles.actionButtonText}>
+            <Text style={styles.actionButtonText} testID="show-code-button-text">
               {showCode ? 'Hide' : 'Show'} JSON Model
             </Text>
           </TouchableOpacity>
@@ -222,16 +233,17 @@ export default function SurveyDemoScreen() {
               style={[styles.actionButton, styles.resetButton]}
               onPress={resetSurvey}
               testID="reset-survey-button"
+              accessibilityLabel="Reset survey to initial state"
             >
-              <Text style={styles.actionButtonText}>Reset Survey</Text>
+              <Text style={styles.actionButtonText} testID="reset-button-text">Reset Survey</Text>
             </TouchableOpacity>
           )}
         </View>
 
         {/* Code Display */}
         {showCode && (
-          <View style={styles.codeContainer}>
-            <Text style={styles.codeTitle}>Survey JSON Model:</Text>
+          <View style={styles.codeContainer} testID="code-container">
+            <Text style={styles.codeTitle} testID="code-title">Survey JSON Model:</Text>
             <ScrollView
               horizontal
               style={styles.codeScrollView}
@@ -349,7 +361,7 @@ export default function SurveyDemoScreen() {
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Select Survey Example</Text>
               <ScrollView style={styles.exampleList}>
-                {surveyExamples.map((example) => (
+                {allExamples.map((example) => (
                   <TouchableOpacity
                     key={example.id}
                     style={[
