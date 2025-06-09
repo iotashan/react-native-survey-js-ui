@@ -135,14 +135,14 @@ const PanelContent: React.FC<PanelProps> = ({
 
   // Create style configuration
   const styleConfig: PanelStyleConfig = {
-    theme,
+    ...(theme && { theme }),
     isRTL,
   };
 
   // Get dynamic styles based on nesting level and configuration
   const containerStyles = getPanelContainerStyle({
     nestingLevel: effectiveNestingLevel,
-    customStyle: style,
+    ...(style && { customStyle: style }),
     isVisible: panel.visible,
     config: styleConfig,
   });
@@ -162,7 +162,7 @@ const PanelContent: React.FC<PanelProps> = ({
       {panel.title && (
         <PanelHeader
           title={panel.title}
-          description={panel.description}
+          {...(panel.description && { description: panel.description })}
           collapsible={collapsible}
           expanded={expanded}
           onToggle={handleToggle}
@@ -202,7 +202,7 @@ const PanelContent: React.FC<PanelProps> = ({
                   collapsible={collapsible}
                   initialExpanded={initialExpanded}
                   nestingLevel={effectiveNestingLevel + 1}
-                  theme={theme}
+                  {...(theme && { theme })}
                   isRTL={isRTL}
                 />
               </View>

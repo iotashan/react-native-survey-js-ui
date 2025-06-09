@@ -78,12 +78,12 @@ export const PanelStateProvider: React.FC<PanelStateProviderProps> = ({
 export function withPanelState<P extends object>(
   Component: React.ComponentType<P>,
   options?: UsePanelStateOptions
-) {
-  const WrappedComponent = React.forwardRef<any, P>((props, ref) => (
+): React.ComponentType<P> {
+  const WrappedComponent: React.FC<P> = (props) => (
     <PanelStateProvider {...options}>
-      <Component {...props} ref={ref} />
+      <Component {...props} />
     </PanelStateProvider>
-  ));
+  );
 
   WrappedComponent.displayName = `withPanelState(${Component.displayName || Component.name})`;
   

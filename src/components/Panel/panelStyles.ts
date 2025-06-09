@@ -231,20 +231,19 @@ export const getContentContainerStyle = (options: {
 };
 
 // Orientation change listener setup
-let orientationListener: any = null;
+let orientationSubscription: any = null;
 
 export const setupOrientationListener = (callback: () => void): void => {
-  if (orientationListener) {
-    Dimensions.removeEventListener('change', orientationListener);
+  if (orientationSubscription) {
+    orientationSubscription.remove();
   }
   
-  orientationListener = callback;
-  Dimensions.addEventListener('change', callback);
+  orientationSubscription = Dimensions.addEventListener('change', callback);
 };
 
 export const removeOrientationListener = (): void => {
-  if (orientationListener) {
-    Dimensions.removeEventListener('change', orientationListener);
-    orientationListener = null;
+  if (orientationSubscription) {
+    orientationSubscription.remove();
+    orientationSubscription = null;
   }
 };
