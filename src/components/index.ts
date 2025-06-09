@@ -12,3 +12,5 @@ export { ValidationError } from './ValidationError';
 export type { ValidationErrorProps } from './ValidationError';
 export { ValidationProvider, useValidation, useQuestionValidation } from './ValidationContext';
 export type { ValidationContextState, ValidationContextValue } from './ValidationContext';
+export { SubmissionStatus } from './SubmissionStatus';
+export type { SubmissionStatusProps } from './SubmissionStatus';

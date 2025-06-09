@@ -8,7 +8,14 @@ import {
   Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Survey, validateSurveyModel } from 'react-native-survey-js-ui';
+import { 
+  Survey, 
+  validateSurveyModel,
+  type SubmissionOptions,
+  type SubmissionEvent,
+  type SubmissionResult,
+  type SubmissionStatus,
+} from 'react-native-survey-js-ui';
 import { surveyExamples, type SurveyExample } from '../data/surveyExamples';
 
 export default function SurveyDemoScreen() {
@@ -20,6 +27,8 @@ export default function SurveyDemoScreen() {
   const [showResults, setShowResults] = useState(false);
   const [showCode, setShowCode] = useState(false);
   const [eventLogs, setEventLogs] = useState<string[]>([]);
+  const [submissionLogs, setSubmissionLogs] = useState<string[]>([]);
+  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
 
   const isValid = validateSurveyModel(selectedExample.model);
 
@@ -54,6 +63,63 @@ export default function SurveyDemoScreen() {
     setEventLogs((prev) => [logEntry, ...prev].slice(0, 20)); // Keep only last 20 events
   };
 
+  const addSubmissionLog = (eventType: string, data: any) => {
+    const timestamp = new Date().toLocaleTimeString();
+    const logEntry = `[${timestamp}] ${eventType}: ${JSON.stringify(data, null, 2)}`;
+    setSubmissionLogs((prev) => [logEntry, ...prev].slice(0, 10)); // Keep only last 10 submissions
+  };
+
+  // Determine submission options based on selected example
+  const getSubmissionOptions = (): SubmissionOptions => {
+    switch (selectedExample.id) {
+      case 'realtime-submission':
+        return {
+          mode: 'realtime',
+          debounceDelay: 1000, // 1 second debounce
+          showStatus: true,
+        };
+      case 'page-change-submission':
+        return {
+          mode: 'onPageChange',
+          showStatus: true,
+        };
+      case 'value-change-submission':
+        return {
+          mode: 'onValueChange',
+          showStatus: true,
+        };
+      default:
+        return {
+          mode: 'onComplete',
+          showStatus: true,
+        };
+    }
+  };
+
+  // Submission event handlers
+  const handleSubmissionEvent = (event: SubmissionEvent) => {
+    addSubmissionLog('Submission Event', {
+      trigger: event.trigger,
+      data: event.data,
+      attempt: event.attempt,
+      triggerQuestion: event.triggerQuestion,
+      triggerPage: event.triggerPage,
+    });
+  };
+
+  const handleSubmissionResult = (result: SubmissionResult) => {
+    addSubmissionLog('Submission Result', {
+      success: result.success,
+      error: result.error,
+      trigger: result.event.trigger,
+    });
+  };
+
+  const handleSubmissionStatusChange = (status: SubmissionStatus, result?: SubmissionResult) => {
+    setSubmissionStatus(status);
+    addSubmissionLog('Status Change', { status, hasError: !!result?.error });
+  };
+
   const handleExampleSelect = (example: SurveyExample) => {
     setSelectedExample(example);
     setShowExampleSelector(false);
@@ -65,8 +131,29 @@ export default function SurveyDemoScreen() {
     setSurveyResults(null);
     setShowResults(false);
     setEventLogs([]);
+    setSubmissionLogs([]);
+    setSubmissionStatus('idle');
     // Force re-render of Survey component by changing key
     setSelectedExample({ ...selectedExample });
+  };
+
+  // Check if current example uses submission modes
+  const isSubmissionModeExample = ['realtime-submission', 'page-change-submission', 'value-change-submission'].includes(selectedExample.id);
+
+  // Get status color helper
+  const getStatusColor = (status: SubmissionStatus) => {
+    switch (status) {
+      case 'pending':
+        return { color: '#2196F3' };
+      case 'success':
+        return { color: '#4CAF50' };
+      case 'error':
+        return { color: '#F44336' };
+      case 'retrying':
+        return { color: '#FF9800' };
+      default:
+        return { color: '#666' };
+    }
   };
 
   return (
@@ -157,6 +244,26 @@ export default function SurveyDemoScreen() {
           </View>
         )}
 
+        {/* Submission Mode Info */}
+        {isSubmissionModeExample && (
+          <View style={styles.submissionInfoContainer}>
+            <Text style={styles.submissionInfoTitle}>
+              Submission Mode: {getSubmissionOptions().mode}
+            </Text>
+            <Text style={styles.submissionInfoDescription}>
+              {selectedExample.id === 'realtime-submission' && 
+                'Data is submitted continuously with 1-second debouncing'}
+              {selectedExample.id === 'page-change-submission' && 
+                'Data is submitted when moving between pages'}
+              {selectedExample.id === 'value-change-submission' && 
+                'Data is submitted immediately on every field change'}
+            </Text>
+            <Text style={[styles.submissionStatusText, getStatusColor(submissionStatus)]}>
+              Status: {submissionStatus}
+            </Text>
+          </View>
+        )}
+
         {/* Event Logs Section */}
         {eventLogs.length > 0 && (
           <View style={styles.eventLogsContainer}>
@@ -167,6 +274,23 @@ export default function SurveyDemoScreen() {
             >
               {eventLogs.map((log, index) => (
                 <Text key={index} style={styles.eventLogText}>
+                  {log}
+                </Text>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
+        {/* Submission Logs Section */}
+        {submissionLogs.length > 0 && (
+          <View style={styles.submissionLogsContainer}>
+            <Text style={styles.submissionLogsTitle}>Submission Logs (Real-time)</Text>
+            <ScrollView
+              style={styles.submissionLogsScrollView}
+              showsVerticalScrollIndicator={true}
+            >
+              {submissionLogs.map((log, index) => (
+                <Text key={index} style={styles.submissionLogText}>
                   {log}
                 </Text>
               ))}
@@ -197,6 +321,10 @@ export default function SurveyDemoScreen() {
                 onComplete={handleSurveyComplete}
                 onValueChanged={handleValueChanged}
                 onCurrentPageChanged={handleCurrentPageChanged}
+                submissionOptions={isSubmissionModeExample ? getSubmissionOptions() : undefined}
+                onSubmissionEvent={isSubmissionModeExample ? handleSubmissionEvent : undefined}
+                onSubmissionResult={isSubmissionModeExample ? handleSubmissionResult : undefined}
+                onSubmissionStatusChange={isSubmissionModeExample ? handleSubmissionStatusChange : undefined}
               />
             ) : (
               <View style={styles.errorContainer}>
@@ -518,5 +646,58 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#666',
+  },
+  submissionInfoContainer: {
+    margin: 16,
+    backgroundColor: '#e8f4fd',
+    borderRadius: 8,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#2196F3',
+  },
+  submissionInfoTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1976D2',
+    marginBottom: 8,
+  },
+  submissionInfoDescription: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 8,
+    lineHeight: 20,
+  },
+  submissionStatusText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  submissionLogsContainer: {
+    margin: 16,
+    backgroundColor: '#fff3cd',
+    borderRadius: 8,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#ffc107',
+  },
+  submissionLogsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#856404',
+    marginBottom: 12,
+  },
+  submissionLogsScrollView: {
+    backgroundColor: '#fff',
+    borderRadius: 4,
+    padding: 12,
+    maxHeight: 250,
+    borderWidth: 1,
+    borderColor: '#ffc107',
+  },
+  submissionLogText: {
+    fontFamily: 'monospace',
+    fontSize: 10,
+    color: '#495057',
+    lineHeight: 14,
+    marginBottom: 6,
   },
 });

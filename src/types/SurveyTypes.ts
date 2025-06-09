@@ -461,6 +461,93 @@ export interface SurveyVariable {
 }
 
 /**
+ * Survey submission modes
+ */
+export type SurveySubmissionMode = 
+  | 'onComplete'      // Submit only when survey is completed (default)
+  | 'onValueChange'   // Submit on every value change
+  | 'onPageChange'    // Submit at the end of each page
+  | 'realtime'        // Continuous real-time submission with debouncing
+  | 'manual';         // Manual submission controlled by external triggers
+
+/**
+ * Submission status for tracking submission state
+ */
+export type SubmissionStatus = 
+  | 'idle'           // No submission in progress
+  | 'pending'        // Submission in progress
+  | 'success'        // Last submission succeeded
+  | 'error'          // Last submission failed
+  | 'retrying';      // Retrying after failure
+
+/**
+ * Submission options for controlling submission behavior
+ */
+export interface SubmissionOptions {
+  /** Submission mode */
+  mode: SurveySubmissionMode;
+  /** Auto-retry failed submissions */
+  autoRetry?: boolean;
+  /** Maximum retry attempts */
+  maxRetries?: number;
+  /** Retry delay in milliseconds */
+  retryDelay?: number;
+  /** Debounce delay for realtime mode in milliseconds */
+  debounceDelay?: number;
+  /** Whether to show submission status to user */
+  showStatus?: boolean;
+  /** Custom submission endpoint */
+  endpoint?: string;
+  /** Additional headers for submission requests */
+  headers?: Record<string, string>;
+  /** Transform data before submission */
+  transformData?: (data: SurveyData) => any;
+}
+
+/**
+ * Submission event data
+ */
+export interface SubmissionEvent {
+  /** Submission trigger */
+  trigger: 'valueChange' | 'pageChange' | 'complete' | 'manual' | 'retry';
+  /** Survey data being submitted */
+  data: SurveyData;
+  /** Timestamp of submission */
+  timestamp: string;
+  /** Current submission attempt number */
+  attempt: number;
+  /** Question that triggered the submission (for valueChange trigger) */
+  triggerQuestion?: string | undefined;
+  /** Page that triggered the submission (for pageChange trigger) */
+  triggerPage?: number | undefined;
+}
+
+/**
+ * Submission result
+ */
+export interface SubmissionResult {
+  /** Whether submission was successful */
+  success: boolean;
+  /** Response data from server */
+  response?: any;
+  /** Error information if submission failed */
+  error?: {
+    message: string;
+    code?: string | number;
+    details?: any;
+  };
+  /** Submission event that resulted in this result */
+  event: SubmissionEvent;
+}
+
+/**
+ * Event handlers for submission
+ */
+export type SubmissionEventHandler = (event: SubmissionEvent) => void | Promise<void>;
+export type SubmissionResultHandler = (result: SubmissionResult) => void;
+export type SubmissionStatusHandler = (status: SubmissionStatus, result?: SubmissionResult) => void;
+
+/**
  * Survey completion options
  */
 export interface SurveyCompletedOptions {

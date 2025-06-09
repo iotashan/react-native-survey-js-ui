@@ -8,21 +8,33 @@ import {
 import type {
   SurveyValueChangedHandler,
   SurveyCurrentPageChangedHandler,
+  SubmissionOptions,
+  SubmissionEventHandler,
+  SubmissionResultHandler,
+  SubmissionStatusHandler,
 } from '../../types';
 import { Model } from 'survey-core';
 import { useSurveyModel } from '../../hooks';
 import { useSurveyState } from '../../hooks';
 import { usePageNavigation } from '../../hooks';
+import { useSubmissionMode } from '../../hooks';
 import { ValidationProvider, useValidation } from '../ValidationContext';
 import { PageNavigation } from '../PageNavigation';
 import { ProgressIndicator } from '../ProgressIndicator';
 import { SurveyPage } from './SurveyPage';
+import { SubmissionStatus } from '../SubmissionStatus';
 
 export interface SurveyProps {
   model: Model | any; // Accept Model or JSON
   onComplete?: (result: any) => void;
   onValueChanged?: SurveyValueChangedHandler;
   onCurrentPageChanged?: SurveyCurrentPageChangedHandler;
+  
+  // Submission mode options
+  submissionOptions?: Partial<SubmissionOptions>;
+  onSubmissionEvent?: SubmissionEventHandler;
+  onSubmissionResult?: SubmissionResultHandler;
+  onSubmissionStatusChange?: SubmissionStatusHandler;
 }
 
 // Internal component that uses validation context
@@ -33,6 +45,12 @@ interface SurveyContentProps {
   onComplete?: ((result: any) => void) | undefined;
   onValueChanged?: SurveyValueChangedHandler | undefined;
   onCurrentPageChanged?: SurveyCurrentPageChangedHandler | undefined;
+  
+  // Submission mode props
+  submissionOptions?: Partial<SubmissionOptions> | undefined;
+  onSubmissionEvent?: SubmissionEventHandler | undefined;
+  onSubmissionResult?: SubmissionResultHandler | undefined;
+  onSubmissionStatusChange?: SubmissionStatusHandler | undefined;
 }
 
 const SurveyContent: React.FC<SurveyContentProps> = ({
@@ -42,9 +60,22 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
   onComplete,
   onValueChanged,
   onCurrentPageChanged,
+  submissionOptions,
+  onSubmissionEvent,
+  onSubmissionResult,
+  onSubmissionStatusChange,
 }) => {
   const { validateAllVisibleQuestions, setShowErrors } = useValidation();
   const { navigationState, goToNextPage, goToPreviousPage, completeSurvey } = usePageNavigation(surveyModel);
+  
+  // Initialize submission mode
+  const { status, lastResult, retryCount, triggerSubmission } = useSubmissionMode(
+    surveyModel,
+    submissionOptions,
+    onSubmissionEvent,
+    onSubmissionResult,
+    onSubmissionStatusChange
+  );
 
   React.useEffect(() => {
     if (surveyModel && onComplete) {
@@ -155,6 +186,16 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
         )}
       </ScrollView>
 
+      {/* Submission status indicator */}
+      <SubmissionStatus
+        status={status}
+        lastResult={lastResult}
+        retryCount={retryCount}
+        visible={submissionOptions?.showStatus !== false}
+        onRetry={triggerSubmission}
+        style={styles.submissionStatus}
+      />
+
       {!surveyState.isCompleted && (
         <PageNavigation
           navigationState={navigationState}
@@ -178,6 +219,10 @@ export const Survey: React.FC<SurveyProps> = ({
   onComplete,
   onValueChanged,
   onCurrentPageChanged,
+  submissionOptions,
+  onSubmissionEvent,
+  onSubmissionResult,
+  onSubmissionStatusChange,
 }) => {
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
@@ -208,6 +253,10 @@ export const Survey: React.FC<SurveyProps> = ({
         onComplete={onComplete}
         onValueChanged={onValueChanged}
         onCurrentPageChanged={onCurrentPageChanged}
+        submissionOptions={submissionOptions}
+        onSubmissionEvent={onSubmissionEvent}
+        onSubmissionResult={onSubmissionResult}
+        onSubmissionStatusChange={onSubmissionStatusChange}
       />
     </ValidationProvider>
   );
@@ -261,5 +310,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#4CAF50',
+  },
+  submissionStatus: {
+    marginHorizontal: 16,
+    marginVertical: 8,
   },
 });

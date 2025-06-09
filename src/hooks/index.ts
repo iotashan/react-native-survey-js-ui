@@ -34,3 +34,6 @@ export type {
   UsePanelStateOptions,
   UsePanelStateReturn
 } from './usePanelState';
+
+// Submission mode hook
+export { useSubmissionMode } from './useSubmissionMode';

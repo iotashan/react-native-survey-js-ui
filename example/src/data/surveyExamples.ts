@@ -398,6 +398,152 @@ export const multiPageDemoSurvey: SurveyExample = {
   },
 };
 
+// Submission Mode Examples
+export const realtimeSubmissionSurvey: SurveyExample = {
+  id: 'realtime-submission',
+  title: 'Real-time Submission Demo',
+  description: 'Data is submitted continuously as you type (with debouncing)',
+  model: {
+    title: 'Real-time Data Collection',
+    description: 'This form saves your progress automatically as you type',
+    pages: [
+      {
+        name: 'page1',
+        elements: [
+          {
+            type: 'text',
+            name: 'thoughts',
+            title: 'Share your thoughts',
+            description: 'Start typing to see real-time submission in action',
+            placeHolder: 'Your thoughts are saved automatically...',
+          },
+          {
+            type: 'rating',
+            name: 'satisfaction',
+            title: 'How satisfied are you?',
+            rateMin: 1,
+            rateMax: 10,
+            rateStep: 1,
+            minRateDescription: 'Not satisfied',
+            maxRateDescription: 'Very satisfied',
+          },
+        ],
+      },
+    ],
+  },
+};
+
+export const pageChangeSubmissionSurvey: SurveyExample = {
+  id: 'page-change-submission',
+  title: 'Page Change Submission Demo',
+  description: 'Data is submitted at the end of each page',
+  model: {
+    title: 'Multi-step Registration',
+    description: 'Your data is saved after each step',
+    pages: [
+      {
+        name: 'personal',
+        title: 'Personal Information',
+        elements: [
+          {
+            type: 'text',
+            name: 'firstName',
+            title: 'First Name',
+            isRequired: true,
+          },
+          {
+            type: 'text',
+            name: 'lastName',
+            title: 'Last Name',
+            isRequired: true,
+          },
+        ],
+      },
+      {
+        name: 'contact',
+        title: 'Contact Information',
+        elements: [
+          {
+            type: 'text',
+            name: 'email',
+            title: 'Email Address',
+            isRequired: true,
+            validators: [
+              {
+                type: 'email',
+                text: 'Please enter a valid email address',
+              },
+            ],
+          },
+          {
+            type: 'text',
+            name: 'phone',
+            title: 'Phone Number',
+            placeHolder: '+1 (555) 123-4567',
+          },
+        ],
+      },
+      {
+        name: 'preferences',
+        title: 'Preferences',
+        elements: [
+          {
+            type: 'checkbox',
+            name: 'interests',
+            title: 'What are you interested in?',
+            choices: [
+              'Technology',
+              'Sports',
+              'Music',
+              'Travel',
+              'Food',
+            ],
+          },
+        ],
+      },
+    ],
+  },
+};
+
+export const valueChangeSubmissionSurvey: SurveyExample = {
+  id: 'value-change-submission',
+  title: 'Value Change Submission Demo',
+  description: 'Data is submitted immediately on every field change',
+  model: {
+    title: 'Instant Feedback Form',
+    description: 'Each answer is submitted immediately',
+    pages: [
+      {
+        name: 'feedback',
+        elements: [
+          {
+            type: 'radiogroup',
+            name: 'rating',
+            title: 'How would you rate our service?',
+            choices: [
+              { value: 'excellent', text: 'Excellent' },
+              { value: 'good', text: 'Good' },
+              { value: 'average', text: 'Average' },
+              { value: 'poor', text: 'Poor' },
+            ],
+          },
+          {
+            type: 'boolean',
+            name: 'recommend',
+            title: 'Would you recommend us to others?',
+          },
+          {
+            type: 'comment',
+            name: 'comments',
+            title: 'Additional comments',
+            placeHolder: 'Any additional feedback...',
+          },
+        ],
+      },
+    ],
+  },
+};
+
 // All survey examples
 export const surveyExamples: SurveyExample[] = [
   basicTextSurvey,
@@ -405,6 +551,9 @@ export const surveyExamples: SurveyExample[] = [
   mixedTypesSurvey,
   validationSurvey,
   multiPageDemoSurvey,
+  realtimeSubmissionSurvey,
+  pageChangeSubmissionSurvey,
+  valueChangeSubmissionSurvey,
   invalidModelExample,
 ];
 
