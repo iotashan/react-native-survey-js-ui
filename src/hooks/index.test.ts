@@ -25,6 +25,7 @@ describe('hooks index exports', () => {
     expect(exportedKeys).toContain('useSurveyStateFixed');
     expect(exportedKeys).toContain('usePageNavigation');
     expect(exportedKeys).toContain('usePageValidation');
-    expect(exportedKeys.length).toBe(6);
+    expect(exportedKeys).toContain('usePanelState');
+    expect(exportedKeys.length).toBe(7);
   });
 });

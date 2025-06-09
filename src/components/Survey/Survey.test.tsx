@@ -465,7 +465,7 @@ describe('Survey Component', () => {
       expect(queryByText('Previous')).toBeNull();
     });
 
-    it('should disable Previous button on first page', () => {
+    it('should hide Previous button on first page', () => {
       const mockModel = {
         pages: [{ name: 'page1' }, { name: 'page2' }],
       };
@@ -499,22 +499,10 @@ describe('Survey Component', () => {
         questions: [],
       });
 
-      const { getByText } = render(<Survey model={mockModel} />);
-      // Find the Previous button by text
-      const prevButtonText = getByText('Previous');
-      // Walk up the tree to find the TouchableOpacity with the disabled prop
-      let currentNode = prevButtonText;
-      while (
-        currentNode &&
-        !currentNode.props.disabled &&
-        !currentNode.props.accessibilityState?.disabled
-      ) {
-        currentNode = currentNode.parent;
-      }
-      expect(
-        currentNode?.props.disabled ||
-          currentNode?.props.accessibilityState?.disabled
-      ).toBe(true);
+      const { getByText, queryByText } = render(<Survey model={mockModel} />);
+      // On the first page, Previous button should be hidden
+      expect(queryByText('Previous')).toBeNull();
+      expect(getByText('Next')).toBeTruthy();
     });
 
     it('should navigate to next page when Next is pressed', () => {
@@ -523,6 +511,8 @@ describe('Survey Component', () => {
       };
       const mockUseSurveyModel = require('../../hooks').useSurveyModel;
       const mockUseSurveyState = require('../../hooks').useSurveyState;
+      const mockUsePageNavigation = require('../../hooks').usePageNavigation;
+      const mockUsePageValidation = require('../../hooks').usePageValidation;
       const mockSurveyModel = {
         nextPage: jest.fn(),
         prevPage: jest.fn(),
@@ -532,9 +522,15 @@ describe('Survey Component', () => {
         isFirstPage: true,
         isLastPage: false,
         onComplete: { add: jest.fn(), remove: jest.fn() },
+        onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
         getProgressInfo: jest.fn(() => ({ currentPageNo: 0, pageCount: 2 })),
         showProgressBar: true,
       };
+      
+      const mockGoToNextPage = jest.fn(() => {
+        mockSurveyModel.nextPage();
+      });
+      
       mockUseSurveyModel.mockReturnValue({
         model: mockSurveyModel,
         isLoading: false,
@@ -550,8 +546,29 @@ describe('Survey Component', () => {
         questions: [],
       });
 
+      mockUsePageNavigation.mockReturnValue({
+        navigationState: {
+          currentPageNo: 0,
+          pageCount: 2,
+          isFirstPage: true,
+          isLastPage: false,
+          canGoNext: true,
+          canGoPrevious: false,
+          isNavigating: false,
+          validationError: null,
+        },
+        goToNextPage: mockGoToNextPage,
+        goToPreviousPage: jest.fn(),
+        completeSurvey: jest.fn(),
+      });
+
+      mockUsePageValidation.mockReturnValue({
+        validateCurrentPage: jest.fn(() => true),
+      });
+
       const { getByText } = render(<Survey model={mockModel} />);
       fireEvent.press(getByText('Next'));
+      expect(mockGoToNextPage).toHaveBeenCalled();
       expect(mockSurveyModel.nextPage).toHaveBeenCalled();
     });
 
@@ -561,6 +578,8 @@ describe('Survey Component', () => {
       };
       const mockUseSurveyModel = require('../../hooks').useSurveyModel;
       const mockUseSurveyState = require('../../hooks').useSurveyState;
+      const mockUsePageNavigation = require('../../hooks').usePageNavigation;
+      const mockUsePageValidation = require('../../hooks').usePageValidation;
       const mockSurveyModel = {
         prevPage: jest.fn(),
         nextPage: jest.fn(),
@@ -570,9 +589,15 @@ describe('Survey Component', () => {
         isFirstPage: false,
         isLastPage: true,
         onComplete: { add: jest.fn(), remove: jest.fn() },
+        onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
         getProgressInfo: jest.fn(() => ({ currentPageNo: 1, pageCount: 2 })),
         showProgressBar: true,
       };
+
+      const mockGoToPreviousPage = jest.fn(() => {
+        mockSurveyModel.prevPage();
+      });
+
       mockUseSurveyModel.mockReturnValue({
         model: mockSurveyModel,
         isLoading: false,
@@ -588,8 +613,29 @@ describe('Survey Component', () => {
         questions: [],
       });
 
+      mockUsePageNavigation.mockReturnValue({
+        navigationState: {
+          currentPageNo: 1,
+          pageCount: 2,
+          isFirstPage: false,
+          isLastPage: true,
+          canGoNext: false,
+          canGoPrevious: true,
+          isNavigating: false,
+          validationError: null,
+        },
+        goToNextPage: jest.fn(),
+        goToPreviousPage: mockGoToPreviousPage,
+        completeSurvey: jest.fn(),
+      });
+
+      mockUsePageValidation.mockReturnValue({
+        validateCurrentPage: jest.fn(() => true),
+      });
+
       const { getByText } = render(<Survey model={mockModel} />);
       fireEvent.press(getByText('Previous'));
+      expect(mockGoToPreviousPage).toHaveBeenCalled();
       expect(mockSurveyModel.prevPage).toHaveBeenCalled();
     });
 
@@ -620,7 +666,7 @@ describe('Survey Component', () => {
         pages: [{ name: 'page1' }, { name: 'page2' }],
       };
       const { getByTestId } = render(<Survey model={mockModel} />);
-      expect(getByTestId('survey-progress-bar')).toBeTruthy();
+      expect(getByTestId('progress-indicator')).toBeTruthy();
     });
 
     it('should not render progress bar when showProgressBar is false', () => {
