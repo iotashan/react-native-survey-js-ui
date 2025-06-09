@@ -146,10 +146,14 @@ jest.mock('../../hooks', () => ({
   })),
   usePageNavigation: jest.fn(() => ({
     navigationState: {
+      currentPageNo: 0,
+      pageCount: 1,
+      isFirstPage: true,
+      isLastPage: false,
       canGoNext: true,
       canGoPrevious: false,
-      isOnLastPage: false,
-      currentPageIndex: 0,
+      isNavigating: false,
+      validationError: null,
     },
     goToNextPage: jest.fn(),
     goToPreviousPage: jest.fn(),
@@ -191,6 +195,8 @@ describe('Survey Component', () => {
 
   it('should render complete button', () => {
     const mockUseSurveyState = require('../../hooks').useSurveyState;
+    const mockUsePageNavigation = require('../../hooks').usePageNavigation;
+    
     mockUseSurveyState.mockReturnValue({
       currentPageNo: 0,
       pageCount: 1,
@@ -199,6 +205,23 @@ describe('Survey Component', () => {
       isCompleted: false,
       questions: [],
     });
+    
+    mockUsePageNavigation.mockReturnValue({
+      navigationState: {
+        currentPageNo: 0,
+        pageCount: 1,
+        isFirstPage: true,
+        isLastPage: true,
+        canGoNext: true,
+        canGoPrevious: false,
+        isNavigating: false,
+        validationError: null,
+      },
+      goToNextPage: jest.fn(),
+      goToPreviousPage: jest.fn(),
+      completeSurvey: jest.fn(),
+    });
+    
     const { getByText } = render(<Survey model={{}} />);
     expect(getByText('Complete')).toBeTruthy();
   });
@@ -211,6 +234,9 @@ describe('Survey Component', () => {
     };
 
     const mockUseSurveyState = require('../../hooks').useSurveyState;
+    const mockUsePageNavigation = require('../../hooks').usePageNavigation;
+    const mockCompleteSurvey = jest.fn();
+    
     mockUseSurveyState.mockReturnValue({
       currentPageNo: 0,
       pageCount: 1,
@@ -218,6 +244,22 @@ describe('Survey Component', () => {
       isLastPage: true,
       isCompleted: false,
       questions: [],
+    });
+    
+    mockUsePageNavigation.mockReturnValue({
+      navigationState: {
+        currentPageNo: 0,
+        pageCount: 1,
+        isFirstPage: true,
+        isLastPage: true,
+        canGoNext: true,
+        canGoPrevious: false,
+        isNavigating: false,
+        validationError: null,
+      },
+      goToNextPage: jest.fn(),
+      goToPreviousPage: jest.fn(),
+      completeSurvey: mockCompleteSurvey,
     });
 
     const { getByText } = render(
@@ -239,6 +281,9 @@ describe('Survey Component', () => {
 
   it('should not throw error when onComplete is not provided', () => {
     const mockUseSurveyState = require('../../hooks').useSurveyState;
+    const mockUsePageNavigation = require('../../hooks').usePageNavigation;
+    const mockCompleteSurvey = jest.fn();
+    
     mockUseSurveyState.mockReturnValue({
       currentPageNo: 0,
       pageCount: 1,
@@ -246,6 +291,22 @@ describe('Survey Component', () => {
       isLastPage: true,
       isCompleted: false,
       questions: [],
+    });
+    
+    mockUsePageNavigation.mockReturnValue({
+      navigationState: {
+        currentPageNo: 0,
+        pageCount: 1,
+        isFirstPage: true,
+        isLastPage: true,
+        canGoNext: true,
+        canGoPrevious: false,
+        isNavigating: false,
+        validationError: null,
+      },
+      goToNextPage: jest.fn(),
+      goToPreviousPage: jest.fn(),
+      completeSurvey: mockCompleteSurvey,
     });
 
     const { getByText } = render(<Survey model={{}} />);
@@ -262,6 +323,9 @@ describe('Survey Component', () => {
     };
 
     const mockUseSurveyState = require('../../hooks').useSurveyState;
+    const mockUsePageNavigation = require('../../hooks').usePageNavigation;
+    const mockCompleteSurvey = jest.fn();
+    
     mockUseSurveyState.mockReturnValue({
       currentPageNo: 0,
       pageCount: 1,
@@ -269,6 +333,22 @@ describe('Survey Component', () => {
       isLastPage: true,
       isCompleted: false,
       questions: [],
+    });
+    
+    mockUsePageNavigation.mockReturnValue({
+      navigationState: {
+        currentPageNo: 0,
+        pageCount: 1,
+        isFirstPage: true,
+        isLastPage: true,
+        canGoNext: true,
+        canGoPrevious: false,
+        isNavigating: false,
+        validationError: null,
+      },
+      goToNextPage: jest.fn(),
+      goToPreviousPage: jest.fn(),
+      completeSurvey: mockCompleteSurvey,
     });
 
     const { getByText } = render(
