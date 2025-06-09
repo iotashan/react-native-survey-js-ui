@@ -13,11 +13,21 @@ declare module 'survey-core' {
     isRequired?: boolean;
   }
 
+  export interface PanelModel {
+    name: string;
+    title?: string;
+    description?: string;
+    questions: Question[];
+    panels: PanelModel[];
+    visible: boolean;
+  }
+
   export interface PageModel {
     name: string;
     title?: string;
     description?: string;
     questions: Question[];
+    panels?: PanelModel[];
     getQuestionByName?(name: string): Question | undefined;
   }
 

@@ -50,11 +50,14 @@ Add validation timing options supporting real-time validation, on-submit validat
 ### T05_S08 - Custom Validation Foundation (Medium Complexity)
 Establish extensible custom validation rule support system that integrates with survey-core and supports React Native patterns.
 
-### T06_S08 - Integration Testing (High Complexity)
-Create comprehensive integration testing suite that validates validation behavior across page navigation, panel layouts, and question types.
+### T06_S08 - Validation Navigation Integration Testing (Medium Complexity)
+Create integration tests specifically for validation system working with page navigation components, ensuring validation properly blocks or allows navigation.
 
 ### T07_S08 - Sample App Validation Examples (Low Complexity)
 Add comprehensive validation examples to both Survey Demo and Explore tabs demonstrating all validation features and edge cases.
+
+### T08_S08 - Validation Panel Integration Testing (Medium Complexity)
+Create integration tests for validation system working with panel components and hierarchies, ensuring validation works correctly within nested panel structures.
 
 ## Notes / Retrospective Points
 - This sprint completes the core M02 functionality with validation

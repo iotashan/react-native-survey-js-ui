@@ -6,3 +6,5 @@ export { PageNavigation } from './PageNavigation';
 export type { PageNavigationProps } from './PageNavigation';
 export { ProgressIndicator } from './ProgressIndicator';
 export type { ProgressIndicatorProps, ProgressIndicatorMode } from './ProgressIndicator';
+export { Panel } from './Panel';
+export type { PanelProps } from './Panel';
