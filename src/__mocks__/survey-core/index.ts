@@ -64,3 +64,29 @@ export const ComponentCollection = {
     clear: jest.fn(),
   },
 };
+
+// Validator classes for CustomValidator
+export class SurveyValidator {
+  constructor() {}
+  text = '';
+  isAsync = false;
+  isRunning = false;
+  validate = jest.fn().mockReturnValue(null);
+  createCustomError = jest.fn();
+  getErrorText = jest.fn();
+  onAsyncCompleted = null;
+  errorOwner = null;
+}
+
+export class ValidatorResult {
+  constructor(public value: any, public error: any = null) {}
+}
+
+export class CustomError {
+  constructor(public text: string, public errorOwner: any) {}
+}
+
+export const JsonObject = {
+  getValue: jest.fn((obj: any, name: string) => obj[name]),
+  setValue: jest.fn((obj: any, name: string, value: any) => { obj[name] = value; }),
+};

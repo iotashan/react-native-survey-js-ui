@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { Model, Question } from 'survey-core';
+import { ValidatorRegistry, CustomValidator, type ValidationFunction } from '../validation';
 
 /**
  * Validation timing modes for form validation
@@ -32,6 +33,12 @@ export interface ValidationContextValue {
   setFieldError: (fieldName: string, errors: string[]) => void;
   getFieldErrors: (fieldName: string) => string[];
   markFieldTouched: (fieldName: string) => void;
+  
+  // Custom validation methods
+  registerCustomValidator: (ruleName: string, validationFunction: ValidationFunction, errorMessage?: string) => void;
+  addCustomValidatorToField: (fieldName: string, validatorRuleName: string, customErrorMessage?: string) => void;
+  removeCustomValidatorFromField: (fieldName: string, validatorRuleName: string) => void;
+  validateWithCustomValidator: (fieldName: string, value: any, validatorRuleName: string) => boolean | Promise<boolean>;
 }
 
 const ValidationContext = createContext<ValidationContextValue | null>(null);
@@ -55,6 +62,9 @@ export function ValidationProvider({
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
   const [isValidating, setIsValidating] = useState(false);
+  
+  // Custom validator state - track which validators are applied to which fields
+  const [fieldCustomValidators, setFieldCustomValidators] = useState<Record<string, string[]>>({});
   
   // Ref to track current validation mode for event handlers
   const validationModeRef = useRef(validationMode);
@@ -411,6 +421,80 @@ export function ValidationProvider({
     };
   }, [model, validateField, validateSurvey, getQuestionErrors]);
 
+  // Custom validation methods
+  const registerCustomValidator = useCallback((
+    ruleName: string, 
+    validationFunction: ValidationFunction, 
+    errorMessage?: string
+  ) => {
+    ValidatorRegistry.register(ruleName, validationFunction, errorMessage);
+  }, []);
+
+  const addCustomValidatorToField = useCallback((
+    fieldName: string, 
+    validatorRuleName: string, 
+    customErrorMessage?: string
+  ) => {
+    setFieldCustomValidators(prev => ({
+      ...prev,
+      [fieldName]: [...(prev[fieldName] || []), validatorRuleName]
+    }));
+  }, []);
+
+  const removeCustomValidatorFromField = useCallback((
+    fieldName: string, 
+    validatorRuleName: string
+  ) => {
+    setFieldCustomValidators(prev => ({
+      ...prev,
+      [fieldName]: (prev[fieldName] || []).filter(name => name !== validatorRuleName)
+    }));
+  }, []);
+
+  const validateWithCustomValidator = useCallback(async (
+    fieldName: string, 
+    value: any, 
+    validatorRuleName: string
+  ): Promise<boolean> => {
+    try {
+      if (!ValidatorRegistry.exists(validatorRuleName)) {
+        console.warn(`Custom validator "${validatorRuleName}" not found`);
+        return true;
+      }
+
+      const validator = ValidatorRegistry.createValidator(validatorRuleName);
+      const result = validator.validate(value, fieldName);
+      
+      if (validator.isAsync) {
+        // For async validators, we return true initially and handle errors via onAsyncCompleted
+        return new Promise((resolve) => {
+          validator.onAsyncCompleted = (asyncResult) => {
+            const isValid = !asyncResult || !asyncResult.error;
+            if (!isValid && asyncResult?.error) {
+              setFieldError(fieldName, [asyncResult.error.text || 'Validation failed']);
+            } else {
+              clearFieldError(fieldName);
+            }
+            resolve(isValid);
+          };
+        });
+      } else {
+        // Sync validation
+        const isValid = !result || !result.error;
+        if (!isValid && result?.error) {
+          setFieldError(fieldName, [result.error.text || 'Validation failed']);
+        } else {
+          clearFieldError(fieldName);
+        }
+        return isValid;
+      }
+    } catch (error) {
+      console.error(`Error in custom validator "${validatorRuleName}":`, error);
+      setFieldError(fieldName, ['Validation error occurred']);
+      return false;
+    }
+  }, [setFieldError, clearFieldError]);
+
   // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo<ValidationContextValue>(() => ({
     model,
@@ -428,6 +512,10 @@ export function ValidationProvider({
     setFieldError,
     getFieldErrors,
     markFieldTouched,
+    registerCustomValidator,
+    addCustomValidatorToField,
+    removeCustomValidatorFromField,
+    validateWithCustomValidator,
   }), [
     model,
     validationMode,
@@ -443,6 +531,10 @@ export function ValidationProvider({
     setFieldError,
     getFieldErrors,
     markFieldTouched,
+    registerCustomValidator,
+    addCustomValidatorToField,
+    removeCustomValidatorFromField,
+    validateWithCustomValidator,
   ]);
 
   return (

@@ -21,3 +21,8 @@ export * from './utils';
 
 // Hooks
 export * from './hooks';
+
+// Validation
+export * from './validation';
+export { ValidationProvider, useValidation } from './contexts/ValidationContext';
+export type { ValidationMode, ValidationContextValue } from './contexts/ValidationContext';
