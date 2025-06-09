@@ -1,36 +1,11 @@
 import { QuestionModel } from 'react-native-survey-js-ui';
+import { panelDemoComponents } from './panelExamples';
+import { QuestionCategory, ComponentProperty, ComponentInfo } from './types';
 
-export enum QuestionCategory {
-  TextInput = 'Text Input',
-  Selection = 'Selection',
-  Rating = 'Rating',
-  Matrix = 'Matrix',
-  Advanced = 'Advanced',
-  Display = 'Display',
-  Layout = 'Layout',
-}
+// Re-export for backward compatibility
+export { QuestionCategory, ComponentProperty, ComponentInfo } from './types';
 
-export interface ComponentProperty {
-  name: string;
-  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
-  description: string;
-  required?: boolean;
-  defaultValue?: any;
-  options?: any[];
-}
-
-export interface ComponentInfo {
-  type: string;
-  name: string;
-  description: string;
-  category: QuestionCategory;
-  icon: string;
-  tags: string[];
-  properties: ComponentProperty[];
-  example: QuestionModel;
-}
-
-export const componentCatalog: ComponentInfo[] = [
+const baseComponentCatalog: ComponentInfo[] = [
   // Text Input Components
   {
     type: 'text',
@@ -790,66 +765,12 @@ export const componentCatalog: ComponentInfo[] = [
       displayStyle: 'decimal',
     },
   },
+];
 
-  // Layout Components
-  {
-    type: 'panel',
-    name: 'Panel with Header',
-    description: 'Container for grouping questions with collapsible header',
-    category: QuestionCategory.Layout,
-    icon: '📦',
-    tags: ['layout', 'container', 'group', 'collapsible', 'panel'],
-    properties: [
-      {
-        name: 'title',
-        type: 'string',
-        description: 'Title displayed in the panel header',
-        required: false,
-      },
-      {
-        name: 'description',
-        type: 'string',
-        description: 'Description displayed below the title',
-        required: false,
-      },
-      {
-        name: 'collapsible',
-        type: 'boolean',
-        description: 'Whether the panel can be collapsed/expanded',
-        defaultValue: false,
-      },
-      {
-        name: 'initialExpanded',
-        type: 'boolean',
-        description: 'Initial expanded state when collapsible',
-        defaultValue: true,
-      },
-      {
-        name: 'showIcon',
-        type: 'boolean',
-        description: 'Show expand/collapse icon',
-        defaultValue: true,
-      },
-    ],
-    example: {
-      type: 'panel',
-      name: 'personalInfo',
-      title: 'Personal Information',
-      description: 'Please provide your basic details',
-      elements: [
-        {
-          type: 'text',
-          name: 'firstName',
-          title: 'First Name',
-        },
-        {
-          type: 'text',
-          name: 'lastName',
-          title: 'Last Name',
-        },
-      ],
-    },
-  },
+// Merge panel demo components into the main catalog
+export const componentCatalog: ComponentInfo[] = [
+  ...baseComponentCatalog,
+  ...panelDemoComponents,
 ];
 
 // Helper functions

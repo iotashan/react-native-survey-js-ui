@@ -2,14 +2,14 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { TabNavigator } from './navigation';
+import { RootNavigator } from './navigation';
 
 export default function App() {
   return (
     <SafeAreaProvider>
       <View style={styles.container} testID="app-container">
         <NavigationContainer>
-          <TabNavigator />
+          <RootNavigator />
         </NavigationContainer>
       </View>
     </SafeAreaProvider>
