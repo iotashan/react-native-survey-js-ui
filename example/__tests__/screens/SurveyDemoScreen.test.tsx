@@ -228,6 +228,23 @@ describe('SurveyDemoScreen', () => {
       expect(hasError).toBe(true);
     });
 
+    test('includes multi-page demo showing navigation flow', () => {
+      const { getSurveyExampleById } = require('../../src/data/surveyExamples');
+      const multiPageDemo = getSurveyExampleById('multi-page-demo');
+
+      expect(multiPageDemo).toBeDefined();
+      expect(multiPageDemo.title).toBe('Multi-Page Demo Survey');
+      expect(multiPageDemo.model.pages).toHaveLength(5);
+      
+      // Verify page names for navigation demo
+      const pageNames = multiPageDemo.model.pages.map((page: any) => page.name);
+      expect(pageNames).toEqual(['welcome', 'demographics', 'experience', 'feedback', 'completion']);
+      
+      // Should have progress and numbering enabled for better UX
+      expect(multiPageDemo.model.showProgressBar).toBe('top');
+      expect(multiPageDemo.model.showQuestionNumbers).toBe('on');
+    });
+
     test('survey examples provide good developer learning experience', () => {
       const { surveyExamples } = require('../../src/data/surveyExamples');
 
