@@ -13,6 +13,7 @@ import {
   PanelStyleConfig
 } from './panelStyles';
 import { PanelNestingContext, PanelNestingProvider, usePanelNesting } from './PanelNestingContext';
+import { usePanelStateContext } from './PanelStateContext';
 
 export interface PanelProps {
   panel: PanelModel | null | undefined;
@@ -33,9 +34,31 @@ const PanelContent: React.FC<PanelProps> = ({
   theme,
   isRTL = false
 }) => {
-  const [expanded, setExpanded] = useState(initialExpanded);
+  const [localExpanded, setLocalExpanded] = useState(initialExpanded);
   const [, forceUpdate] = useState({});
   const nestingContext = usePanelNesting();
+  const panelStateContext = usePanelStateContext();
+
+  // Determine if we should use context state or local state
+  const usingContextState = panelStateContext.enabled && panel?.name;
+  
+  // Get effective expanded state
+  const expanded = useMemo(() => {
+    if (usingContextState && panel?.name) {
+      return panelStateContext.getPanelState(panel.name);
+    }
+    return localExpanded;
+  }, [usingContextState, panel?.name, panelStateContext, localExpanded]);
+
+  // Handle state changes
+  const handleToggle = useMemo(() => {
+    if (usingContextState && panel?.name) {
+      return (newExpanded: boolean) => {
+        panelStateContext.setPanelState(panel.name, newExpanded);
+      };
+    }
+    return setLocalExpanded;
+  }, [usingContextState, panel?.name, panelStateContext]);
 
   // Use context nesting level if available, otherwise use prop
   const effectiveNestingLevel = nestingContext ? nestingContext.nestingLevel : nestingLevel;
@@ -142,7 +165,7 @@ const PanelContent: React.FC<PanelProps> = ({
           description={panel.description}
           collapsible={collapsible}
           expanded={expanded}
-          onToggle={setExpanded}
+          onToggle={handleToggle}
           testID={`panel-header-${panel.name}`}
         />
       )}

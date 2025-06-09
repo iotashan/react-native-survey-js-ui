@@ -4,6 +4,8 @@ export { PanelHeader } from './PanelHeader';
 export type { PanelHeaderProps } from './PanelHeader';
 export { PanelNestingContext, usePanelNesting } from './PanelNestingContext';
 export type { PanelNestingContextValue } from './PanelNestingContext';
+export { PanelStateProvider, usePanelStateContext, withPanelState } from './PanelStateContext';
+export type { PanelStateContextValue, PanelStateProviderProps } from './PanelStateContext';
 
 // Export panel styling utilities
 export { 

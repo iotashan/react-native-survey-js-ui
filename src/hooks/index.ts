@@ -27,3 +27,10 @@ export type {
   ValidationError,
   UsePageValidationReturn
 } from './usePageValidation';
+
+// Panel state hook
+export { usePanelState } from './usePanelState';
+export type {
+  UsePanelStateOptions,
+  UsePanelStateReturn
+} from './usePanelState';
