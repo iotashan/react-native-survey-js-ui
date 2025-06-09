@@ -164,7 +164,7 @@ describe('Panel with Styling System Integration', () => {
     it('should handle many panels efficiently', () => {
       // Create a complex structure with many panels
       const panels = Array.from({ length: 20 }, (_, i) => ({
-        name: `panel${i}`,
+        name: `child-panel${i}`,
         visible: true,
         questions: [],
         panels: [],
@@ -173,12 +173,15 @@ describe('Panel with Styling System Integration', () => {
       mockPanel.panels = panels;
 
       const startTime = Date.now();
-      const { getAllByTestId } = render(<Panel panel={mockPanel} />);
+      const { getByTestId, getAllByTestId } = render(<Panel panel={mockPanel} />);
       const renderTime = Date.now() - startTime;
 
-      // Should render all panels (parent + 20 nested)
-      const renderedPanels = getAllByTestId(/^panel-panel/);
-      expect(renderedPanels).toHaveLength(21); // 1 parent + 20 nested
+      // Should render parent panel
+      expect(getByTestId('panel-panel1')).toBeTruthy();
+      
+      // Should render all child panels
+      const childPanels = getAllByTestId(/^panel-child-panel/);
+      expect(childPanels).toHaveLength(20);
 
       // Should render quickly (under 100ms)
       expect(renderTime).toBeLessThan(100);

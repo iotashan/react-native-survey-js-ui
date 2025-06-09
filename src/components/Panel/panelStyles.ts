@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, ViewStyle, Platform } from 'react-native';
+import { StyleSheet, Dimensions, ViewStyle } from 'react-native';
 
 // Responsive breakpoint utilities
 export class ResponsiveBreakpoints {

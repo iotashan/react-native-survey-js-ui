@@ -86,22 +86,26 @@ describe('Panel Integration with SurveyPage', () => {
   });
 
   it('should demonstrate panel visibility control in page context', () => {
-    const panel1 = createMockPanel({
+    const panel = createMockPanel({
       name: 'panel1',
       visible: true,
       questions: [createMockQuestion('q1')],
     });
 
-    const panel2 = createMockPanel({
-      name: 'panel2',
-      visible: false,
-      questions: [createMockQuestion('q2')],
-    });
-
-    const { rerender } = render(<Panel panel={panel1} />);
+    const { rerender } = render(<Panel panel={panel} />);
     expect(screen.getByTestId('panel-panel1')).toBeTruthy();
+    expect(screen.getByTestId('question-q1')).toBeTruthy();
 
-    rerender(<Panel panel={panel2} />);
-    expect(screen.queryByTestId('panel-panel2')).toBeNull();
+    // Change visibility
+    panel.visible = false;
+    rerender(<Panel panel={panel} />);
+    expect(screen.queryByTestId('panel-panel1')).toBeNull();
+    expect(screen.queryByTestId('question-q1')).toBeNull();
+
+    // Make visible again
+    panel.visible = true;
+    rerender(<Panel panel={panel} />);
+    expect(screen.getByTestId('panel-panel1')).toBeTruthy();
+    expect(screen.getByTestId('question-q1')).toBeTruthy();
   });
 });
