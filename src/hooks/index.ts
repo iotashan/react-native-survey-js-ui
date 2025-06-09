@@ -9,7 +9,12 @@ export type {
 export { useSurveyModelFixed } from './useSurveyModelFixed';
 
 export { useSurveyStateFixed as useSurveyState } from './useSurveyStateFixed';
-export type { SurveyState } from './useSurveyStateFixed';
+export type { 
+  SurveyState, 
+  UseSurveyStateReturn,
+  ValidationState as SurveyValidationState,
+  ValidationError as SurveyValidationError
+} from './useSurveyStateFixed';
 
 export { useSurveyStateFixed } from './useSurveyStateFixed';
 

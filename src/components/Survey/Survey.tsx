@@ -18,7 +18,6 @@ import { useSurveyModel } from '../../hooks';
 import { useSurveyState } from '../../hooks';
 import { usePageNavigation } from '../../hooks';
 import { useSubmissionMode } from '../../hooks';
-import { usePageValidation } from '../../hooks';
 import { ValidationProvider, useValidation } from '../../contexts/ValidationContext';
 import { PageNavigation } from '../PageNavigation';
 import { ProgressIndicator } from '../ProgressIndicator';
@@ -68,7 +67,6 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
 }) => {
   const { validateAllVisibleQuestions, setShowErrors } = useValidation();
   const { navigationState, goToNextPage, goToPreviousPage, completeSurvey } = usePageNavigation(surveyModel);
-  const { validationState, validateCurrentPage, clearErrors, getQuestionErrors } = usePageValidation(surveyModel);
   
   // Initialize submission mode
   const { status, lastResult, retryCount, triggerSubmission } = useSubmissionMode(
@@ -153,9 +151,9 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
   const handleValidation = React.useCallback(() => {
     setShowErrors(true); // Show errors when validating
     const contextValidation = validateAllVisibleQuestions();
-    const pageValidation = validateCurrentPage();
+    const pageValidation = surveyState.validateCurrentPage();
     return contextValidation && pageValidation;
-  }, [validateAllVisibleQuestions, setShowErrors, validateCurrentPage]);
+  }, [validateAllVisibleQuestions, setShowErrors, surveyState]);
 
   const showProgressBar =
     Boolean(surveyModel?.showProgressBar && surveyModel.showProgressBar !== 'off');
@@ -180,6 +178,7 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
             onQuestionValueChange={(name, value) => {
               surveyModel.setValue(name, value);
             }}
+            questionErrors={surveyState.validation.errors}
           />
         ) : (
           <View style={styles.placeholderContainer}>
@@ -206,7 +205,7 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
           onNext={() => goToNextPage(handleValidation)}
           onPrevious={goToPreviousPage}
           onComplete={() => completeSurvey(handleValidation)}
-          validationState={validationState}
+          validationState={surveyState.validation}
         />
       )}
 

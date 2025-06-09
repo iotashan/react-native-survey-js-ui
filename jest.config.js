@@ -84,6 +84,7 @@ module.exports = {
   moduleNameMapper: {
     '^react-native-survey-js-ui$': '<rootDir>/src/index.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^survey-core$': '<rootDir>/src/__mocks__/survey-core',
   },
   
   // Roots for Jest to search

@@ -2,32 +2,21 @@ import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import type { PageModel, Question } from 'survey-core';
 import { QuestionFactory } from '../Questions';
-import { useValidation } from '../../contexts/ValidationContext';
 
 export interface SurveyPageProps {
   page: PageModel;
   surveyId?: string;
   onQuestionValueChange?: (name: string, value: any) => void;
+  questionErrors?: Record<string, string[]>; // Question-level errors from useSurveyState
 }
 
-export const SurveyPage: React.FC<SurveyPageProps> = ({ page, onQuestionValueChange }) => {
-  const validation = useValidation();
-  
+export const SurveyPage: React.FC<SurveyPageProps> = ({ page, onQuestionValueChange, questionErrors }) => {
   if (!page) {
     return null;
   }
 
   const visibleQuestions = page.questions?.filter((q: Question) => q.visible) || [];
   
-  // Collect all errors for visible questions on this page
-  const pageErrors: Array<{ field: string; message: string }> = [];
-  visibleQuestions.forEach((question) => {
-    const fieldErrors = validation.getFieldErrors(question.name);
-    fieldErrors.forEach((error) => {
-      pageErrors.push({ field: question.title || question.name, message: error });
-    });
-  });
-
   return (
     <View style={styles.container} testID="survey-page">
       {page.title && (
@@ -41,33 +30,28 @@ export const SurveyPage: React.FC<SurveyPageProps> = ({ page, onQuestionValueCha
         </Text>
       )}
       
-      {/* Validation Summary */}
-      {validation.hasErrors && pageErrors.length > 0 && (
-        <View style={styles.validationSummary} testID="validation-summary">
-          <Text style={styles.validationSummaryTitle}>Please fix the following errors:</Text>
-          {pageErrors.map((error, index) => (
-            <Text key={index} style={styles.validationSummaryMessage}>
-              • {error.field}: {error.message}
-            </Text>
-          ))}
-        </View>
-      )}
-      
       <View style={styles.questionsContainer}>
         {visibleQuestions.length > 0 ? (
-          visibleQuestions.map((question: Question) => (
-            <View key={question.name} style={styles.questionWrapper}>
-              <QuestionFactory
-                question={question}
-                value={question.value}
-                onChange={(value: any) => {
-                  if (onQuestionValueChange) {
-                    onQuestionValueChange(question.name, value);
-                  }
-                }}
-              />
-            </View>
-          ))
+          visibleQuestions.map((question: Question) => {
+            // Get question-level errors from the questionErrors prop (from useSurveyState)
+            const questionErrorMessages = questionErrors?.[question.name] || [];
+            const questionError = questionErrorMessages.length > 0 ? questionErrorMessages[0] : undefined;
+            
+            return (
+              <View key={question.name} style={styles.questionWrapper}>
+                <QuestionFactory
+                  question={question}
+                  value={question.value}
+                  onChange={(value: any) => {
+                    if (onQuestionValueChange) {
+                      onQuestionValueChange(question.name, value);
+                    }
+                  }}
+                  error={questionError}
+                />
+              </View>
+            );
+          })
         ) : (
           <Text style={styles.emptyText} testID="empty-page-message">
             No questions available on this page
@@ -92,25 +76,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 16,
-  },
-  validationSummary: {
-    backgroundColor: '#ffebee',
-    borderColor: '#d32f2f',
-    borderWidth: 1,
-    borderRadius: 4,
-    padding: 12,
-    marginBottom: 16,
-  },
-  validationSummaryTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#d32f2f',
-    marginBottom: 8,
-  },
-  validationSummaryMessage: {
-    fontSize: 12,
-    color: '#d32f2f',
-    marginBottom: 4,
   },
   questionsContainer: {
     flex: 1,
