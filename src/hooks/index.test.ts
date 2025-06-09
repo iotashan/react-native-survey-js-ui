@@ -23,6 +23,8 @@ describe('hooks index exports', () => {
     expect(exportedKeys).toContain('useSurveyState');
     expect(exportedKeys).toContain('useSurveyModelFixed');
     expect(exportedKeys).toContain('useSurveyStateFixed');
-    expect(exportedKeys.length).toBe(5);
+    expect(exportedKeys).toContain('usePageNavigation');
+    expect(exportedKeys).toContain('usePageValidation');
+    expect(exportedKeys.length).toBe(7);
   });
 });

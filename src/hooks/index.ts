@@ -19,3 +19,11 @@ export type {
   NavigationState, 
   UsePageNavigationReturn 
 } from './usePageNavigation';
+
+// Page validation hook
+export { usePageValidation } from './usePageValidation';
+export type {
+  ValidationState,
+  ValidationError,
+  UsePageValidationReturn
+} from './usePageValidation';

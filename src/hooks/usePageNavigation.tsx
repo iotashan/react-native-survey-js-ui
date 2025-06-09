@@ -15,9 +15,9 @@ export interface NavigationState {
 
 export interface UsePageNavigationReturn {
   navigationState: NavigationState;
-  goToNextPage: () => Promise<void>;
+  goToNextPage: (validatePage?: () => boolean) => Promise<void>;
   goToPreviousPage: () => Promise<void>;
-  completeSurvey: () => Promise<void>;
+  completeSurvey: (validatePage?: () => boolean) => Promise<void>;
 }
 
 /**
@@ -105,7 +105,7 @@ export function usePageNavigation(model: Model | null): UsePageNavigationReturn 
   /**
    * Navigate to the next page with validation
    */
-  const goToNextPage = useCallback(async () => {
+  const goToNextPage = useCallback(async (validatePage?: () => boolean) => {
     if (!model || navigationState.isLastPage || navigationState.isNavigating) {
       return;
     }
@@ -113,20 +113,26 @@ export function usePageNavigation(model: Model | null): UsePageNavigationReturn 
     setNavigationState((prev) => ({ ...prev, isNavigating: true }));
 
     try {
-      // Validate current page - use basic validation approach
       let isValid = true;
-      try {
-        // Use hasErrors if available, otherwise assume valid
-        if ((model as any).hasErrors) {
-          isValid = !(model as any).hasErrors();
+      
+      // Use provided validation function if available
+      if (validatePage) {
+        isValid = validatePage();
+      } else {
+        // Fallback to basic validation approach
+        try {
+          // Use hasErrors if available, otherwise assume valid
+          if ((model as any).hasErrors) {
+            isValid = !(model as any).hasErrors();
+          }
+          // Check current page validation if available
+          if (model.currentPage && (model.currentPage as any).hasErrors) {
+            isValid = isValid && !(model.currentPage as any).hasErrors();
+          }
+        } catch (error) {
+          // Fallback: assume valid if validation methods don't exist
+          isValid = true;
         }
-        // Check current page validation if available
-        if (model.currentPage && (model.currentPage as any).hasErrors) {
-          isValid = isValid && !(model.currentPage as any).hasErrors();
-        }
-      } catch (error) {
-        // Fallback: assume valid if validation methods don't exist
-        isValid = true;
       }
       
       if (isValid) {
@@ -181,7 +187,7 @@ export function usePageNavigation(model: Model | null): UsePageNavigationReturn 
   /**
    * Complete the survey with final validation
    */
-  const completeSurvey = useCallback(async () => {
+  const completeSurvey = useCallback(async (validatePage?: () => boolean) => {
     if (!model || !navigationState.isLastPage || navigationState.isNavigating) {
       return;
     }
@@ -189,18 +195,24 @@ export function usePageNavigation(model: Model | null): UsePageNavigationReturn 
     setNavigationState((prev) => ({ ...prev, isNavigating: true }));
 
     try {
-      // Validate entire survey before completion
       let isValid = true;
-      try {
-        // Use completeLastPage if available, otherwise use doComplete directly
-        if ((model as any).completeLastPage) {
-          isValid = (model as any).completeLastPage();
-        } else if ((model as any).hasErrors) {
-          isValid = !(model as any).hasErrors();
+      
+      // Use provided validation function if available
+      if (validatePage) {
+        isValid = validatePage();
+      } else {
+        // Fallback to basic validation approach
+        try {
+          // Use completeLastPage if available, otherwise use doComplete directly
+          if ((model as any).completeLastPage) {
+            isValid = (model as any).completeLastPage();
+          } else if ((model as any).hasErrors) {
+            isValid = !(model as any).hasErrors();
+          }
+        } catch (error) {
+          // Fallback: proceed with completion if validation methods don't exist
+          isValid = true;
         }
-      } catch (error) {
-        // Fallback: proceed with completion if validation methods don't exist
-        isValid = true;
       }
       
       if (isValid) {
