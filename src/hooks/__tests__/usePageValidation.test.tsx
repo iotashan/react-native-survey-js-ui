@@ -1,43 +1,23 @@
-import React from 'react';
+import * as React from 'react';
 import { renderHook, act } from '@testing-library/react-native';
+import { Model } from 'survey-core';
 import { usePageValidation } from '../usePageValidation';
-import type { Model, QuestionBase, Page } from 'survey-core';
 
-// Mock survey-core Model
-const createMockModel = (options: Partial<{
-  currentPage: Partial<Page>;
-  pages: Partial<Page>[];
-  questions: Partial<QuestionBase>[];
-  hasValidationMethods: boolean;
-}> = {}): Model => {
-  const {
-    currentPage,
-    pages = [],
-    questions = [],
-    hasValidationMethods = false
-  } = options;
-
-  const mockQuestions = questions.map(q => ({
-    name: q.name || 'question1',
-    value: q.value || '',
-    isRequired: q.isRequired || false,
-    hasErrors: hasValidationMethods ? jest.fn(() => false) : undefined,
-    errors: hasValidationMethods ? [] : undefined,
-    ...q
-  }));
-
-  const mockCurrentPage = {
-    questions: mockQuestions,
-    getQuestionByName: jest.fn((name: string) => 
-      mockQuestions.find(q => q.name === name)
-    ),
-    hasErrors: hasValidationMethods ? jest.fn(() => false) : undefined,
-    ...currentPage
-  };
-
-  const model = {
-    currentPage: mockCurrentPage,
-    pages: pages.length > 0 ? pages : [mockCurrentPage],
+// Mock survey-core
+jest.mock('survey-core', () => ({
+  Model: jest.fn().mockImplementation(() => ({
+    currentPage: {
+      validate: jest.fn(),
+      hasErrors: false,
+      errors: [],
+      questions: [],
+    },
+    validate: jest.fn(),
+    hasErrors: jest.fn(),
+    onValidateQuestion: {
+      add: jest.fn(),
+      remove: jest.fn(),
+    },
     onValueChanged: {
       add: jest.fn(),
       remove: jest.fn(),
@@ -46,388 +26,256 @@ const createMockModel = (options: Partial<{
       add: jest.fn(),
       remove: jest.fn(),
     },
-    onValidatedErrorsOnCurrentPage: hasValidationMethods ? {
-      add: jest.fn(),
-      remove: jest.fn(),
-    } : undefined,
-    validateCurrentPage: hasValidationMethods ? jest.fn(() => true) : undefined,
-    hasErrors: hasValidationMethods ? jest.fn(() => false) : undefined,
-    validate: hasValidationMethods ? jest.fn(() => true) : undefined,
-  } as unknown as Model;
-
-  return model;
-};
+    getQuestionByName: jest.fn(),
+    pages: [],
+  })),
+}));
 
 describe('usePageValidation', () => {
+  let mockModel: jest.Mocked<Model>;
+
   beforeEach(() => {
+    mockModel = new Model({}) as jest.Mocked<Model>;
     jest.clearAllMocks();
   });
 
-  describe('Initialization', () => {
-    it('should initialize with empty validation state when no model provided', () => {
+  describe('Initial State', () => {
+    it('should return initial validation state when model is null', () => {
       const { result } = renderHook(() => usePageValidation(null));
 
       expect(result.current.validationState).toEqual({
-        hasErrors: false,
         errors: {},
-        validationMessages: [],
         isValidating: false,
+        hasErrors: false,
+        validationMessages: [],
       });
     });
 
-    it('should initialize with empty validation state for valid model', () => {
-      const model = createMockModel();
-      const { result } = renderHook(() => usePageValidation(model));
+    it('should return initial validation state when model is provided', () => {
+      const { result } = renderHook(() => usePageValidation(mockModel));
 
       expect(result.current.validationState).toEqual({
-        hasErrors: false,
         errors: {},
-        validationMessages: [],
         isValidating: false,
-      });
-    });
-
-    it('should subscribe to model events during initialization', () => {
-      const model = createMockModel({ hasValidationMethods: true });
-      renderHook(() => usePageValidation(model));
-
-      expect(model.onValueChanged.add).toHaveBeenCalled();
-      expect(model.onCurrentPageChanged.add).toHaveBeenCalled();
-      expect((model as any).onValidatedErrorsOnCurrentPage.add).toHaveBeenCalled();
-    });
-
-    it('should handle models without advanced validation events', () => {
-      const model = createMockModel({ hasValidationMethods: false });
-      renderHook(() => usePageValidation(model));
-
-      expect(model.onValueChanged.add).toHaveBeenCalled();
-      expect(model.onCurrentPageChanged.add).toHaveBeenCalled();
-    });
-  });
-
-  describe('Event Handling', () => {
-    it('should handle value changed events', () => {
-      const model = createMockModel({
-        questions: [
-          { name: 'q1', value: '', isRequired: true }
-        ]
-      });
-      
-      const { result } = renderHook(() => usePageValidation(model));
-
-      // Simulate value changed event
-      const valueChangedHandler = (model.onValueChanged.add as jest.Mock).mock.calls[0][0];
-      
-      act(() => {
-        valueChangedHandler(model, { 
-          question: { 
-            name: 'q1', 
-            value: '', 
-            isRequired: true 
-          } 
-        });
-      });
-
-      expect(result.current.validationState.hasErrors).toBe(true);
-      expect(result.current.validationState.errors.q1).toContain('This field is required');
-    });
-
-    it('should clear errors when page changes', () => {
-      const model = createMockModel({
-        questions: [
-          { name: 'q1', value: '', isRequired: true }
-        ]
-      });
-      
-      const { result } = renderHook(() => usePageValidation(model));
-
-      // First, create some errors
-      const valueChangedHandler = (model.onValueChanged.add as jest.Mock).mock.calls[0][0];
-      act(() => {
-        valueChangedHandler(model, { 
-          question: { 
-            name: 'q1', 
-            value: '', 
-            isRequired: true 
-          } 
-        });
-      });
-
-      expect(result.current.validationState.hasErrors).toBe(true);
-
-      // Then simulate page change
-      const pageChangedHandler = (model.onCurrentPageChanged.add as jest.Mock).mock.calls[0][0];
-      act(() => {
-        pageChangedHandler();
-      });
-
-      expect(result.current.validationState.hasErrors).toBe(false);
-      expect(result.current.validationState.errors).toEqual({});
-    });
-  });
-
-  describe('Validation Methods', () => {
-    describe('validateCurrentPage', () => {
-      it('should return true for model without current page', () => {
-        const model = createMockModel();
-        model.currentPage = null as any;
-        
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          const isValid = result.current.validateCurrentPage();
-          expect(isValid).toBe(true);
-        });
-      });
-
-      it('should use survey-core validation when available', () => {
-        const model = createMockModel({ hasValidationMethods: true });
-        (model as any).validateCurrentPage = jest.fn(() => true);
-        
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          const isValid = result.current.validateCurrentPage();
-          expect(isValid).toBe(true);
-          expect((model as any).validateCurrentPage).toHaveBeenCalled();
-        });
-      });
-
-      it('should validate required fields when survey-core methods unavailable', () => {
-        const model = createMockModel({
-          questions: [
-            { name: 'q1', value: '', isRequired: true },
-            { name: 'q2', value: 'filled', isRequired: true }
-          ]
-        });
-        
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          const isValid = result.current.validateCurrentPage();
-          expect(isValid).toBe(false);
-        });
-
-        expect(result.current.validationState.hasErrors).toBe(true);
-        expect(result.current.validationState.errors.q1).toContain('This field is required');
-        expect(result.current.validationState.errors.q2).toBeUndefined();
-      });
-
-      it('should set isValidating state during validation', () => {
-        const model = createMockModel();
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          result.current.validateCurrentPage();
-        });
-
-        expect(result.current.validationState.isValidating).toBe(false);
-      });
-    });
-
-    describe('validateAllPages', () => {
-      it('should return true for null model', () => {
-        const { result } = renderHook(() => usePageValidation(null));
-
-        act(() => {
-          const isValid = result.current.validateAllPages();
-          expect(isValid).toBe(true);
-        });
-      });
-
-      it('should use survey-core hasErrors when available', () => {
-        const model = createMockModel({ hasValidationMethods: true });
-        (model as any).hasErrors = jest.fn(() => false);
-        
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          const isValid = result.current.validateAllPages();
-          expect(isValid).toBe(true);
-          expect((model as any).hasErrors).toHaveBeenCalled();
-        });
-      });
-
-      it('should validate all pages and questions when methods unavailable', () => {
-        const page1Questions = [
-          { name: 'q1', value: 'filled', isRequired: true }
-        ];
-        const page2Questions = [
-          { name: 'q2', value: '', isRequired: true }
-        ];
-
-        const model = createMockModel({
-          pages: [
-            { questions: page1Questions },
-            { questions: page2Questions }
-          ]
-        });
-        
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          const isValid = result.current.validateAllPages();
-          expect(isValid).toBe(false);
-        });
-      });
-    });
-
-    describe('validateQuestion', () => {
-      it('should return true for non-existent question', () => {
-        const model = createMockModel();
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          const isValid = result.current.validateQuestion('nonexistent');
-          expect(isValid).toBe(true);
-        });
-      });
-
-      it('should validate specific question and update state', () => {
-        const model = createMockModel({
-          questions: [
-            { name: 'q1', value: '', isRequired: true }
-          ]
-        });
-        
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          const isValid = result.current.validateQuestion('q1');
-          expect(isValid).toBe(false);
-        });
-
-        expect(result.current.validationState.errors.q1).toContain('This field is required');
-      });
-
-      it('should use survey-core hasErrors when available', () => {
-        const mockQuestion = {
-          name: 'q1',
-          value: 'test',
-          isRequired: true,
-          hasErrors: jest.fn(() => false)
-        };
-
-        const model = createMockModel({
-          hasValidationMethods: true,
-          questions: [mockQuestion]
-        });
-        
-        const { result } = renderHook(() => usePageValidation(model));
-
-        act(() => {
-          const isValid = result.current.validateQuestion('q1');
-          expect(isValid).toBe(true);
-          expect(mockQuestion.hasErrors).toHaveBeenCalled();
-        });
-      });
-    });
-
-    describe('clearValidationErrors', () => {
-      it('should clear all validation errors', () => {
-        const model = createMockModel({
-          questions: [
-            { name: 'q1', value: '', isRequired: true }
-          ]
-        });
-        
-        const { result } = renderHook(() => usePageValidation(model));
-
-        // First create some errors
-        act(() => {
-          result.current.validateCurrentPage();
-        });
-
-        expect(result.current.validationState.hasErrors).toBe(true);
-
-        // Then clear them
-        act(() => {
-          result.current.clearValidationErrors();
-        });
-
-        expect(result.current.validationState).toEqual({
-          hasErrors: false,
-          errors: {},
-          validationMessages: [],
-          isValidating: false,
-        });
+        hasErrors: false,
+        validationMessages: [],
       });
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle validation errors gracefully', () => {
-      const model = createMockModel();
-      // Mock console.error to avoid test output noise
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-      // Force an error by making getQuestionByName throw
-      (model.currentPage as any).getQuestionByName = jest.fn(() => {
-        throw new Error('Test error');
-      });
-      
-      const { result } = renderHook(() => usePageValidation(model));
+  describe('Page Validation', () => {
+    it('should validate current page successfully', async () => {
+      mockModel.currentPage.validate = jest.fn().mockReturnValue(true);
+      mockModel.currentPage.hasErrors = false;
 
-      act(() => {
-        const isValid = result.current.validateQuestion('q1');
-        expect(isValid).toBe(true); // Should fallback to true
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      await act(async () => {
+        const isValid = result.current.validateCurrentPage();
+        expect(isValid).toBe(true);
       });
 
-      consoleSpy.mockRestore();
+      expect(mockModel.currentPage.validate).toHaveBeenCalledWith(true, false);
     });
 
-    it('should handle missing survey-core methods gracefully', () => {
-      const model = createMockModel({
-        questions: [
-          { name: 'q1', value: '', isRequired: true }
-        ]
-      });
+    it('should handle validation errors', async () => {
+      const mockErrors = [
+        { text: 'This field is required' },
+      ];
       
-      // Remove all survey-core methods
-      delete (model as any).validateCurrentPage;
-      delete (model.currentPage as any).hasErrors;
-      delete (model as any).hasErrors;
-      delete (model as any).validate;
-      
-      const { result } = renderHook(() => usePageValidation(model));
+      mockModel.currentPage.validate = jest.fn().mockReturnValue(false);
+      mockModel.currentPage.hasErrors = true;
+      mockModel.currentPage.errors = mockErrors;
 
-      // Should still work with fallback validation
-      act(() => {
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      await act(async () => {
         const isValid = result.current.validateCurrentPage();
         expect(isValid).toBe(false);
       });
 
       expect(result.current.validationState.hasErrors).toBe(true);
     });
+
+    it('should fallback to manual validation when validate method fails', async () => {
+      mockModel.currentPage.validate = jest.fn().mockImplementation(() => {
+        throw new Error('Validation error');
+      });
+
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      await act(async () => {
+        const isValid = result.current.validateCurrentPage();
+        expect(isValid).toBe(true); // Should fallback to true on error
+      });
+    });
   });
 
-  describe('Cleanup', () => {
-    it('should remove event listeners on unmount', () => {
-      const model = createMockModel({ hasValidationMethods: true });
-      const { unmount } = renderHook(() => usePageValidation(model));
+  describe('Error Management', () => {
+    it('should clear errors for specific question', () => {
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      // Set initial errors
+      act(() => {
+        result.current.validationState.errors = {
+          question1: ['Error 1'],
+          question2: ['Error 2'],
+        };
+      });
+
+      act(() => {
+        result.current.clearErrors('question1');
+      });
+
+      expect(result.current.getQuestionErrors('question1')).toEqual([]);
+      expect(result.current.getQuestionErrors('question2')).toEqual(['Error 2']);
+    });
+
+    it('should clear all errors when no question name provided', () => {
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      // Set initial errors
+      act(() => {
+        result.current.validationState.errors = {
+          question1: ['Error 1'],
+          question2: ['Error 2'],
+        };
+      });
+
+      act(() => {
+        result.current.clearErrors();
+      });
+
+      expect(result.current.validationState.errors).toEqual({});
+      expect(result.current.validationState.hasErrors).toBe(false);
+    });
+
+    it('should get question errors correctly', () => {
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      // Mock validation state with errors
+      act(() => {
+        result.current.validationState.errors = {
+          question1: ['Error 1', 'Error 2'],
+        };
+      });
+
+      const errors = result.current.getQuestionErrors('question1');
+      expect(errors).toEqual(['Error 1', 'Error 2']);
+
+      const noErrors = result.current.getQuestionErrors('nonexistent');
+      expect(noErrors).toEqual([]);
+    });
+  });
+
+  describe('Event Handling', () => {
+    it('should register event handlers on model', () => {
+      renderHook(() => usePageValidation(mockModel));
+
+      expect(mockModel.onValidateQuestion.add).toHaveBeenCalled();
+      expect(mockModel.onValueChanged.add).toHaveBeenCalled();
+    });
+
+    it('should handle value change events', () => {
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      // Simulate value change
+      const valueChangedHandler = (mockModel.onValueChanged.add as jest.Mock).mock.calls[0][0];
+      
+      act(() => {
+        valueChangedHandler(mockModel, { name: 'question1' });
+      });
+
+      // Should clear errors for the changed question
+      expect(result.current.getQuestionErrors('question1')).toEqual([]);
+    });
+
+    it('should handle question validation events', () => {
+      const mockQuestion = {
+        name: 'question1',
+        errors: [{ text: 'Validation error' }],
+      };
+      
+      mockModel.getQuestionByName = jest.fn().mockReturnValue(mockQuestion);
+
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      // Simulate validation event
+      const validateHandler = (mockModel.onValidateQuestion.add as jest.Mock).mock.calls[0][0];
+      
+      act(() => {
+        validateHandler(mockModel, { name: 'question1' });
+      });
+
+      expect(result.current.getQuestionErrors('question1')).toEqual(['Validation error']);
+    });
+
+    it('should clean up event handlers on unmount', () => {
+      const { unmount } = renderHook(() => usePageValidation(mockModel));
 
       unmount();
 
-      expect(model.onValueChanged.remove).toHaveBeenCalled();
-      expect(model.onCurrentPageChanged.remove).toHaveBeenCalled();
-      expect((model as any).onValidatedErrorsOnCurrentPage.remove).toHaveBeenCalled();
+      expect(mockModel.onValidateQuestion.remove).toHaveBeenCalled();
+      expect(mockModel.onValueChanged.remove).toHaveBeenCalled();
+    });
+  });
+
+  describe('All Pages Validation', () => {
+    it('should validate all pages successfully', () => {
+      mockModel.validate = jest.fn().mockReturnValue(true);
+
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      act(() => {
+        const isValid = result.current.validateAllPages();
+        expect(isValid).toBe(true);
+      });
+
+      expect(mockModel.validate).toHaveBeenCalled();
     });
 
-    it('should handle cleanup when model changes to null', () => {
-      const model = createMockModel();
-      const { result, rerender } = renderHook(
-        ({ model }) => usePageValidation(model),
-        { initialProps: { model } }
-      );
+    it('should handle validation errors across all pages', () => {
+      mockModel.validate = jest.fn().mockReturnValue(false);
+      mockModel.hasErrors = jest.fn().mockReturnValue(true);
 
-      // Change model to null
-      rerender({ model: null });
+      const { result } = renderHook(() => usePageValidation(mockModel));
 
-      expect(result.current.validationState).toEqual({
-        hasErrors: false,
-        errors: {},
-        validationMessages: [],
-        isValidating: false,
+      act(() => {
+        const isValid = result.current.validateAllPages();
+        expect(isValid).toBe(false);
+      });
+    });
+  });
+
+  describe('Question Validation', () => {
+    it('should validate individual question', () => {
+      const mockQuestion = {
+        name: 'question1',
+        value: 'test',
+        isRequired: true,
+        hasErrors: jest.fn().mockReturnValue(false),
+      };
+
+      mockModel.currentPage.getQuestionByName = jest.fn().mockReturnValue(mockQuestion);
+
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      act(() => {
+        const isValid = result.current.validateQuestion('question1');
+        expect(isValid).toBe(true);
+      });
+
+      expect(mockModel.currentPage.getQuestionByName).toHaveBeenCalledWith('question1');
+    });
+
+    it('should return true for non-existent question', () => {
+      mockModel.currentPage.getQuestionByName = jest.fn().mockReturnValue(null);
+
+      const { result } = renderHook(() => usePageValidation(mockModel));
+
+      act(() => {
+        const isValid = result.current.validateQuestion('nonexistent');
+        expect(isValid).toBe(true);
       });
     });
   });

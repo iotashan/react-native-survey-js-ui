@@ -37,6 +37,17 @@ Validate M03 completion and prepare for milestone transition.
 - [ ] Achieve >90% code coverage for all new code
 - [ ] No code implementation without corresponding test coverage
 
+## Simulator Verification (FOR ALL UI TASKS)
+**CRITICAL**: All UI-related development must be tested in iOS Simulator:
+- [ ] Launch example app in iOS Simulator (use `pnpm run:ios` if native changes, `pnpm start` otherwise)
+- [ ] Navigate to relevant screens/features
+- [ ] Test all functionality works as expected
+- [ ] Verify accessibility features (VoiceOver if applicable)
+- [ ] Test with different device sizes/orientations if relevant
+- [ ] Confirm no runtime errors or crashes
+- [ ] Test hot reload works for iterative development
+- [ ] Document any simulator-specific issues or limitations
+
 ## Technical Guidance
 **Key integration points:**
 - Must validate all components from S09, S10, and S11

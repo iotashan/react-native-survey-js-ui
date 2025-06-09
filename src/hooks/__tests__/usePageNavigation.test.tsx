@@ -18,8 +18,9 @@ jest.mock('survey-core', () => {
       doComplete: jest.fn(),
       completeLastPage: jest.fn(),
       validate: jest.fn().mockReturnValue(true),
+      hasErrors: jest.fn().mockReturnValue(false),
       currentPage: {
-        hasErrors: false,
+        hasErrors: jest.fn().mockReturnValue(false),
         validate: jest.fn().mockReturnValue(true),
       },
       onCurrentPageChanged: {
@@ -133,6 +134,9 @@ describe('usePageNavigation', () => {
 
     it('should block navigation on validation errors', async () => {
       const mockValidator = jest.fn(() => false);
+      mockModel.hasErrors.mockReturnValue(true);
+      mockModel.currentPage.hasErrors.mockReturnValue(true);
+
       const { result } = renderHook(() => usePageNavigation(mockModel));
 
       await act(async () => {
@@ -220,6 +224,8 @@ describe('usePageNavigation', () => {
     it('should clear validation error on successful navigation', async () => {
       let validationResult = false;
       const mockValidator = jest.fn(() => validationResult);
+      mockModel.hasErrors.mockReturnValue(true);
+      mockModel.currentPage.hasErrors.mockReturnValue(true);
 
       const { result } = renderHook(() => usePageNavigation(mockModel));
 
@@ -232,6 +238,8 @@ describe('usePageNavigation', () => {
 
       // Fix validation
       validationResult = true;
+      mockModel.hasErrors.mockReturnValue(false);
+      mockModel.currentPage.hasErrors.mockReturnValue(false);
 
       // Second attempt - should succeed
       await act(async () => {

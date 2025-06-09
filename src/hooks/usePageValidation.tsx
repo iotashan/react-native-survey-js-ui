@@ -1,6 +1,6 @@
 import * as React from 'react';
 const { useState, useEffect, useCallback } = React;
-import type { Model, Question, PageModel } from 'survey-core';
+import type { Model, Question, PageModel, SurveyError } from 'survey-core';
 
 export interface ValidationError {
   questionName: string;
@@ -21,6 +21,9 @@ export interface UsePageValidationReturn {
   validateAllPages: () => boolean;
   clearValidationErrors: () => void;
   validateQuestion: (questionName: string) => boolean;
+  // Additional methods from task/T04
+  clearErrors: (questionName?: string) => void;
+  getQuestionErrors: (questionName: string) => string[];
 }
 
 /**
@@ -36,6 +39,25 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
     validationMessages: [],
     isValidating: false,
   }));
+
+  /**
+   * Converts survey-core errors to our error format
+   */
+  const parseErrors = useCallback((surveyErrors: SurveyError[]): Record<string, string[]> => {
+    const errorMap: Record<string, string[]> = {};
+    
+    surveyErrors.forEach((error) => {
+      const questionName = (error as any).questionName || 'general';
+      const errorText = error.text || 'Validation error';
+      
+      if (!errorMap[questionName]) {
+        errorMap[questionName] = [];
+      }
+      errorMap[questionName].push(errorText);
+    });
+    
+    return errorMap;
+  }, []);
 
   // Update validation state when model changes
   useEffect(() => {
@@ -238,33 +260,61 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
     try {
       let isValid = true;
 
-      // Use survey-core validation if available
-      if ((model as any).validateCurrentPage) {
-        isValid = (model as any).validateCurrentPage();
-      } else if ((model.currentPage as any).hasErrors) {
-        isValid = !(model.currentPage as any).hasErrors();
-      } else {
-        // Fallback validation
-        const questions = model.currentPage.questions || [];
+      // Try using survey-core's validate method first
+      if (model.currentPage.validate) {
+        isValid = model.currentPage.validate(true, false);
         
-        questions.forEach((question: Question) => {
-          if (question.isRequired && (!question.value || question.value === '')) {
-            isValid = false;
-          }
-        });
+        if (isValid && !model.currentPage.hasErrors) {
+          // No errors
+          setValidationState(prev => ({
+            ...prev,
+            errors: {},
+            hasErrors: false,
+            isValidating: false,
+          }));
+          return true;
+        } else {
+          // Has errors - collect them
+          const errors = model.currentPage.errors || [];
+          const errorMap = parseErrors(errors);
+          
+          setValidationState(prev => ({
+            ...prev,
+            errors: errorMap,
+            hasErrors: Object.keys(errorMap).length > 0,
+            isValidating: false,
+          }));
+          return false;
+        }
+      } else {
+        // Fallback validation methods
+        if ((model as any).validateCurrentPage) {
+          isValid = (model as any).validateCurrentPage();
+        } else if ((model.currentPage as any).hasErrors) {
+          isValid = !(model.currentPage as any).hasErrors();
+        } else {
+          // Manual validation
+          const questions = model.currentPage.questions || [];
+          
+          questions.forEach((question: Question) => {
+            if (question.isRequired && (!question.value || question.value === '')) {
+              isValid = false;
+            }
+          });
+        }
+
+        // Update validation state
+        updateValidationState();
+        setValidationState(prev => ({ ...prev, isValidating: false }));
+        
+        return isValid;
       }
-
-      // Update validation state
-      updateValidationState();
-
-      setValidationState(prev => ({ ...prev, isValidating: false }));
-      
-      return isValid;
     } catch (error) {
+      console.warn('Page validation error:', error);
       setValidationState(prev => ({ ...prev, isValidating: false }));
       return true; // Fallback: assume valid if validation fails
     }
-  }, [model, updateValidationState]);
+  }, [model, updateValidationState, parseErrors]);
 
   /**
    * Validate all pages in the survey
@@ -320,6 +370,39 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
   }, []);
 
   /**
+   * Clears validation errors for a specific question or all questions
+   */
+  const clearErrors = useCallback((questionName?: string) => {
+    setValidationState((prev) => {
+      if (!questionName) {
+        // Clear all errors
+        return {
+          ...prev,
+          errors: {},
+          hasErrors: false,
+        };
+      } else {
+        // Clear errors for specific question
+        const newErrors = { ...prev.errors };
+        delete newErrors[questionName];
+        
+        return {
+          ...prev,
+          errors: newErrors,
+          hasErrors: Object.keys(newErrors).length > 0,
+        };
+      }
+    });
+  }, []);
+
+  /**
+   * Gets errors for a specific question
+   */
+  const getQuestionErrors = useCallback((questionName: string): string[] => {
+    return validationState.errors[questionName] || [];
+  }, [validationState.errors]);
+
+  /**
    * Validate a specific question by name
    */
   const validateQuestion = useCallback((questionName: string): boolean => {
@@ -347,11 +430,77 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
     }
   }, [model, validateSingleQuestion]);
 
+  /**
+   * Real-time validation on question value changes
+   */
+  useEffect(() => {
+    if (!model) {
+      return;
+    }
+
+    const handleValidateQuestion = (sender: Model, options: any) => {
+      try {
+        // Update errors for the specific question that was validated
+        const questionName = options?.name;
+        if (!questionName) return;
+
+        const question = model.getQuestionByName(questionName);
+        if (!question) return;
+
+        // Get errors for this specific question
+        const questionErrors = (question as any).errors || [];
+        const errorTexts = questionErrors.map((error: SurveyError) => error.text);
+
+        setValidationState((prev) => {
+          const newErrors = { ...prev.errors };
+          
+          if (errorTexts.length > 0) {
+            newErrors[questionName] = errorTexts;
+          } else {
+            delete newErrors[questionName];
+          }
+
+          return {
+            ...prev,
+            errors: newErrors,
+            hasErrors: Object.keys(newErrors).length > 0,
+          };
+        });
+      } catch (error) {
+        console.warn('Question validation error:', error);
+      }
+    };
+
+    const handleValueChanged = (sender: Model, options: any) => {
+      try {
+        // Clear errors for question when value changes
+        const questionName = options?.name;
+        if (questionName) {
+          clearErrors(questionName);
+        }
+      } catch (error) {
+        console.warn('Value change handling error:', error);
+      }
+    };
+
+    // Subscribe to events
+    model.onValidateQuestion.add(handleValidateQuestion);
+    model.onValueChanged.add(handleValueChanged);
+
+    // Cleanup
+    return () => {
+      model.onValidateQuestion.remove(handleValidateQuestion);
+      model.onValueChanged.remove(handleValueChanged);
+    };
+  }, [model, clearErrors]);
+
   return {
     validationState,
     validateCurrentPage,
     validateAllPages,
     clearValidationErrors,
     validateQuestion,
+    clearErrors,
+    getQuestionErrors,
   };
 }

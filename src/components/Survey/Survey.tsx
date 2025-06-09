@@ -18,7 +18,8 @@ import { useSurveyModel } from '../../hooks';
 import { useSurveyState } from '../../hooks';
 import { usePageNavigation } from '../../hooks';
 import { useSubmissionMode } from '../../hooks';
-import { ValidationProvider, useValidation } from '../ValidationContext';
+import { usePageValidation } from '../../hooks';
+import { ValidationProvider, useValidation } from '../../contexts/ValidationContext';
 import { PageNavigation } from '../PageNavigation';
 import { ProgressIndicator } from '../ProgressIndicator';
 import { SurveyPage } from './SurveyPage';
@@ -67,6 +68,7 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
 }) => {
   const { validateAllVisibleQuestions, setShowErrors } = useValidation();
   const { navigationState, goToNextPage, goToPreviousPage, completeSurvey } = usePageNavigation(surveyModel);
+  const { validationState, validateCurrentPage, clearErrors, getQuestionErrors } = usePageValidation(surveyModel);
   
   // Initialize submission mode
   const { status, lastResult, retryCount, triggerSubmission } = useSubmissionMode(
@@ -147,11 +149,13 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
     return undefined;
   }, [surveyModel, onCurrentPageChanged]);
 
-  // Validation function for navigation
+  // Validation function for navigation - use both validation approaches
   const handleValidation = React.useCallback(() => {
     setShowErrors(true); // Show errors when validating
-    return validateAllVisibleQuestions();
-  }, [validateAllVisibleQuestions, setShowErrors]);
+    const contextValidation = validateAllVisibleQuestions();
+    const pageValidation = validateCurrentPage();
+    return contextValidation && pageValidation;
+  }, [validateAllVisibleQuestions, setShowErrors, validateCurrentPage]);
 
   const showProgressBar =
     Boolean(surveyModel?.showProgressBar && surveyModel.showProgressBar !== 'off');
@@ -202,6 +206,7 @@ const SurveyContent: React.FC<SurveyContentProps> = ({
           onNext={() => goToNextPage(handleValidation)}
           onPrevious={goToPreviousPage}
           onComplete={() => completeSurvey(handleValidation)}
+          validationState={validationState}
         />
       )}
 
@@ -245,7 +250,7 @@ export const Survey: React.FC<SurveyProps> = ({
   }
 
   return (
-    <ValidationProvider surveyModel={surveyModel}>
+    <ValidationProvider model={surveyModel}>
       <SurveyContent
         model={model}
         surveyModel={surveyModel}

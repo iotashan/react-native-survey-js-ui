@@ -37,6 +37,16 @@ Build a comprehensive Explore tab for library component discovery:
 - [x] Achieve >90% code coverage for all new code
 - [x] No code implementation without corresponding test coverage
 
+## Simulator Verification (FOR ALL TASKS)
+**MANDATORY**: After completing any task, perform simulator verification:
+- [ ] Kill the app in the simulator
+- [ ] Kill metro process (use `kill` command, not control-c)
+- [ ] Run `pnpm start` (or `pnpm run:ios` if native code changed)
+- [ ] Open the app in the simulator
+- [ ] Confirm no catastrophic changes occurred
+- [ ] If task was UI-facing, manually test the implemented functionality
+- [ ] Verify app loads and functions correctly
+
 ## Technical Guidance
 
 ### Key Integration Points

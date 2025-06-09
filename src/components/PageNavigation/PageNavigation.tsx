@@ -9,6 +9,7 @@ import {
   TextStyle,
 } from 'react-native';
 import type { NavigationState } from '../../hooks/usePageNavigation';
+import type { ValidationState } from '../../hooks/usePageValidation';
 
 export interface PageNavigationProps {
   /**
@@ -27,6 +28,10 @@ export interface PageNavigationProps {
    * Called when Complete button is pressed
    */
   onComplete: () => void;
+  /**
+   * Validation state from usePageValidation hook
+   */
+  validationState?: ValidationState;
   /**
    * Custom text for Next button
    */
@@ -70,6 +75,7 @@ export const PageNavigation: React.FC<PageNavigationProps> = ({
   onNext,
   onPrevious,
   onComplete,
+  validationState,
   nextText = 'Next',
   previousText = 'Previous',
   completeText = 'Complete',
@@ -145,6 +151,19 @@ export const PageNavigation: React.FC<PageNavigationProps> = ({
       {validationError && (
         <View style={styles.errorContainer} testID="validation-error">
           <Text style={styles.errorText}>{validationError}</Text>
+        </View>
+      )}
+
+      {validationState?.hasErrors && (
+        <View style={styles.errorContainer} testID="page-validation-errors">
+          <Text style={styles.errorText}>Please fix the following errors:</Text>
+          {Object.entries(validationState.errors).map(([questionName, errors]) => (
+            <View key={questionName} style={styles.questionErrorContainer}>
+              {errors.map((error, index) => (
+                <Text key={index} style={styles.errorText}>• {error}</Text>
+              ))}
+            </View>
+          ))}
         </View>
       )}
 
@@ -234,5 +253,8 @@ const styles = StyleSheet.create({
   errorText: {
     color: '#c62828',
     fontSize: 14,
+  },
+  questionErrorContainer: {
+    marginTop: 4,
   },
 });

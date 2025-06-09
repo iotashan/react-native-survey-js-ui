@@ -50,29 +50,23 @@ Update the Survey Demo tab in the example app with comprehensive multi-page navi
 - [ ] All examples work correctly on both iOS and Android
 - [ ] Performance remains smooth with complex navigation scenarios
 
-## TDD Requirements
+## TDD Requirements (FOR ALL CODING TASKS)
+**CRITICAL**: All development must follow Test-Driven Development approach:
+- [ ] Write failing tests first (describe expected behavior)
+- [ ] Implement minimal code to make tests pass
+- [ ] Refactor while keeping tests green
+- [ ] Achieve >90% code coverage for all new code
+- [ ] No code implementation without corresponding test coverage
 
-### Test Categories
-1. **Demo Screen Tests**
-   - Example selection and loading
-   - Navigation between examples
-   - State reset between demos
-
-2. **Interactive Playground Tests**
-   - Control toggle functionality
-   - Real-time state updates
-   - Configuration persistence
-
-3. **Example Validation Tests**
-   - Each example loads correctly
-   - Navigation features work as documented
-   - Edge cases are properly demonstrated
-
-### Testing Approach
-- Unit tests for demo utility functions
-- Integration tests for example loading
-- Component tests for playground controls
-- Snapshot tests for demo UI consistency
+## Simulator Verification (FOR ALL TASKS)
+**MANDATORY**: After completing any task, perform simulator verification:
+- [ ] Kill the app in the simulator
+- [ ] Kill metro process (use `kill` command, not control-c)
+- [ ] Run `pnpm start` (or `pnpm run:ios` if native code changed)
+- [ ] Open the app in the simulator
+- [ ] Confirm no catastrophic changes occurred
+- [ ] If task was UI-facing, manually test the implemented functionality
+- [ ] Verify app loads and functions correctly
 
 ## Subtasks
 
