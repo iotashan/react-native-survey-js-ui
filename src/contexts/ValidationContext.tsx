@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import type { Model, Question, PageModel } from 'survey-core';
-import type { ValidationError, ValidationState } from '../hooks/usePageValidation';
+import type { Model, Question } from 'survey-core';
 
 /**
  * Validation timing modes for form validation

@@ -6,10 +6,10 @@ import {
   ScrollView,
 } from 'react-native';
 import type {
-  SurveyModel,
   SurveyValueChangedHandler,
   SurveyCurrentPageChangedHandler,
 } from '../../types';
+import { Model } from 'survey-core';
 import { useSurveyModel } from '../../hooks';
 import { useSurveyState } from '../../hooks';
 import { usePageNavigation } from '../../hooks';
@@ -19,7 +19,7 @@ import { ProgressIndicator } from '../ProgressIndicator';
 import { SurveyPage } from './SurveyPage';
 
 export interface SurveyProps {
-  model: SurveyModel;
+  model: Model | any; // Accept Model or JSON
   onComplete?: (result: any) => void;
   onValueChanged?: SurveyValueChangedHandler;
   onCurrentPageChanged?: SurveyCurrentPageChangedHandler;

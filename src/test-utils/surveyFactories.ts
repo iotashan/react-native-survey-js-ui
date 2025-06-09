@@ -106,6 +106,7 @@ export function createMixedQuestionSurvey(): SurveyJSON {
             type: 'comment',
             name: 'feedback',
             title: 'Additional feedback',
+            // @ts-ignore - rows is valid for comment type
             rows: 4,
           },
         ],

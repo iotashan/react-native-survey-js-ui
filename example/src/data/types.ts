@@ -27,5 +27,5 @@ export interface ComponentInfo {
   icon: string;
   tags: string[];
   properties: ComponentProperty[];
-  example: QuestionModel;
+  example: QuestionModel | any; // Allow any question type including panels
 }

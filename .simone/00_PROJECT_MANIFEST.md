@@ -123,6 +123,7 @@ This project follows a milestone-based development approach with strict TDD requ
 - [✅] T004: [Add Expo Icons to Example App Tabs](./04_GENERAL_TASKS/TX004_Add_Expo_Icons_to_Example_App_Tabs.md) - Status: Completed (2025-06-07 11:03)
 - [✅] TX004: [Fix React Hooks Null Error in Library Build](./04_GENERAL_TASKS/COMPLETED_TX004_Fix_React_Hooks_Null_Error_Library_Build.md) - Status: Completed (2025-06-07 11:14)
 - [✅] T005: [Fix Infrastructure and Testing Issues](./04_GENERAL_TASKS/TX005_Fix_Infrastructure_and_Testing_Issues.md) - Status: Completed (2025-06-08 00:33)
+- [ ] T006: [Fix TypeScript Compilation Errors](./04_GENERAL_TASKS/T006_Fix_TypeScript_Compilation_Errors.md) - Status: Not Started
 
 ## 6. Key Documentation
 

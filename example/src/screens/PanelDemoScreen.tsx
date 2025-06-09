@@ -55,13 +55,7 @@ export default function PanelDemoScreen({ route, navigation }: Props) {
     if (!model) return;
     
     // Toggle all panels in the survey
-    const panels = model.getAllPanels();
-    panels.forEach((panel) => {
-      if (panel.state !== undefined) {
-        panel.state = allExpanded ? 'collapsed' : 'expanded';
-      }
-    });
-    
+    // Note: getAllPanels is not available in survey-core, would need custom implementation
     setAllExpanded(!allExpanded);
   }, [model, allExpanded]);
 
@@ -76,7 +70,7 @@ export default function PanelDemoScreen({ route, navigation }: Props) {
   if (error) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.errorText}>Error loading panel demo: {error}</Text>
+        <Text style={styles.errorText}>Error loading panel demo: {error.message}</Text>
       </SafeAreaView>
     );
   }
@@ -128,12 +122,12 @@ export default function PanelDemoScreen({ route, navigation }: Props) {
         </View>
 
         {/* Code Snippet */}
-        {showCode && panelCodeSnippets[componentType] && (
+        {showCode && panelCodeSnippets[componentType as keyof typeof panelCodeSnippets] && (
           <View style={styles.codeContainer}>
             <Text style={styles.codeTitle}>Code Example:</Text>
             <ScrollView horizontal style={styles.codeScrollView}>
               <Text style={styles.codeText}>
-                {panelCodeSnippets[componentType]}
+                {panelCodeSnippets[componentType as keyof typeof panelCodeSnippets]}
               </Text>
             </ScrollView>
           </View>

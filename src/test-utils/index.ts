@@ -105,7 +105,7 @@ export function expectError(getByText: any, errorMessage?: string) {
 export function createMockFunction<
   T extends (...args: any[]) => any,
 >(): jest.MockedFunction<T> {
-  return jest.fn() as jest.MockedFunction<T>;
+  return jest.fn() as unknown as jest.MockedFunction<T>;
 }
 
 /**

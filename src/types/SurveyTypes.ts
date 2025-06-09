@@ -4,6 +4,11 @@
  */
 
 /**
+ * SurveyJSON type representing the JSON structure of a survey
+ */
+export type SurveyJSON = SurveyModel;
+
+/**
  * Main survey model interface representing the entire survey structure
  */
 export interface SurveyModel {
@@ -125,6 +130,28 @@ export interface PageModel {
 
   /** Allow additional page properties */
   [key: string]: any;
+}
+
+/**
+ * Panel model interface representing a container for questions
+ */
+export interface PanelModel extends QuestionModel {
+  /** Panel type is always 'panel' */
+  type: 'panel';
+  /** Array of questions/panels within this panel */
+  elements?: QuestionModel[];
+  /** Panel state (expanded/collapsed) */
+  state?: 'expanded' | 'collapsed';
+  /** Whether panel is collapsible */
+  showTitle?: boolean;
+  /** Inner indent */
+  innerIndent?: number;
+  /** Question start index */
+  questionStartIndex?: string;
+  /** Show question numbers */
+  showQuestionNumbers?: 'default' | 'onpanel' | 'off';
+  /** Questions title location */
+  questionTitleLocation?: 'default' | 'top' | 'bottom' | 'left';
 }
 
 /**

@@ -186,8 +186,9 @@ export function createMockSurveyWithEvents() {
     onAfterRenderSurvey: emitter.getEvent('afterRenderSurvey'),
 
     // Methods
-    fireEvent: (name: string, options: any) =>
-      emitter.fireEvent(name, this, options),
+    fireEvent: function(name: string, options: any) {
+      return emitter.fireEvent(name, this, options);
+    },
     dispose: () => emitter.clearAll(),
 
     // Test utilities

@@ -1,9 +1,9 @@
-import { QuestionModel } from 'react-native-survey-js-ui';
 import { panelDemoComponents } from './panelExamples';
-import { QuestionCategory, ComponentProperty, ComponentInfo } from './types';
+import { QuestionCategory, ComponentInfo } from './types';
 
 // Re-export for backward compatibility
-export { QuestionCategory, ComponentProperty, ComponentInfo } from './types';
+export type { ComponentProperty, ComponentInfo } from './types';
+export { QuestionCategory } from './types';
 
 const baseComponentCatalog: ComponentInfo[] = [
   // Text Input Components

@@ -95,7 +95,7 @@ export const PanelHeaderDemo: React.FC = () => {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Survey Panels with Collapsible Feature</Text>
-        {survey.pages[0].panels.map((panel, index) => (
+        {survey.pages?.[0]?.panels?.map((panel, index) => (
           <View key={panel.name} style={{ marginBottom: 16 }}>
             <Panel 
               panel={panel} 

@@ -10,6 +10,8 @@ export { BaseQuestion } from './components/Questions';
 export type { BaseQuestionProps } from './components/Questions';
 export { PageNavigation } from './components/PageNavigation';
 export type { PageNavigationProps } from './components/PageNavigation';
+export { Panel, PanelHeader } from './components/Panel';
+export type { PanelProps, PanelHeaderProps } from './components/Panel';
 
 // Types
 export * from './types';

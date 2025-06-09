@@ -80,7 +80,7 @@ export const Picker = jest.fn(
     )
 );
 
-Picker.Item = jest.fn(({ label, value }) =>
+(Picker as any).Item = jest.fn(({ label, value }: { label: string; value: any }) =>
   React.createElement('option', { value }, label)
 );
 
@@ -172,7 +172,7 @@ export const Keyboard = {
 
 // Mock Alert
 export const Alert = {
-  alert: jest.fn((title, message, buttons, _options) => {
+  alert: jest.fn((_title: string, _message?: string, buttons?: any[], _options?: any) => {
     if (buttons && buttons.length > 0) {
       // Simulate pressing the first button by default
       const firstButton = buttons[0];
@@ -190,7 +190,7 @@ export const Animated = {
     this.setValue = jest.fn((newValue: number) => {
       this.value = newValue;
     });
-    this.interpolate = jest.fn((config: any) => ({
+    this.interpolate = jest.fn((_config: any) => ({
       __getValue: () => this.value,
     }));
     this.addListener = jest.fn();
