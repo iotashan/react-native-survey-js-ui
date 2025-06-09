@@ -13,6 +13,7 @@ import type {
 import { useSurveyModel } from '../../hooks';
 import { useSurveyState } from '../../hooks';
 import { usePageNavigation } from '../../hooks';
+import { usePageValidation } from '../../hooks';
 import { PageNavigation } from '../PageNavigation';
 import { ProgressIndicator } from '../ProgressIndicator';
 import { SurveyPage } from './SurveyPage';
@@ -33,6 +34,7 @@ export const Survey: React.FC<SurveyProps> = ({
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
   const { navigationState, goToNextPage, goToPreviousPage, completeSurvey } = usePageNavigation(surveyModel);
+  const { validateCurrentPage } = usePageValidation(surveyModel);
 
   React.useEffect(() => {
     if (surveyModel && onComplete) {
@@ -159,9 +161,9 @@ export const Survey: React.FC<SurveyProps> = ({
       {!surveyState.isCompleted && (
         <PageNavigation
           navigationState={navigationState}
-          onNext={goToNextPage}
+          onNext={() => goToNextPage(validateCurrentPage)}
           onPrevious={goToPreviousPage}
-          onComplete={completeSurvey}
+          onComplete={() => completeSurvey(validateCurrentPage)}
         />
       )}
 

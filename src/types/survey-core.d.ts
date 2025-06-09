@@ -4,6 +4,33 @@ declare module 'survey-core' {
     remove(handler: (sender: any, options: T) => void): void;
   }
 
+  export interface Question {
+    name: string;
+    title?: string;
+    type: string;
+    visible: boolean;
+    value: any;
+    isRequired?: boolean;
+  }
+
+  export interface PanelModel {
+    name: string;
+    title?: string;
+    description?: string;
+    questions: Question[];
+    panels: PanelModel[];
+    visible: boolean;
+  }
+
+  export interface PageModel {
+    name: string;
+    title?: string;
+    description?: string;
+    questions: Question[];
+    panels?: PanelModel[];
+    getQuestionByName?(name: string): Question | undefined;
+  }
+
   export class Model {
     constructor(json?: any);
 
@@ -16,6 +43,7 @@ declare module 'survey-core' {
     isLastPage: boolean;
     isCompleted: boolean;
     currentPage?: PageModel;
+    pages?: PageModel[];
 
     // Methods
     doComplete(): void;
@@ -44,21 +72,6 @@ declare module 'survey-core' {
 
     // Configuration
     showProgressBar?: boolean | 'off' | 'top' | 'bottom';
-  }
-
-  export interface Question {
-    name: string;
-    title?: string;
-    type: string;
-    visible: boolean;
-    value: any;
-  }
-
-  export interface PageModel {
-    name: string;
-    title?: string;
-    description?: string;
-    questions: Question[];
   }
 
   export const settings: {

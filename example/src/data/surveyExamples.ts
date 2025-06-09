@@ -256,12 +256,155 @@ export const invalidModelExample: SurveyExample = {
   } as SurveyModel, // Type assertion to bypass compile-time check for demo purposes
 };
 
+// Multi-Page Demo Survey Example (using only text questions for now)
+export const multiPageDemoSurvey: SurveyExample = {
+  id: 'multi-page-demo',
+  title: 'Multi-Page Demo Survey',
+  description: 'Comprehensive multi-page survey demonstrating navigation flow',
+  model: {
+    title: 'Customer Experience Survey',
+    description: 'Help us understand your experience with our services',
+    showProgressBar: 'top',
+    showQuestionNumbers: 'on',
+    pages: [
+      {
+        name: 'welcome',
+        title: 'Welcome',
+        elements: [
+          {
+            type: 'text',
+            name: 'participantName',
+            title: 'Your Name (Optional)',
+            placeHolder: 'Enter your name',
+          },
+          {
+            type: 'text',
+            name: 'email',
+            title: 'Email Address (Optional)',
+            placeHolder: 'email@example.com',
+            validators: [
+              {
+                type: 'email',
+                text: 'Please enter a valid email address',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'demographics',
+        title: 'About You',
+        elements: [
+          {
+            type: 'text',
+            name: 'ageGroup',
+            title: 'What is your age group? (18-24, 25-34, 35-44, 45-54, 55-64, 65+)',
+            isRequired: true,
+            placeHolder: 'e.g., 25-34',
+          },
+          {
+            type: 'text',
+            name: 'customerType',
+            title: 'How would you describe yourself as a customer?',
+            isRequired: true,
+            placeHolder: 'e.g., New customer, Regular customer, Loyal customer',
+          },
+          {
+            type: 'text',
+            name: 'interests',
+            title: 'Which of our services interest you most?',
+            placeHolder: 'e.g., Product Development, Customer Support, etc.',
+          },
+        ],
+      },
+      {
+        name: 'experience',
+        title: 'Your Experience',
+        elements: [
+          {
+            type: 'text',
+            name: 'overallSatisfaction',
+            title: 'Rate your overall satisfaction (1-10, where 10 is very satisfied)',
+            isRequired: true,
+            inputType: 'number',
+            validators: [
+              {
+                type: 'numeric',
+                minValue: 1,
+                maxValue: 10,
+                text: 'Please enter a number between 1 and 10',
+              },
+            ],
+            placeHolder: 'Enter a number from 1 to 10',
+          },
+          {
+            type: 'text',
+            name: 'serviceQuality',
+            title: 'How would you rate our service quality?',
+            placeHolder: 'e.g., Excellent, Good, Fair, Poor',
+          },
+          {
+            type: 'text',
+            name: 'wouldRecommend',
+            title: 'Would you recommend our services to others? (Yes/No)',
+            isRequired: true,
+            placeHolder: 'Yes or No',
+          },
+        ],
+      },
+      {
+        name: 'feedback',
+        title: 'Your Feedback',
+        elements: [
+          {
+            type: 'text',
+            name: 'improvements',
+            title: 'What improvements would you like to see?',
+            placeHolder: 'Please share your suggestions...',
+          },
+          {
+            type: 'text',
+            name: 'additionalComments',
+            title: 'Any additional comments?',
+            placeHolder: 'Feel free to share any other thoughts...',
+          },
+          {
+            type: 'text',
+            name: 'contactPreference',
+            title: 'How would you prefer us to contact you for follow-up?',
+            placeHolder: 'e.g., Email, Phone, Text message, Do not contact',
+          },
+        ],
+      },
+      {
+        name: 'completion',
+        title: 'Thank You!',
+        elements: [
+          {
+            type: 'text',
+            name: 'finalThoughts',
+            title: 'Any final thoughts about your experience with us?',
+            placeHolder: 'Thank you for your time and feedback!',
+          },
+          {
+            type: 'text',
+            name: 'subscribe',
+            title: 'Would you like to subscribe to our newsletter? (Yes/No)',
+            placeHolder: 'Yes or No',
+          },
+        ],
+      },
+    ],
+  },
+};
+
 // All survey examples
 export const surveyExamples: SurveyExample[] = [
   basicTextSurvey,
   multipleChoiceSurvey,
   mixedTypesSurvey,
   validationSurvey,
+  multiPageDemoSurvey,
   invalidModelExample,
 ];
 

@@ -120,27 +120,26 @@ describe('usePageNavigation', () => {
 
   describe('Navigation Methods', () => {
     it('should navigate to next page with validation', async () => {
+      const mockValidator = jest.fn(() => true);
       const { result } = renderHook(() => usePageNavigation(mockModel));
 
       await act(async () => {
-        await result.current.goToNextPage();
+        await result.current.goToNextPage(mockValidator);
       });
 
-      expect(mockModel.validate).toHaveBeenCalled();
+      expect(mockValidator).toHaveBeenCalled();
       expect(mockModel.nextPage).toHaveBeenCalled();
     });
 
     it('should block navigation on validation errors', async () => {
-      mockModel.validate.mockReturnValue(false);
-      mockModel.currentPage.hasErrors = true;
-
+      const mockValidator = jest.fn(() => false);
       const { result } = renderHook(() => usePageNavigation(mockModel));
 
       await act(async () => {
-        await result.current.goToNextPage();
+        await result.current.goToNextPage(mockValidator);
       });
 
-      expect(mockModel.validate).toHaveBeenCalled();
+      expect(mockValidator).toHaveBeenCalled();
       expect(mockModel.nextPage).not.toHaveBeenCalled();
       expect(result.current.navigationState.validationError).toBeTruthy();
     });
@@ -219,25 +218,24 @@ describe('usePageNavigation', () => {
 
   describe('Validation Error Handling', () => {
     it('should clear validation error on successful navigation', async () => {
-      mockModel.validate.mockReturnValue(false);
-      mockModel.currentPage.hasErrors = true;
+      let validationResult = false;
+      const mockValidator = jest.fn(() => validationResult);
 
       const { result } = renderHook(() => usePageNavigation(mockModel));
 
       // First attempt - should fail
       await act(async () => {
-        await result.current.goToNextPage();
+        await result.current.goToNextPage(mockValidator);
       });
 
       expect(result.current.navigationState.validationError).toBeTruthy();
 
       // Fix validation
-      mockModel.validate.mockReturnValue(true);
-      mockModel.currentPage.hasErrors = false;
+      validationResult = true;
 
       // Second attempt - should succeed
       await act(async () => {
-        await result.current.goToNextPage();
+        await result.current.goToNextPage(mockValidator);
       });
 
       expect(result.current.navigationState.validationError).toBeNull();

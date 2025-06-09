@@ -7,6 +7,7 @@ export enum QuestionCategory {
   Matrix = 'Matrix',
   Advanced = 'Advanced',
   Display = 'Display',
+  Layout = 'Layout',
 }
 
 export interface ComponentProperty {
@@ -787,6 +788,66 @@ export const componentCatalog: ComponentInfo[] = [
       title: 'Total Score',
       expression: '{question1} + {question2} + {question3}',
       displayStyle: 'decimal',
+    },
+  },
+
+  // Layout Components
+  {
+    type: 'panel',
+    name: 'Panel with Header',
+    description: 'Container for grouping questions with collapsible header',
+    category: QuestionCategory.Layout,
+    icon: '📦',
+    tags: ['layout', 'container', 'group', 'collapsible', 'panel'],
+    properties: [
+      {
+        name: 'title',
+        type: 'string',
+        description: 'Title displayed in the panel header',
+        required: false,
+      },
+      {
+        name: 'description',
+        type: 'string',
+        description: 'Description displayed below the title',
+        required: false,
+      },
+      {
+        name: 'collapsible',
+        type: 'boolean',
+        description: 'Whether the panel can be collapsed/expanded',
+        defaultValue: false,
+      },
+      {
+        name: 'initialExpanded',
+        type: 'boolean',
+        description: 'Initial expanded state when collapsible',
+        defaultValue: true,
+      },
+      {
+        name: 'showIcon',
+        type: 'boolean',
+        description: 'Show expand/collapse icon',
+        defaultValue: true,
+      },
+    ],
+    example: {
+      type: 'panel',
+      name: 'personalInfo',
+      title: 'Personal Information',
+      description: 'Please provide your basic details',
+      elements: [
+        {
+          type: 'text',
+          name: 'firstName',
+          title: 'First Name',
+        },
+        {
+          type: 'text',
+          name: 'lastName',
+          title: 'Last Name',
+        },
+      ],
     },
   },
 ];

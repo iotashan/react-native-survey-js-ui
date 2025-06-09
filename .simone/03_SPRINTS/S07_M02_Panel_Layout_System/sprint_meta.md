@@ -42,13 +42,16 @@ Implement PanelHeader with collapse/expand functionality, proper animations, and
 ### T03_S07 - Panel Layout System (Medium Complexity)
 Build responsive panel styling system with proper spacing, indentation for nesting, and mobile-optimized layouts.
 
-### T04_S07 - Panel Nesting Logic (High Complexity)
-Implement proper nested panel hierarchy rendering with correct parent-child relationships and state management.
+### T04_S07 - Panel Hierarchy Rendering (Medium Complexity)
+Implement the core logic for rendering nested panel hierarchies with correct parent-child relationships and recursive rendering algorithm.
 
-### T05_S07 - Panel State Management (Low Complexity)
-Add panel-level state management for collapsed/expanded states with persistence and proper event handling.
+### T05_S07 - Panel Hierarchy State Management (Medium Complexity)
+Implement state management for nested panel hierarchies, including maintaining and synchronizing collapsed/expanded states across the panel tree.
 
-### T06_S07 - Explore Tab Panel Demo (Low Complexity)
+### T06_S07 - Panel State Management (Low Complexity)
+Add focused panel-level state management for individual panel collapsed/expanded states with persistence and proper event handling.
+
+### T07_S07 - Explore Tab Panel Demo (Low Complexity)
 Add comprehensive panel functionality demonstration to Explore tab with nested panels, different layouts, and interactive examples.
 
 ## Notes / Retrospective Points
@@ -56,4 +59,5 @@ Add comprehensive panel functionality demonstration to Explore tab with nested p
 - Focus on mobile-first responsive design for panels
 - Ensure panel system integrates well with page navigation from S06
 - Panel collapse/expand should provide smooth user experience
-- Nested panel logic is complex - allocate sufficient time for T04
+- Original T04 (High Complexity) was split into T04, T05, and T06 for better task management
+- All tasks are now Medium or Low complexity to ensure manageable scope
