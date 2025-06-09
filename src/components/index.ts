@@ -8,3 +8,5 @@ export { ProgressIndicator } from './ProgressIndicator';
 export type { ProgressIndicatorProps, ProgressIndicatorMode } from './ProgressIndicator';
 export { Panel, PanelHeader } from './Panel';
 export type { PanelProps, PanelHeaderProps } from './Panel';
+export { ValidationError } from './ValidationError';
+export type { ValidationErrorProps } from './ValidationError';
