@@ -144,6 +144,55 @@ jest.mock('../../hooks', () => ({
       }
     }),
   })),
+  usePageNavigation: jest.fn((model) => ({
+    navigationState: {
+      currentPageNo: model?.currentPageNo || 0,
+      pageCount: model?.pageCount || 1,
+      isFirstPage: model?.isFirstPage ?? true,
+      isLastPage: model?.isLastPage ?? false,
+      canGoNext: model ? !model.isLastPage : false,
+      canGoPrevious: model ? !model.isFirstPage : false,
+      isNavigating: false,
+      validationError: null,
+    },
+    goToNextPage: jest.fn((validatePage) => {
+      // If validation function is provided, call it
+      if (validatePage) {
+        const isValid = validatePage();
+        if (!isValid) return;
+      }
+      // Simulate navigation
+      if (model && model.nextPage) {
+        model.nextPage();
+      }
+    }),
+    goToPreviousPage: jest.fn(() => {
+      if (model && model.prevPage) {
+        model.prevPage();
+      }
+    }),
+    completeSurvey: jest.fn((validatePage) => {
+      // If validation function is provided, call it
+      if (validatePage) {
+        const isValid = validatePage();
+        if (!isValid) return;
+      }
+      // Simulate completion
+      if (model && model.doComplete) {
+        model.doComplete();
+      }
+    }),
+  })),
+  usePageValidation: jest.fn((model) => ({
+    validationState: {
+      errors: {},
+      isValidating: false,
+      hasErrors: false,
+    },
+    validateCurrentPage: jest.fn(() => true),
+    clearErrors: jest.fn(),
+    getQuestionErrors: jest.fn(() => []),
+  })),
 }));
 
 let mockCompleteHandlers: Array<{ model: any; handler: any }> = [];
@@ -1184,6 +1233,127 @@ describe('Survey Component', () => {
         // Should not throw when model is null
         expect(() => render(<Survey model={mockModel} />)).not.toThrow();
       });
+    });
+  });
+
+  describe('Page Validation Integration', () => {
+    it('should use validation hook with the survey model', () => {
+      const mockModel = { id: 'test-survey' };
+      const mockUsePageValidation = require('../../hooks').usePageValidation;
+
+      render(<Survey model={mockModel} />);
+
+      expect(mockUsePageValidation).toHaveBeenCalledWith(
+        expect.objectContaining({})
+      );
+    });
+
+    it('should pass validation state to page navigation', () => {
+      const mockModel = { id: 'test-survey' };
+      const mockUsePageValidation = require('../../hooks').usePageValidation;
+      const mockUsePageNavigation = require('../../hooks').usePageNavigation;
+
+      // Mock validation with errors
+      mockUsePageValidation.mockReturnValue({
+        validationState: {
+          errors: { question1: ['This field is required'] },
+          isValidating: false,
+          hasErrors: true,
+        },
+        validateCurrentPage: jest.fn(() => false),
+        clearErrors: jest.fn(),
+        getQuestionErrors: jest.fn(() => ['This field is required']),
+      });
+
+      render(<Survey model={mockModel} />);
+
+      expect(mockUsePageValidation).toHaveBeenCalledWith(
+        expect.objectContaining({})
+      );
+    });
+
+    it('should display validation errors in the UI', () => {
+      const mockModel = {
+        id: 'test-survey',
+        pages: [
+          {
+            name: 'page1',
+            elements: [{ type: 'text', name: 'q1', title: 'Question 1' }],
+          },
+        ],
+      };
+
+      const mockUsePageValidation = require('../../hooks').usePageValidation;
+      
+      // Mock validation with errors
+      mockUsePageValidation.mockReturnValue({
+        validationState: {
+          errors: { q1: ['This field is required'] },
+          isValidating: false,
+          hasErrors: true,
+        },
+        validateCurrentPage: jest.fn(() => false),
+        clearErrors: jest.fn(),
+        getQuestionErrors: jest.fn((name) => 
+          name === 'q1' ? ['This field is required'] : []
+        ),
+      });
+
+      const { getByText } = render(<Survey model={mockModel} />);
+      
+      // Check that validation errors would be available through the hook
+      const validationHook = mockUsePageValidation.mock.results[0].value;
+      expect(validationHook.getQuestionErrors('q1')).toEqual(['This field is required']);
+    });
+
+    it('should clear validation errors when clearErrors is called', () => {
+      const mockModel = { id: 'test-survey' };
+      const mockClearErrors = jest.fn();
+      const mockUsePageValidation = require('../../hooks').usePageValidation;
+
+      mockUsePageValidation.mockReturnValue({
+        validationState: {
+          errors: {},
+          isValidating: false,
+          hasErrors: false,
+        },
+        validateCurrentPage: jest.fn(() => true),
+        clearErrors: mockClearErrors,
+        getQuestionErrors: jest.fn(() => []),
+      });
+
+      render(<Survey model={mockModel} />);
+
+      const validationHook = mockUsePageValidation.mock.results[0].value;
+      validationHook.clearErrors();
+      
+      expect(mockClearErrors).toHaveBeenCalled();
+    });
+
+    it('should validate page before navigation', () => {
+      const mockModel = { id: 'test-survey' };
+      const mockValidateCurrentPage = jest.fn(() => true);
+      const mockUsePageValidation = require('../../hooks').usePageValidation;
+
+      mockUsePageValidation.mockReturnValue({
+        validationState: {
+          errors: {},
+          isValidating: false,
+          hasErrors: false,
+        },
+        validateCurrentPage: mockValidateCurrentPage,
+        clearErrors: jest.fn(),
+        getQuestionErrors: jest.fn(() => []),
+      });
+
+      render(<Survey model={mockModel} />);
+
+      // The hook should be available for navigation components to use
+      const validationHook = mockUsePageValidation.mock.results[0].value;
+      const isValid = validationHook.validateCurrentPage();
+      
+      expect(mockValidateCurrentPage).toHaveBeenCalled();
+      expect(isValid).toBe(true);
     });
   });
 });

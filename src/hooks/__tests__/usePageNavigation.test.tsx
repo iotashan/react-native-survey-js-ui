@@ -18,8 +18,9 @@ jest.mock('survey-core', () => {
       doComplete: jest.fn(),
       completeLastPage: jest.fn(),
       validate: jest.fn().mockReturnValue(true),
+      hasErrors: jest.fn().mockReturnValue(false),
       currentPage: {
-        hasErrors: false,
+        hasErrors: jest.fn().mockReturnValue(false),
         validate: jest.fn().mockReturnValue(true),
       },
       onCurrentPageChanged: {
@@ -126,13 +127,13 @@ describe('usePageNavigation', () => {
         await result.current.goToNextPage();
       });
 
-      expect(mockModel.validate).toHaveBeenCalled();
+      expect(mockModel.hasErrors).toHaveBeenCalled();
       expect(mockModel.nextPage).toHaveBeenCalled();
     });
 
     it('should block navigation on validation errors', async () => {
-      mockModel.validate.mockReturnValue(false);
-      mockModel.currentPage.hasErrors = true;
+      mockModel.hasErrors.mockReturnValue(true);
+      mockModel.currentPage.hasErrors.mockReturnValue(true);
 
       const { result } = renderHook(() => usePageNavigation(mockModel));
 
@@ -140,7 +141,7 @@ describe('usePageNavigation', () => {
         await result.current.goToNextPage();
       });
 
-      expect(mockModel.validate).toHaveBeenCalled();
+      expect(mockModel.hasErrors).toHaveBeenCalled();
       expect(mockModel.nextPage).not.toHaveBeenCalled();
       expect(result.current.navigationState.validationError).toBeTruthy();
     });
@@ -219,8 +220,8 @@ describe('usePageNavigation', () => {
 
   describe('Validation Error Handling', () => {
     it('should clear validation error on successful navigation', async () => {
-      mockModel.validate.mockReturnValue(false);
-      mockModel.currentPage.hasErrors = true;
+      mockModel.hasErrors.mockReturnValue(true);
+      mockModel.currentPage.hasErrors.mockReturnValue(true);
 
       const { result } = renderHook(() => usePageNavigation(mockModel));
 
@@ -232,8 +233,8 @@ describe('usePageNavigation', () => {
       expect(result.current.navigationState.validationError).toBeTruthy();
 
       // Fix validation
-      mockModel.validate.mockReturnValue(true);
-      mockModel.currentPage.hasErrors = false;
+      mockModel.hasErrors.mockReturnValue(false);
+      mockModel.currentPage.hasErrors.mockReturnValue(false);
 
       // Second attempt - should succeed
       await act(async () => {
