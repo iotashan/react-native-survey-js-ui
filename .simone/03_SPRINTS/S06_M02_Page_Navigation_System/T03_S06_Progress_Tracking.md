@@ -2,7 +2,7 @@
 id: T03_S06_Progress_Tracking
 title: Extract and Enhance Progress Tracking
 sprint: S06_M02_Page_Navigation_System
-status: todo
+status: completed
 complexity: Low
 dependencies:
   - T01_S06_Page_Component
