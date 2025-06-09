@@ -36,13 +36,23 @@ Enhance the existing navigation system with comprehensive state management to ha
 - [ ] State transitions are predictable and tested
 - [ ] Navigation state syncs with survey-core events
 
-## TDD Requirements
+## TDD Requirements (FOR ALL CODING TASKS)
+**CRITICAL**: All development must follow Test-Driven Development approach:
+- [ ] Write failing tests first (describe expected behavior)
+- [ ] Implement minimal code to make tests pass
+- [ ] Refactor while keeping tests green
+- [ ] Achieve >90% code coverage for all new code
+- [ ] No code implementation without corresponding test coverage
 
-- Write tests for navigation state hook before implementation
-- Test all state transitions and edge cases
-- Mock survey-core navigation events
-- Test integration with validation state
-- Ensure 100% coverage of state management logic
+## Simulator Verification (FOR ALL TASKS)
+**MANDATORY**: After completing any task, perform simulator verification:
+- [ ] Kill the app in the simulator
+- [ ] Kill metro process (use `kill` command, not control-c)
+- [ ] Run `pnpm start` (or `pnpm run:ios` if native code changed)
+- [ ] Open the app in the simulator
+- [ ] Confirm no catastrophic changes occurred
+- [ ] If task was UI-facing, manually test the implemented functionality
+- [ ] Verify app loads and functions correctly
 
 ## Subtasks
 
