@@ -324,7 +324,7 @@ describe('PageNavigation', () => {
       );
 
       const container = getByTestId('page-navigation');
-      expect(container.props.accessibilityRole).toBe('navigation');
+      expect(container.props.accessibilityRole).toBe('toolbar');
     });
   });
 

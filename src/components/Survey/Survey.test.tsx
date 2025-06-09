@@ -233,9 +233,17 @@ describe('Survey Component', () => {
       title: 'Test Survey',
     };
 
+    const mockUseSurveyModel = require('../../hooks').useSurveyModel;
     const mockUseSurveyState = require('../../hooks').useSurveyState;
     const mockUsePageNavigation = require('../../hooks').usePageNavigation;
-    const mockCompleteSurvey = jest.fn();
+    
+    // Get the mocked survey model to access doComplete
+    const surveyModelInstance = mockUseSurveyModel(mockModel).model;
+    
+    const mockCompleteSurvey = jest.fn(async () => {
+      // Simulate the completion flow by calling doComplete
+      surveyModelInstance.doComplete();
+    });
     
     mockUseSurveyState.mockReturnValue({
       currentPageNo: 0,
@@ -268,6 +276,9 @@ describe('Survey Component', () => {
 
     const completeButton = getByText('Complete');
     fireEvent.press(completeButton);
+
+    // The completeSurvey mock should be called
+    expect(mockCompleteSurvey).toHaveBeenCalled();
 
     await waitFor(() => {
       expect(mockOnComplete).toHaveBeenCalledTimes(1);
@@ -315,16 +326,24 @@ describe('Survey Component', () => {
     expect(() => fireEvent.press(completeButton)).not.toThrow();
   });
 
-  it('should use default surveyId when model.id is not provided', () => {
+  it('should use default surveyId when model.id is not provided', async () => {
     const mockOnComplete = jest.fn();
     const mockModel = {
       title: 'Test Survey',
       // no id provided
     };
 
+    const mockUseSurveyModel = require('../../hooks').useSurveyModel;
     const mockUseSurveyState = require('../../hooks').useSurveyState;
     const mockUsePageNavigation = require('../../hooks').usePageNavigation;
-    const mockCompleteSurvey = jest.fn();
+    
+    // Get the mocked survey model to access doComplete
+    const surveyModelInstance = mockUseSurveyModel(mockModel).model;
+    
+    const mockCompleteSurvey = jest.fn(async () => {
+      // Simulate the completion flow by calling doComplete
+      surveyModelInstance.doComplete();
+    });
     
     mockUseSurveyState.mockReturnValue({
       currentPageNo: 0,
@@ -358,11 +377,16 @@ describe('Survey Component', () => {
     const completeButton = getByText('Complete');
     fireEvent.press(completeButton);
 
-    expect(mockOnComplete).toHaveBeenCalledWith(
-      expect.objectContaining({
-        surveyId: 'survey',
-      })
-    );
+    // The completeSurvey mock should be called
+    expect(mockCompleteSurvey).toHaveBeenCalled();
+
+    await waitFor(() => {
+      expect(mockOnComplete).toHaveBeenCalledWith(
+        expect.objectContaining({
+          surveyId: 'survey',
+        })
+      );
+    });
   });
 
   it('should render title when provided in model', () => {
@@ -387,6 +411,7 @@ describe('Survey Component', () => {
       };
       const mockUseSurveyModel = require('../../hooks').useSurveyModel;
       const mockUseSurveyState = require('../../hooks').useSurveyState;
+      const mockUsePageNavigation = require('../../hooks').usePageNavigation;
 
       mockUseSurveyModel.mockReturnValue({
         model: {
@@ -395,10 +420,13 @@ describe('Survey Component', () => {
           pageCount: 2,
           isFirstPage: true,
           isLastPage: false,
+          currentPage: { name: 'page1' },
           nextPage: jest.fn(),
           prevPage: jest.fn(),
           doComplete: jest.fn(),
           onComplete: { add: jest.fn(), remove: jest.fn() },
+          onCurrentPageChanged: { add: jest.fn(), remove: jest.fn() },
+          onValueChanged: { add: jest.fn(), remove: jest.fn() },
           getProgressInfo: jest.fn(() => ({ currentPageNo: 0, pageCount: 2 })),
           showProgressBar: true,
         },
@@ -415,9 +443,26 @@ describe('Survey Component', () => {
         questions: [],
       });
 
-      const { getByText } = render(<Survey model={mockModel} />);
+      mockUsePageNavigation.mockReturnValue({
+        navigationState: {
+          currentPageNo: 0,
+          pageCount: 2,
+          isFirstPage: true,
+          isLastPage: false,
+          canGoNext: true,
+          canGoPrevious: false,
+          isNavigating: false,
+          validationError: null,
+        },
+        goToNextPage: jest.fn(),
+        goToPreviousPage: jest.fn(),
+        completeSurvey: jest.fn(),
+      });
+
+      const { getByText, queryByText } = render(<Survey model={mockModel} />);
+      // On the first page, we should see Next but not Previous
       expect(getByText('Next')).toBeTruthy();
-      expect(getByText('Previous')).toBeTruthy();
+      expect(queryByText('Previous')).toBeNull();
     });
 
     it('should disable Previous button on first page', () => {
