@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for utils/surveyCore.ts</title>
+    <title>Code coverage report for hooks/useSurveyModelFixed.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">utils</a> surveyCore.ts</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">hooks</a> useSurveyModelFixed.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/111</span>
+                <span class='fraction'>0/117</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/111</span>
+                <span class='fraction'>0/117</span>
             </div>
         
             
@@ -174,7 +174,13 @@
 <a name='L109'></a><a href='#L109'>109</a>
 <a name='L110'></a><a href='#L110'>110</a>
 <a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -285,116 +291,128 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import { Model } from 'survey-core';</span></span></span>
-<span class="cstat-no" title="statement not covered" >import { applyPolyfills } from './polyfills';</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >// Import React hooks directly to avoid resolution issues</span></span></span>
+<span class="cstat-no" title="statement not covered" >import * as React from 'react';</span>
+<span class="cstat-no" title="statement not covered" >import { Model } from 'survey-core';</span>
+<span class="cstat-no" title="statement not covered" >import { SurveyModelManager } from '../utils/surveyCore';</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export interface UseSurveyModelOptions {</span>
+<span class="cstat-no" title="statement not covered" >  /**</span>
+<span class="cstat-no" title="statement not covered" >   * Custom model ID (defaults to auto-generated)</span>
+<span class="cstat-no" title="statement not covered" >   */</span>
+<span class="cstat-no" title="statement not covered" >  modelId?: string;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export interface UseSurveyModelResult {</span>
+<span class="cstat-no" title="statement not covered" >  /**</span>
+<span class="cstat-no" title="statement not covered" >   * The survey model instance</span>
+<span class="cstat-no" title="statement not covered" >   */</span>
+<span class="cstat-no" title="statement not covered" >  model: Model | null;</span>
+<span class="cstat-no" title="statement not covered" >  /**</span>
+<span class="cstat-no" title="statement not covered" >   * Loading state</span>
+<span class="cstat-no" title="statement not covered" >   */</span>
+<span class="cstat-no" title="statement not covered" >  isLoading: boolean;</span>
+<span class="cstat-no" title="statement not covered" >  /**</span>
+<span class="cstat-no" title="statement not covered" >   * Error state</span>
+<span class="cstat-no" title="statement not covered" >   */</span>
+<span class="cstat-no" title="statement not covered" >  error: Error | null;</span>
+<span class="cstat-no" title="statement not covered" >  /**</span>
+<span class="cstat-no" title="statement not covered" >   * Refresh the survey model</span>
+<span class="cstat-no" title="statement not covered" >   */</span>
+<span class="cstat-no" title="statement not covered" >  refresh: () =&gt; void;</span>
+<span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * Initialize survey-core for React Native environment</span>
-<span class="cstat-no" title="statement not covered" > * Handles platform-specific configuration</span>
+<span class="cstat-no" title="statement not covered" > * React hook for managing survey-core model lifecycle (fixed version)</span>
+<span class="cstat-no" title="statement not covered" > * @param json - SurveyJS JSON model</span>
+<span class="cstat-no" title="statement not covered" > * @param options - Hook options</span>
+<span class="cstat-no" title="statement not covered" > * @returns Survey model and state</span>
 <span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export function initializeSurveyCore(): { platform: string; error?: boolean } {</span>
-<span class="cstat-no" title="statement not covered" >  // Apply polyfills before any survey-core usage</span>
-<span class="cstat-no" title="statement not covered" >  applyPolyfills();</span>
+<span class="cstat-no" title="statement not covered" >export function useSurveyModelFixed(</span>
+<span class="cstat-no" title="statement not covered" >  json: any,</span>
+<span class="cstat-no" title="statement not covered" >  options: UseSurveyModelOptions = {}</span>
+<span class="cstat-no" title="statement not covered" >): UseSurveyModelResult {</span>
+<span class="cstat-no" title="statement not covered" >  // Use React.useState directly to avoid destructuring issues</span>
+<span class="cstat-no" title="statement not covered" >  // Store the entire state tuple to avoid babel destructuring</span>
+<span class="cstat-no" title="statement not covered" >  const modelState = React.useState&lt;Model | null&gt;(null);</span>
+<span class="cstat-no" title="statement not covered" >  const model = modelState[0];</span>
+<span class="cstat-no" title="statement not covered" >  const setModel = modelState[1];</span>
 <span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  // For now, we just return a configuration object</span>
+<span class="cstat-no" title="statement not covered" >  const loadingState = React.useState(true);</span>
+<span class="cstat-no" title="statement not covered" >  const isLoading = loadingState[0];</span>
+<span class="cstat-no" title="statement not covered" >  const setIsLoading = loadingState[1];</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const errorState = React.useState&lt;Error | null&gt;(null);</span>
+<span class="cstat-no" title="statement not covered" >  const error = errorState[0];</span>
+<span class="cstat-no" title="statement not covered" >  const setError = errorState[1];</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const modelIdRef = React.useRef(options.modelId || generateModelId());</span>
+<span class="cstat-no" title="statement not covered" >  const jsonRef = React.useRef(json);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const createModel = React.useCallback(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setIsLoading(true);</span>
+<span class="cstat-no" title="statement not covered" >    setError(null);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    try {</span>
+<span class="cstat-no" title="statement not covered" >      if (!json || typeof json !== 'object') {</span>
+<span class="cstat-no" title="statement not covered" >        throw new Error('Invalid survey JSON');</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >      const newModel = SurveyModelManager.create(modelIdRef.current, json);</span>
+<span class="cstat-no" title="statement not covered" >      setModel(newModel);</span>
+<span class="cstat-no" title="statement not covered" >      setIsLoading(false);</span>
+<span class="cstat-no" title="statement not covered" >    } catch (err) {</span>
+<span class="cstat-no" title="statement not covered" >      setError(err as Error);</span>
+<span class="cstat-no" title="statement not covered" >      setModel(null);</span>
+<span class="cstat-no" title="statement not covered" >      setIsLoading(false);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >  }, [json]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  const refresh = React.useCallback(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    if (modelIdRef.current) {</span>
+<span class="cstat-no" title="statement not covered" >      SurveyModelManager.dispose(modelIdRef.current);</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" >    createModel();</span>
+<span class="cstat-no" title="statement not covered" >  }, [createModel]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >  React.useEffect(() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    // Initial creation and when json changes</span>
+<span class="cstat-no" title="statement not covered" >    if (!model || jsonRef.current !== json) {</span>
+<span class="cstat-no" title="statement not covered" >      if (model &amp;&amp; modelIdRef.current) {</span>
+<span class="cstat-no" title="statement not covered" >        SurveyModelManager.dispose(modelIdRef.current);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >      jsonRef.current = json;</span>
+<span class="cstat-no" title="statement not covered" >      createModel();</span>
+<span class="cstat-no" title="statement not covered" >    }</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >    // Cleanup on unmount</span>
+<span class="cstat-no" title="statement not covered" >    return () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      const currentModelId = modelIdRef.current;</span>
+<span class="cstat-no" title="statement not covered" >      if (currentModelId) {</span>
+<span class="cstat-no" title="statement not covered" >        SurveyModelManager.dispose(currentModelId);</span>
+<span class="cstat-no" title="statement not covered" >      }</span>
+<span class="cstat-no" title="statement not covered" >    };</span>
+<span class="cstat-no" title="statement not covered" >  }, [json]);</span>
+<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  return {</span>
-<span class="cstat-no" title="statement not covered" >    platform: 'react-native',</span>
+<span class="cstat-no" title="statement not covered" >    model,</span>
+<span class="cstat-no" title="statement not covered" >    isLoading,</span>
+<span class="cstat-no" title="statement not covered" >    error,</span>
+<span class="cstat-no" title="statement not covered" >    refresh,</span>
 <span class="cstat-no" title="statement not covered" >  };</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 <span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * Create a survey model from JSON</span>
-<span class="cstat-no" title="statement not covered" > * @param json - SurveyJS JSON model</span>
-<span class="cstat-no" title="statement not covered" > * @returns Survey model instance</span>
+<span class="cstat-no" title="statement not covered" > * Generate a unique model ID</span>
 <span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export function createSurveyModel(json: any): Model {</span>
-<span class="cstat-no" title="statement not covered" >  if (!json || typeof json !== 'object') {</span>
-<span class="cstat-no" title="statement not covered" >    throw new Error('Invalid survey JSON provided');</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    return new Model(json);</span>
-<span class="cstat-no" title="statement not covered" >  } catch (error: any) {</span>
-<span class="cstat-no" title="statement not covered" >    throw new Error(`Failed to create survey model: ${error.message}`);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * Dispose a survey model and clean up resources</span>
-<span class="cstat-no" title="statement not covered" > * @param model - Survey model to dispose</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export function disposeSurveyModel(model: Model | null | undefined): void {</span>
-<span class="cstat-no" title="statement not covered" >  if (!model) {</span>
-<span class="cstat-no" title="statement not covered" >    return;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  if (typeof model.dispose === 'function') {</span>
-<span class="cstat-no" title="statement not covered" >    model.dispose();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >/**</span>
-<span class="cstat-no" title="statement not covered" > * Survey Model Manager for tracking and managing survey instances</span>
-<span class="cstat-no" title="statement not covered" > * Helps prevent memory leaks by ensuring proper disposal</span>
-<span class="cstat-no" title="statement not covered" > */</span>
-<span class="cstat-no" title="statement not covered" >export class SurveyModelManager {</span>
-<span class="cstat-no" title="statement not covered" >  private static instances: Map&lt;string, Model&gt; = new Map();</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Create and track a survey model</span>
-<span class="cstat-no" title="statement not covered" >   * @param id - Unique identifier for the model</span>
-<span class="cstat-no" title="statement not covered" >   * @param json - SurveyJS JSON model</span>
-<span class="cstat-no" title="statement not covered" >   * @returns Survey model instance</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static create(id: string, json: any): Model {</span>
-<span class="cstat-no" title="statement not covered" >    // Dispose existing model with same id</span>
-<span class="cstat-no" title="statement not covered" >    if (this.instances.has(id)) {</span>
-<span class="cstat-no" title="statement not covered" >      this.dispose(id);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >    const model = createSurveyModel(json);</span>
-<span class="cstat-no" title="statement not covered" >    this.instances.set(id, model);</span>
-<span class="cstat-no" title="statement not covered" >    return model;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Get a survey model by id</span>
-<span class="cstat-no" title="statement not covered" >   * @param id - Model identifier</span>
-<span class="cstat-no" title="statement not covered" >   * @returns Survey model or undefined</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static get(id: string): Model | undefined {</span>
-<span class="cstat-no" title="statement not covered" >    return this.instances.get(id);</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Dispose a survey model by id</span>
-<span class="cstat-no" title="statement not covered" >   * @param id - Model identifier</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static dispose(id: string): void {</span>
-<span class="cstat-no" title="statement not covered" >    const model = this.instances.get(id);</span>
-<span class="cstat-no" title="statement not covered" >    if (model) {</span>
-<span class="cstat-no" title="statement not covered" >      disposeSurveyModel(model);</span>
-<span class="cstat-no" title="statement not covered" >      this.instances.delete(id);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Dispose all tracked survey models</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static disposeAll(): void {</span>
-<span class="cstat-no" title="statement not covered" >    this.instances.forEach((model) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      disposeSurveyModel(model);</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
-<span class="cstat-no" title="statement not covered" >    this.instances.clear();</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  /**</span>
-<span class="cstat-no" title="statement not covered" >   * Get all active model IDs</span>
-<span class="cstat-no" title="statement not covered" >   * @returns Array of model IDs</span>
-<span class="cstat-no" title="statement not covered" >   */</span>
-<span class="cstat-no" title="statement not covered" >  static getAll(): string[] {</span>
-<span class="cstat-no" title="statement not covered" >    return Array.from(this.instances.keys());</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >function generateModelId(): string {</span>
+<span class="cstat-no" title="statement not covered" >  return `survey-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -403,7 +421,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-09T11:08:09.047Z
+                at 2025-06-09T11:08:09.096Z
             </div>
         <script src="../prettify.js"></script>
         <script>
