@@ -1,5 +1,5 @@
+// Import React hooks directly to avoid resolution issues
 import * as React from 'react';
-const { useEffect, useState, useCallback } = React;
 import { Model, Question, PageModel, SurveyError } from 'survey-core';
 
 // Import validation interfaces
@@ -73,7 +73,7 @@ export interface UseSurveyStateReturn extends SurveyState {
  * @returns Current survey state with validation methods
  */
 export function useSurveyState(model: Model | null): UseSurveyStateReturn {
-  const [state, setState] = useState<SurveyState>(() => ({
+  const stateResult = React.useState<SurveyState>(() => ({
     data: model?.data || {},
     currentPageNo: model?.currentPageNo || 0,
     pageCount: model?.pageCount || 1,
@@ -88,11 +88,14 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
       isValidating: false,
     },
   }));
+  // Store the entire state tuple to avoid babel destructuring
+  const state = stateResult[0];
+  const setState = stateResult[1];
 
   /**
    * Converts survey-core errors to our error format
    */
-  const parseErrors = useCallback((surveyErrors: SurveyError[]): Record<string, string[]> => {
+  const parseErrors = React.useCallback((surveyErrors: SurveyError[]): Record<string, string[]> => {
     const errorMap: Record<string, string[]> = {};
     
     surveyErrors.forEach((error) => {
@@ -111,7 +114,7 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
   /**
    * Update validation state based on current model state
    */
-  const updateValidationState = useCallback(() => {
+  const updateValidationState = React.useCallback(() => {
     if (!model || !model.currentPage) {
       return;
     }
@@ -126,15 +129,28 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
       questions.forEach((question: Question) => {
         const questionErrors: string[] = [];
         
-        // Check if question has errors (survey-core specific method)
+        // Only check for actual validation errors from survey-core
+        // Don't run validation on initial load - only process existing errors
         if ((question as any).hasErrors && (question as any).hasErrors()) {
           if ((question as any).errors && Array.isArray((question as any).errors)) {
-            questionErrors.push(...(question as any).errors.map((e: any) => e.text || e.message || String(e)));
+            const validErrors = (question as any).errors
+              .map((e: any) => {
+                if (typeof e === 'string') return e;
+                if (e && typeof e === 'object') {
+                  return e.text || e.message || e.errorText;
+                }
+                return null;
+              })
+              .filter(Boolean); // Remove null/undefined values
+            
+            questionErrors.push(...validErrors);
           }
         }
 
-        // Check required validation
-        if (question.isRequired && (!question.value || question.value === '')) {
+        // Only add required validation errors if validation has been explicitly triggered
+        // This prevents showing errors on initial load
+        if (question.isRequired && (!question.value || question.value === '') && 
+            (model as any).validationTriggered) {
           questionErrors.push('This field is required');
         }
 
@@ -171,7 +187,7 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
     }
   }, [model]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!model) {
       setState({
         data: {},
@@ -289,14 +305,15 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
     model.onCurrentPageChanged.add(handlePageChanged);
     model.onComplete.add(handleComplete);
     
-    // Subscribe to validation events
+    // Subscribe to validation events (if available)
     if ((model as any).onValidatedErrorsOnCurrentPage) {
       (model as any).onValidatedErrorsOnCurrentPage.add(handleValidatedErrorsOnCurrentPage);
     }
-    model.onValidateQuestion.add(handleValidateQuestion);
+    if (model.onValidateQuestion) {
+      model.onValidateQuestion.add(handleValidateQuestion);
+    }
 
-    // Initial validation state update
-    updateValidationState();
+    // Don't run validation on initial load - let SurveyJS handle validation timing
 
     // Cleanup
     return () => {
@@ -306,12 +323,14 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
       if ((model as any).onValidatedErrorsOnCurrentPage) {
         (model as any).onValidatedErrorsOnCurrentPage.remove(handleValidatedErrorsOnCurrentPage);
       }
-      model.onValidateQuestion.remove(handleValidateQuestion);
+      if (model.onValidateQuestion) {
+        model.onValidateQuestion.remove(handleValidateQuestion);
+      }
     };
   }, [model, updateValidationState]);
 
   // Validation methods
-  const validateCurrentPage = useCallback((): boolean => {
+  const validateCurrentPage = React.useCallback((): boolean => {
     if (!model || !model.currentPage) {
       return true;
     }
@@ -376,7 +395,7 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
     }
   }, [model, updateValidationState, parseErrors, state.validation.hasErrors]);
 
-  const validateAllPages = useCallback((): boolean => {
+  const validateAllPages = React.useCallback((): boolean => {
     if (!model) {
       return true;
     }
@@ -423,7 +442,7 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
     }
   }, [model]);
 
-  const clearValidationErrors = useCallback(() => {
+  const clearValidationErrors = React.useCallback(() => {
     setState(prev => ({
       ...prev,
       validation: {
@@ -435,7 +454,7 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
     }));
   }, []);
 
-  const clearErrors = useCallback((questionName?: string) => {
+  const clearErrors = React.useCallback((questionName?: string) => {
     setState((prev) => {
       if (!questionName) {
         // Clear all errors
@@ -464,11 +483,11 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
     });
   }, []);
 
-  const getQuestionErrors = useCallback((questionName: string): string[] => {
+  const getQuestionErrors = React.useCallback((questionName: string): string[] => {
     return state.validation.errors[questionName] || [];
   }, [state.validation.errors]);
 
-  const validateQuestion = useCallback((questionName: string): boolean => {
+  const validateQuestion = React.useCallback((questionName: string): boolean => {
     if (!model || !model.currentPage) {
       return true;
     }
@@ -512,15 +531,20 @@ function getQuestions(
     return [];
   }
 
-  const questions = model.getAllQuestions();
-  return questions.map((q: any) => ({
-    name: q.name,
-    value: q.value,
-    type: q.getType(),
-    title: q.title,
-    description: q.description,
-    isRequired: q.isRequired,
-    visible: q.visible,
-    readOnly: q.readOnly,
-  }));
+  try {
+    const questions = model.getAllQuestions();
+    return questions.map((q: any) => ({
+      name: q.name || '',
+      value: q.value || '',
+      type: q.getType?.() || q.type || 'text',
+      title: q.title || '',
+      description: q.description || '',
+      isRequired: Boolean(q.isRequired),
+      visible: q.visible !== false,
+      readOnly: Boolean(q.readOnly),
+    }));
+  } catch (error) {
+    console.warn('Error getting questions:', error);
+    return [];
+  }
 }

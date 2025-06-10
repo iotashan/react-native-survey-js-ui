@@ -70,11 +70,11 @@ describe('React Import Resolution', () => {
     it('should validate fixed hooks are exported and use correct React import pattern', () => {
       // Import the fixed versions to ensure they work
       const { useSurveyModelFixed } = require('../useSurveyModelFixed');
-      const { useSurveyStateFixed } = require('../useSurveyStateFixed');
+      const { useSurveyState } = require('../useSurveyState');
 
       // Verify the hooks are exported correctly
       expect(typeof useSurveyModelFixed).toBe('function');
-      expect(typeof useSurveyStateFixed).toBe('function');
+      expect(typeof useSurveyState).toBe('function');
 
       // Read the source code to verify they use React.useState pattern
       const fs = require('fs');
@@ -85,7 +85,7 @@ describe('React Import Resolution', () => {
         'utf8'
       );
       const stateFixedSource = fs.readFileSync(
-        path.join(__dirname, '..', 'useSurveyStateFixed.tsx'),
+        path.join(__dirname, '..', 'useSurveyState.tsx'),
         'utf8'
       );
 

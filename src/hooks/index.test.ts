@@ -22,10 +22,10 @@ describe('hooks index exports', () => {
     expect(exportedKeys).toContain('useSurveyModel');
     expect(exportedKeys).toContain('useSurveyState');
     expect(exportedKeys).toContain('useSurveyModelFixed');
-    expect(exportedKeys).toContain('useSurveyStateFixed');
     expect(exportedKeys).toContain('usePageNavigation');
     expect(exportedKeys).toContain('usePageValidation');
     expect(exportedKeys).toContain('usePanelState');
+    expect(exportedKeys).toContain('useSubmissionMode');
     expect(exportedKeys.length).toBe(7);
   });
 });

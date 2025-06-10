@@ -8,15 +8,13 @@ export type {
 // Also export the fixed versions under their own names for backward compatibility
 export { useSurveyModelFixed } from './useSurveyModelFixed';
 
-export { useSurveyStateFixed as useSurveyState } from './useSurveyStateFixed';
+export { useSurveyState } from './useSurveyState';
 export type { 
   SurveyState, 
   UseSurveyStateReturn,
   ValidationState as SurveyValidationState,
   ValidationError as SurveyValidationError
-} from './useSurveyStateFixed';
-
-export { useSurveyStateFixed } from './useSurveyStateFixed';
+} from './useSurveyState';
 
 // Page navigation hook
 export { usePageNavigation } from './usePageNavigation';

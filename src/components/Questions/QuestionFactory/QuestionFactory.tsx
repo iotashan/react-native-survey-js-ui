@@ -28,7 +28,10 @@ export const QuestionFactory: React.FC<QuestionFactoryProps> & {
   isTypeRegistered: (type: string) => boolean;
 } = ({ question, value, onChange, error }) => {
   const validation = useValidation();
-  const QuestionComponent = questionRegistry.get(question.type);
+  
+  // Get question type - survey-core questions use getType() method
+  const questionType = (question as any).getType?.() || question.type || 'text';
+  const QuestionComponent = questionRegistry.get(questionType);
 
   // Use validation errors if available, fallback to passed error prop
   const questionErrors = validation.getFieldErrors(question.name);
@@ -43,14 +46,14 @@ export const QuestionFactory: React.FC<QuestionFactoryProps> & {
       onChange(newValue);
     }
 
-    // Validate the new value and update validation state
-    const errors = validation.validateQuestion(question.name, newValue, question as any);
-    validation.setQuestionError(errors);
+    // Mark field as touched and validate
+    validation.markFieldTouched(question.name);
+    validation.validateField(question.name);
   }, [onChange, validation, question]);
 
   if (!QuestionComponent) {
     console.warn(
-      `Unknown question type: ${question.type}. Falling back to BaseQuestion.`
+      `Unknown question type: ${questionType}. Falling back to BaseQuestion.`
     );
     return <BaseQuestion question={question} {...(displayError && { error: displayError })} />;
   }

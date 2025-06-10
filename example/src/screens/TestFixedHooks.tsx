@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import {
   useSurveyModelFixed,
-  useSurveyStateFixed,
+  useSurveyState,
 } from 'react-native-survey-js-ui';
 
 export default function TestFixedHooks() {
@@ -23,7 +23,7 @@ export default function TestFixedHooks() {
   try {
     // Test if the fixed hooks work
     const { model, isLoading, error } = useSurveyModelFixed(testModel);
-    const surveyState = useSurveyStateFixed(model);
+    const surveyState = useSurveyState(model);
 
     return (
       <View style={{ padding: 20 }}>

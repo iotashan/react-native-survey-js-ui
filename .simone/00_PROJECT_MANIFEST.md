@@ -125,6 +125,7 @@ This project follows a milestone-based development approach with strict TDD requ
 - [✅] T005: [Fix Infrastructure and Testing Issues](./04_GENERAL_TASKS/TX005_Fix_Infrastructure_and_Testing_Issues.md) - Status: Completed (2025-06-08 00:33)
 - [ ] T006: [Fix TypeScript Compilation Errors](./04_GENERAL_TASKS/T006_Fix_TypeScript_Compilation_Errors.md) - Status: Not Started
 - [ ] T007: [Implement Explore Detail Screens With TDD](./04_GENERAL_TASKS/T007_Implement_Explore_Detail_Screens_With_TDD.md) - Status: Not Started
+- [ ] T008: [Create E2E Tests With Mobile MCP Simulator Integration](./04_GENERAL_TASKS/T008_Create_E2E_Tests_With_Mobile_MCP_Simulator_Integration.md) - Status: Not Started
 
 ## 6. Key Documentation
 

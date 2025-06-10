@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react-native';
-import { useSurveyStateFixed } from '../useSurveyStateFixed';
+import { useSurveyState } from '../useSurveyState';
 
-describe('useSurveyStateFixed', () => {
+describe('useSurveyState', () => {
   let mockModel: any;
   let valueChangedCallbacks: ((sender: any, options: any) => void)[] = [];
   let pageChangedCallbacks: ((sender: any, options: any) => void)[] = [];
@@ -56,7 +56,7 @@ describe('useSurveyStateFixed', () => {
     it('should work without React import dependency issues', () => {
       // This test verifies that the Fixed version resolves React import conflicts
       // that were causing state update issues in the original useSurveyState
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       expect(result.current).toBeDefined();
       expect(result.current.data).toEqual(mockModel.data);
@@ -66,7 +66,7 @@ describe('useSurveyStateFixed', () => {
     it('should handle undefined React references in state updates', () => {
       // Test the core fix - handling cases where React state setters might be undefined
       // due to import resolution issues
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       expect(() => {
         // Should not throw when state is accessed during React import issues
@@ -84,7 +84,7 @@ describe('useSurveyStateFixed', () => {
 
     it('should maintain state consistency during React import resolution', () => {
       // Verify that state remains consistent even when React imports are unstable
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       const initialState = result.current;
 
@@ -107,7 +107,7 @@ describe('useSurveyStateFixed', () => {
 
   describe('Basic Hook Functionality', () => {
     it('should initialize with survey model data', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       expect(result.current.data).toEqual(mockModel.data);
       expect(result.current.currentPageNo).toBe(mockModel.currentPageNo);
@@ -118,7 +118,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should handle null survey model', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(null));
+      const { result } = renderHook(() => useSurveyState(null));
 
       expect(result.current.data).toEqual({});
       expect(result.current.currentPageNo).toBe(0);
@@ -129,7 +129,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should handle undefined survey model', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(undefined));
+      const { result } = renderHook(() => useSurveyState(undefined));
 
       expect(result.current.data).toEqual({});
       expect(result.current.currentPageNo).toBe(0);
@@ -142,7 +142,7 @@ describe('useSurveyStateFixed', () => {
 
   describe('Event Handling', () => {
     it('should register event listeners on mount', () => {
-      renderHook(() => useSurveyStateFixed(mockModel));
+      renderHook(() => useSurveyState(mockModel));
 
       expect(mockModel.onValueChanged.add).toHaveBeenCalledTimes(1);
       expect(mockModel.onCurrentPageChanged.add).toHaveBeenCalledTimes(1);
@@ -150,7 +150,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should unregister event listeners on unmount', () => {
-      const { unmount } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { unmount } = renderHook(() => useSurveyState(mockModel));
 
       const valueChangedCallback =
         mockModel.onValueChanged.add.mock.calls[0][0];
@@ -172,7 +172,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should update state on value changed event', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       act(() => {
         mockModel.data = { name: 'Jane', age: 25 };
@@ -189,7 +189,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should update state on page changed event', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       act(() => {
         mockModel.currentPageNo = 1;
@@ -211,7 +211,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should update state on complete event', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       act(() => {
         mockModel.isCompleted = true;
@@ -229,7 +229,7 @@ describe('useSurveyStateFixed', () => {
   describe('Model Changes', () => {
     it('should handle survey model updates', () => {
       const { result, rerender } = renderHook(
-        ({ model }) => useSurveyStateFixed(model),
+        ({ model }) => useSurveyState(model),
         {
           initialProps: { model: mockModel },
         }
@@ -263,7 +263,7 @@ describe('useSurveyStateFixed', () => {
 
     it('should clean up old listeners when model changes', () => {
       const { rerender } = renderHook(
-        ({ model }) => useSurveyStateFixed(model),
+        ({ model }) => useSurveyState(model),
         {
           initialProps: { model: mockModel },
         }
@@ -332,12 +332,12 @@ describe('useSurveyStateFixed', () => {
       };
 
       expect(() => {
-        renderHook(() => useSurveyStateFixed(modelWithMinimalEvents as any));
+        renderHook(() => useSurveyState(modelWithMinimalEvents as any));
       }).not.toThrow();
     });
 
     it('should handle malformed event options', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       expect(() => {
         act(() => {
@@ -351,7 +351,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should handle rapid event firing', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       act(() => {
         // Fire many events rapidly
@@ -371,7 +371,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should handle concurrent model updates', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       act(() => {
         // Simulate concurrent updates
@@ -399,7 +399,7 @@ describe('useSurveyStateFixed', () => {
 
   describe('Memory Management and Performance', () => {
     it('should not cause memory leaks with event listeners', () => {
-      const { unmount } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { unmount } = renderHook(() => useSurveyState(mockModel));
 
       // Verify listeners are added
       expect(valueChangedCallbacks.length).toBe(1);
@@ -416,10 +416,10 @@ describe('useSurveyStateFixed', () => {
 
     it('should handle multiple hook instances with the same model', () => {
       const { unmount: unmount1 } = renderHook(() =>
-        useSurveyStateFixed(mockModel)
+        useSurveyState(mockModel)
       );
       const { unmount: unmount2 } = renderHook(() =>
-        useSurveyStateFixed(mockModel)
+        useSurveyState(mockModel)
       );
 
       // Both hooks should register listeners
@@ -440,7 +440,7 @@ describe('useSurveyStateFixed', () => {
   describe('State Consistency and Synchronization', () => {
     it('should maintain state consistency across re-renders', () => {
       const { result, rerender } = renderHook(() =>
-        useSurveyStateFixed(mockModel)
+        useSurveyState(mockModel)
       );
 
       const initialState = result.current;
@@ -453,7 +453,7 @@ describe('useSurveyStateFixed', () => {
     });
 
     it('should properly synchronize with model property changes', () => {
-      const { result } = renderHook(() => useSurveyStateFixed(mockModel));
+      const { result } = renderHook(() => useSurveyState(mockModel));
 
       // Directly modify model properties
       mockModel.currentPageNo = 2;
@@ -482,7 +482,7 @@ describe('useSurveyStateFixed', () => {
       // Test that this hook can be used alongside other Fixed hooks
       // without React import conflicts
       const { result } = renderHook(() => {
-        const state = useSurveyStateFixed(mockModel);
+        const state = useSurveyState(mockModel);
         return { state };
       });
 
@@ -495,7 +495,7 @@ describe('useSurveyStateFixed', () => {
 
       const { result, rerender } = renderHook(() => {
         renderCount++;
-        return useSurveyStateFixed(mockModel);
+        return useSurveyState(mockModel);
       });
 
       expect(renderCount).toBe(2); // Hook runs twice in React 18 Strict Mode
