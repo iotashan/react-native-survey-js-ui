@@ -160,4 +160,55 @@ describe('SurveyDemoScreen - Multi-Page Navigation', () => {
     // Note: We can't directly test console.log, but we verify the examples are loaded
     expect(multiPageNavigationExamples.length).toBe(7);
   });
+
+  it('should show playground button for multi-page navigation examples', async () => {
+    const { getByTestId, queryByTestId } = render(<SurveyDemoScreen />);
+    
+    // Initially playground button should not be visible (non-navigation example)
+    expect(queryByTestId('show-playground-button')).toBeNull();
+    
+    // Select a multi-page navigation example
+    fireEvent.press(getByTestId('example-selector-button'));
+    await waitFor(() => {
+      const navExample = getByTestId('example-basic-multipage');
+      fireEvent.press(navExample);
+    });
+    
+    // Now playground button should be visible
+    await waitFor(() => {
+      expect(getByTestId('show-playground-button')).toBeTruthy();
+    });
+  });
+
+  it('should toggle navigation playground when button is pressed', async () => {
+    const { getByTestId, queryByTestId } = render(<SurveyDemoScreen />);
+    
+    // Select multi-page navigation example
+    fireEvent.press(getByTestId('example-selector-button'));
+    await waitFor(() => {
+      fireEvent.press(getByTestId('example-basic-multipage'));
+    });
+    
+    // Initially playground should not be visible
+    expect(queryByTestId('navigation-playground-container')).toBeNull();
+    
+    // Press playground button
+    await waitFor(() => {
+      const playgroundButton = getByTestId('show-playground-button');
+      fireEvent.press(playgroundButton);
+    });
+    
+    // Playground should now be visible
+    await waitFor(() => {
+      expect(getByTestId('navigation-playground-container')).toBeTruthy();
+    });
+    
+    // Press button again to hide
+    fireEvent.press(getByTestId('show-playground-button'));
+    
+    // Playground should be hidden
+    await waitFor(() => {
+      expect(queryByTestId('navigation-playground-container')).toBeNull();
+    });
+  });
 });
