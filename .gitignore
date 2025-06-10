@@ -76,3 +76,6 @@ web-build/
 *.log
 metro.log
 metro-startup.log
+
+# Test results
+test-results.json
