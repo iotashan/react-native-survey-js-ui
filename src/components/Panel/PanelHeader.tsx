@@ -9,6 +9,7 @@ import {
   TextStyle,
   AccessibilityInfo,
 } from 'react-native';
+import { PanelErrorIndicator } from './PanelErrorIndicator';
 
 export interface PanelHeaderProps {
   title: string;
@@ -24,6 +25,18 @@ export interface PanelHeaderProps {
   showIcon?: boolean;
   expandIcon?: React.ReactElement;
   collapseIcon?: React.ReactElement;
+  /**
+   * Number of validation errors in the panel
+   */
+  errorCount?: number;
+  /**
+   * Whether the panel has validation errors
+   */
+  hasErrors?: boolean;
+  /**
+   * Style for the error state
+   */
+  errorStyle?: ViewStyle;
 }
 
 export const PanelHeader: React.FC<PanelHeaderProps> = ({
@@ -40,6 +53,9 @@ export const PanelHeader: React.FC<PanelHeaderProps> = ({
   showIcon = true,
   expandIcon,
   collapseIcon,
+  errorCount = 0,
+  hasErrors = false,
+  errorStyle,
 }) => {
   // Determine if component is controlled or uncontrolled
   const isControlled = expanded !== undefined;
@@ -109,9 +125,44 @@ export const PanelHeader: React.FC<PanelHeaderProps> = ({
     ? 'Double tap to collapse panel'
     : 'Double tap to expand panel';
 
+  // Determine container styles based on error state
+  const containerStyles = [
+    styles.container,
+    hasErrors && styles.containerError,
+    hasErrors && errorStyle,
+    style,
+  ];
+
+  // Create accessibility state
+  const accessibilityState = collapsible 
+    ? { expanded: isExpanded, invalid: hasErrors }
+    : { invalid: hasErrors };
+
+  // Create accessibility value for error count
+  const accessibilityValue = hasErrors && errorCount > 0
+    ? { text: `${errorCount} error${errorCount === 1 ? '' : 's'}` }
+    : undefined;
+
+  const renderErrorIndicator = () => {
+    if (!hasErrors || errorCount <= 0) return null;
+    
+    return (
+      <PanelErrorIndicator
+        errorCount={errorCount}
+        testID={`${testID}-error-indicator`}
+        style={styles.errorIndicator}
+      />
+    );
+  };
+
   if (!collapsible) {
     return (
-      <View style={[styles.container, style]} testID={testID}>
+      <View 
+        style={containerStyles} 
+        testID={testID}
+        accessibilityState={accessibilityState}
+        accessibilityValue={accessibilityValue}
+      >
         <View style={styles.headerContent}>
           <View style={styles.textContainer}>
             <Text 
@@ -129,7 +180,10 @@ export const PanelHeader: React.FC<PanelHeaderProps> = ({
               </Text>
             )}
           </View>
-          {renderIcon()}
+          <View style={styles.rightContent}>
+            {renderErrorIndicator()}
+            {renderIcon()}
+          </View>
         </View>
       </View>
     );
@@ -137,12 +191,13 @@ export const PanelHeader: React.FC<PanelHeaderProps> = ({
 
   return (
     <TouchableOpacity
-      style={[styles.container, style]}
+      style={containerStyles}
       testID={testID}
       onPress={handlePress}
       activeOpacity={0.7}
       accessibilityRole="button"
-      accessibilityState={{ expanded: isExpanded }}
+      accessibilityState={accessibilityState}
+      accessibilityValue={accessibilityValue}
       accessibilityHint={accessibilityHint}
       accessibilityLabel={`${title} panel header`}
     >
@@ -163,7 +218,10 @@ export const PanelHeader: React.FC<PanelHeaderProps> = ({
             </Text>
           )}
         </View>
-        {renderIcon()}
+        <View style={styles.rightContent}>
+          {renderErrorIndicator()}
+          {renderIcon()}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -176,6 +234,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     borderRadius: 8,
   },
+  containerError: {
+    borderColor: '#d32f2f',
+    borderWidth: 1,
+  },
   headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -184,6 +246,10 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     marginRight: 8,
+  },
+  rightContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontSize: 16,
@@ -198,5 +264,8 @@ const styles = StyleSheet.create({
   defaultIcon: {
     fontSize: 18,
     color: '#666',
+  },
+  errorIndicator: {
+    marginRight: 8,
   },
 });

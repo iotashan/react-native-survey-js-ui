@@ -14,6 +14,7 @@ import {
 } from './panelStyles';
 import { PanelNestingContext, PanelNestingProvider, usePanelNesting } from './PanelNestingContext';
 import { usePanelStateContext } from './PanelStateContext';
+import { usePanelValidation } from '../../hooks/usePanelValidation';
 
 export interface PanelProps {
   panel: PanelModel | null | undefined;
@@ -23,6 +24,10 @@ export interface PanelProps {
   style?: ViewStyle;
   theme?: PanelTheme;
   isRTL?: boolean;
+  /**
+   * Whether to automatically expand the panel when it contains validation errors
+   */
+  autoExpandOnError?: boolean;
 }
 
 const PanelContent: React.FC<PanelProps> = ({ 
@@ -32,15 +37,30 @@ const PanelContent: React.FC<PanelProps> = ({
   nestingLevel = 0,
   style,
   theme,
-  isRTL = false
+  isRTL = false,
+  autoExpandOnError = true
 }) => {
   const [localExpanded, setLocalExpanded] = useState(initialExpanded);
   const [, forceUpdate] = useState({});
   const nestingContext = usePanelNesting();
   const panelStateContext = usePanelStateContext();
+  
+  // Get validation state for this panel
+  const { errorCount, hasErrors } = usePanelValidation(panel);
 
   // Determine if we should use context state or local state
   const usingContextState = panelStateContext.enabled && panel?.name;
+  
+  // Auto-expand if there are errors and autoExpandOnError is enabled
+  useEffect(() => {
+    if (autoExpandOnError && hasErrors && collapsible) {
+      if (usingContextState && panel?.name) {
+        panelStateContext.setPanelState(panel.name, true);
+      } else {
+        setLocalExpanded(true);
+      }
+    }
+  }, [autoExpandOnError, hasErrors, collapsible, usingContextState, panel?.name, panelStateContext]);
   
   // Get effective expanded state
   const expanded = useMemo(() => {
@@ -167,6 +187,8 @@ const PanelContent: React.FC<PanelProps> = ({
           expanded={expanded}
           onToggle={handleToggle}
           testID={`panel-header-${panel.name}`}
+          errorCount={errorCount}
+          hasErrors={hasErrors}
         />
       )}
 
@@ -204,6 +226,7 @@ const PanelContent: React.FC<PanelProps> = ({
                   nestingLevel={effectiveNestingLevel + 1}
                   {...(theme && { theme })}
                   isRTL={isRTL}
+                  autoExpandOnError={autoExpandOnError}
                 />
               </View>
             </PanelNestingProvider>

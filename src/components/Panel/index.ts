@@ -23,3 +23,7 @@ export type {
   SpacingConfig,
   PanelStyleConfig
 } from './panelStyles';
+
+// Export panel error indicator
+export { PanelErrorIndicator } from './PanelErrorIndicator';
+export type { PanelErrorIndicatorProps, PanelErrorIndicatorTheme } from './PanelErrorIndicator';

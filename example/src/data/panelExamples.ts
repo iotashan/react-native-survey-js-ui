@@ -331,6 +331,112 @@ export const panelDemoComponents: ComponentInfo[] = [
       elements: [],
     } as PanelModel,
   },
+
+  // Panel with Validation
+  {
+    type: 'panel-validation',
+    name: 'Panel with Validation',
+    description: 'Panel showing validation error indicators',
+    category: QuestionCategory.Layout,
+    icon: '✅',
+    tags: ['layout', 'validation', 'errors', 'interactive'],
+    properties: [
+      {
+        name: 'autoExpandOnError',
+        type: 'boolean',
+        description: 'Automatically expand panel when it contains validation errors',
+        defaultValue: true,
+      },
+      {
+        name: 'showErrorCount',
+        type: 'boolean',
+        description: 'Display error count in panel header',
+        defaultValue: true,
+      },
+    ],
+    example: {
+      type: 'panel',
+      name: 'registrationPanel',
+      title: 'User Registration',
+      description: 'Please fill in all required fields',
+      state: 'collapsed',
+      elements: [
+        {
+          type: 'text',
+          name: 'username',
+          title: 'Username',
+          isRequired: true,
+          validators: [
+            {
+              type: 'regex',
+              text: 'Username must be 3-20 characters, alphanumeric only',
+              regex: '^[a-zA-Z0-9]{3,20}$',
+            },
+          ],
+        },
+        {
+          type: 'text',
+          name: 'password',
+          title: 'Password',
+          inputType: 'password',
+          isRequired: true,
+          validators: [
+            {
+              type: 'regex',
+              text: 'Password must be at least 8 characters with letters and numbers',
+              regex: '^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$',
+            },
+          ],
+        },
+        {
+          type: 'text',
+          name: 'confirmPassword',
+          title: 'Confirm Password',
+          inputType: 'password',
+          isRequired: true,
+          validators: [
+            {
+              type: 'expression',
+              text: 'Passwords do not match',
+              expression: '{confirmPassword} = {password}',
+            },
+          ],
+        },
+        {
+          type: 'text',
+          name: 'email',
+          title: 'Email Address',
+          inputType: 'email',
+          isRequired: true,
+          validators: [
+            {
+              type: 'email',
+              text: 'Please enter a valid email address',
+            },
+          ],
+        },
+        {
+          type: 'checkbox',
+          name: 'agreeTerms',
+          title: 'Terms and Conditions',
+          isRequired: true,
+          choices: [
+            {
+              value: 'agree',
+              text: 'I agree to the terms and conditions',
+            },
+          ],
+          validators: [
+            {
+              type: 'expression',
+              text: 'You must agree to the terms and conditions',
+              expression: '{agreeTerms} contains "agree"',
+            },
+          ],
+        },
+      ],
+    } as PanelModel,
+  },
 ];
 
 // Performance test panel with many elements
@@ -442,4 +548,37 @@ export const panelCodeSnippets = {
   description="Content will appear based on conditions"
   elements={conditionalElements}
 />`,
+
+  'panel-validation': `<Panel
+  title="User Registration"
+  description="Please fill in all required fields"
+  state="collapsed"
+  autoExpandOnError={true}
+>
+  <TextQuestion 
+    name="username" 
+    title="Username" 
+    isRequired 
+    validators={[{
+      type: 'regex',
+      text: 'Username must be 3-20 characters',
+      regex: '^[a-zA-Z0-9]{3,20}$'
+    }]}
+  />
+  <TextQuestion 
+    name="password" 
+    title="Password" 
+    inputType="password"
+    isRequired 
+  />
+  <TextQuestion 
+    name="email" 
+    title="Email" 
+    inputType="email"
+    isRequired 
+    validators={[{ type: 'email' }]}
+  />
+</Panel>
+// Panel will show error count in header
+// and auto-expand when validation fails`,
 };

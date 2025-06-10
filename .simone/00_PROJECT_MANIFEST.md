@@ -127,6 +127,7 @@ This project follows a milestone-based development approach with strict TDD requ
 - [ ] T007: [Implement Explore Detail Screens With TDD](./04_GENERAL_TASKS/T007_Implement_Explore_Detail_Screens_With_TDD.md) - Status: Not Started
 - [ ] T008: [Create E2E Tests With Mobile MCP Simulator Integration](./04_GENERAL_TASKS/T008_Create_E2E_Tests_With_Mobile_MCP_Simulator_Integration.md) - Status: Not Started
 - [ ] T009: [Fix Critical Test Infrastructure Issues](./04_GENERAL_TASKS/T009_Fix_Critical_Test_Infrastructure_Issues.md) - Status: Not Started
+- [ ] T010: [Implement Panel Validation Error Display](./04_GENERAL_TASKS/T010_Implement_Panel_Validation_Error_Display.md) - Status: Not Started
 
 ## 6. Key Documentation
 

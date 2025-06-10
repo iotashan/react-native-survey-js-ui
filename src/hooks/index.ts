@@ -47,3 +47,9 @@ export type {
   NavigationState as EnhancedNavigationState,
   UseNavigationStateReturn
 } from './useNavigationState';
+
+// Panel validation hook
+export { usePanelValidation } from './usePanelValidation';
+export type {
+  PanelValidationResult
+} from './usePanelValidation';
