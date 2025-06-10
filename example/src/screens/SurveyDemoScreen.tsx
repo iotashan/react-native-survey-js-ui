@@ -18,9 +18,15 @@ import {
 } from 'react-native-survey-js-ui';
 import { surveyExamples, type SurveyExample } from '../data/surveyExamples';
 import { validationExamples } from '../data/validationExamples';
+import { multiPageNavigationExamples } from '../data/multiPageExamples';
+import { NavigationPlayground, type NavigationConfig } from '../components/NavigationPlayground';
 
 // Combine all examples
-const allExamples: SurveyExample[] = [...surveyExamples, ...validationExamples];
+const allExamples: SurveyExample[] = [
+  ...surveyExamples,
+  ...validationExamples,
+  ...multiPageNavigationExamples,
+];
 
 console.log('Total number of examples:', allExamples.length);
 console.log('Validation examples count:', validationExamples.length);
@@ -36,6 +42,8 @@ export default function SurveyDemoScreen() {
   const [eventLogs, setEventLogs] = useState<string[]>([]);
   const [submissionLogs, setSubmissionLogs] = useState<string[]>([]);
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatus>('idle');
+  const [showPlayground, setShowPlayground] = useState(false);
+  const [surveyModel, setSurveyModel] = useState<any>(null);
 
   const isValid = validateSurveyModel(selectedExample.model);
 
@@ -140,12 +148,39 @@ export default function SurveyDemoScreen() {
     setEventLogs([]);
     setSubmissionLogs([]);
     setSubmissionStatus('idle');
+    setShowPlayground(false);
     // Force re-render of Survey component by changing key
     setSelectedExample({ ...selectedExample });
   };
 
+  const handlePlaygroundConfigChange = (config: NavigationConfig) => {
+    if (surveyModel) {
+      // Apply configuration changes to the survey model
+      if (config.showProgressBar !== undefined) {
+        surveyModel.showProgressBar = config.showProgressBar;
+      }
+      if (config.progressBarType !== undefined) {
+        surveyModel.progressBarType = config.progressBarType;
+      }
+      if (config.checkErrorsMode !== undefined) {
+        surveyModel.checkErrorsMode = config.checkErrorsMode;
+      }
+      if (config.showNavigationButtons !== undefined) {
+        surveyModel.showNavigationButtons = config.showNavigationButtons;
+      }
+      if (config.showTimerPanel !== undefined) {
+        surveyModel.showTimerPanel = config.showTimerPanel;
+      }
+      // Force re-render
+      setSurveyModel({ ...surveyModel });
+    }
+  };
+
   // Check if current example uses submission modes
   const isSubmissionModeExample = ['realtime-submission', 'page-change-submission', 'value-change-submission'].includes(selectedExample.id);
+  
+  // Check if current example is a multi-page navigation demo
+  const isMultiPageNavigationExample = multiPageNavigationExamples.some(e => e.id === selectedExample.id);
 
   // Get status color helper
   const getStatusColor = (status: SubmissionStatus) => {
@@ -228,6 +263,18 @@ export default function SurveyDemoScreen() {
               {showCode ? 'Hide' : 'Show'} JSON Model
             </Text>
           </TouchableOpacity>
+          {isMultiPageNavigationExample && !showResults && (
+            <TouchableOpacity
+              style={[styles.actionButton, styles.playgroundButton]}
+              onPress={() => setShowPlayground(!showPlayground)}
+              testID="show-playground-button"
+              accessibilityLabel={showPlayground ? 'Hide playground' : 'Show playground'}
+            >
+              <Text style={styles.actionButtonText} testID="show-playground-button-text">
+                {showPlayground ? 'Hide' : 'Show'} Playground
+              </Text>
+            </TouchableOpacity>
+          )}
           {showResults && (
             <TouchableOpacity
               style={[styles.actionButton, styles.resetButton]}
@@ -253,6 +300,76 @@ export default function SurveyDemoScreen() {
                 {JSON.stringify(selectedExample.model, null, 2)}
               </Text>
             </ScrollView>
+          </View>
+        )}
+
+        {/* Navigation Playground */}
+        {showPlayground && surveyModel && (
+          <View style={styles.playgroundContainer} testID="navigation-playground-container">
+            <Text style={styles.playgroundTitle}>Navigation Playground</Text>
+            <NavigationPlayground
+              survey={surveyModel}
+              onConfigChange={handlePlaygroundConfigChange}
+            />
+          </View>
+        )}
+
+        {/* Multi-Page Navigation Info */}
+        {isMultiPageNavigationExample && (
+          <View style={styles.navigationInfoContainer}>
+            <Text style={styles.navigationInfoTitle}>Multi-Page Navigation Demo</Text>
+            <Text style={styles.navigationInfoDescription}>
+              This example demonstrates multi-page navigation features. Watch the event logs below to see navigation events in action.
+            </Text>
+            {selectedExample.id === 'basic-multipage' && (
+              <Text style={styles.navigationFeatureText}>
+                • Basic page navigation with Next/Previous buttons{'\n'}
+                • Progress bar showing current position{'\n'}
+                • Page titles and smooth transitions
+              </Text>
+            )}
+            {selectedExample.id === 'validation-flow' && (
+              <Text style={styles.navigationFeatureText}>
+                • Required fields block navigation{'\n'}
+                • Validation errors shown before page change{'\n'}
+                • Cross-field validation support
+              </Text>
+            )}
+            {selectedExample.id === 'dynamic-page-count' && (
+              <Text style={styles.navigationFeatureText}>
+                • Pages appear/disappear based on answers{'\n'}
+                • Dynamic progress tracking{'\n'}
+                • Conditional page visibility
+              </Text>
+            )}
+            {selectedExample.id === 'conditional-pages' && (
+              <Text style={styles.navigationFeatureText}>
+                • Complex conditional logic{'\n'}
+                • Different paths based on selections{'\n'}
+                • Smart page flow management
+              </Text>
+            )}
+            {selectedExample.id === 'empty-page-handling' && (
+              <Text style={styles.navigationFeatureText}>
+                • Handles pages with no visible questions{'\n'}
+                • Automatic skip to next visible page{'\n'}
+                • Smooth navigation experience
+              </Text>
+            )}
+            {selectedExample.id === 'complex-validation-navigation' && (
+              <Text style={styles.navigationFeatureText}>
+                • Multiple validation rules per field{'\n'}
+                • Cross-field validation{'\n'}
+                • Custom error messages
+              </Text>
+            )}
+            {selectedExample.id === 'navigation-events' && (
+              <Text style={styles.navigationFeatureText}>
+                • All navigation events logged{'\n'}
+                • Timer panel demonstration{'\n'}
+                • Complete event tracking
+              </Text>
+            )}
           </View>
         )}
 
@@ -337,6 +454,7 @@ export default function SurveyDemoScreen() {
                 onSubmissionEvent={isSubmissionModeExample ? handleSubmissionEvent : undefined}
                 onSubmissionResult={isSubmissionModeExample ? handleSubmissionResult : undefined}
                 onSubmissionStatusChange={isSubmissionModeExample ? handleSubmissionStatusChange : undefined}
+                onModelLoaded={(model) => setSurveyModel(model)}
               />
             ) : (
               <View style={styles.errorContainer}>
@@ -711,5 +829,50 @@ const styles = StyleSheet.create({
     color: '#495057',
     lineHeight: 14,
     marginBottom: 6,
+  },
+  navigationInfoContainer: {
+    margin: 16,
+    backgroundColor: '#f3e5f5',
+    borderRadius: 8,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#9c27b0',
+  },
+  navigationInfoTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#6a1b9a',
+    marginBottom: 8,
+  },
+  navigationInfoDescription: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 12,
+    lineHeight: 20,
+  },
+  navigationFeatureText: {
+    fontSize: 13,
+    color: '#555',
+    lineHeight: 20,
+  },
+  playgroundButton: {
+    backgroundColor: '#9c27b0',
+  },
+  playgroundContainer: {
+    margin: 16,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  playgroundTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#333',
   },
 });

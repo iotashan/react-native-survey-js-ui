@@ -29,6 +29,7 @@ export interface SurveyProps {
   onComplete?: (result: any) => void;
   onValueChanged?: SurveyValueChangedHandler;
   onCurrentPageChanged?: SurveyCurrentPageChangedHandler;
+  onModelLoaded?: (model: Model) => void;
   
   // Submission mode options
   submissionOptions?: Partial<SubmissionOptions>;
@@ -223,6 +224,7 @@ export const Survey: React.FC<SurveyProps> = ({
   onComplete,
   onValueChanged,
   onCurrentPageChanged,
+  onModelLoaded,
   submissionOptions,
   onSubmissionEvent,
   onSubmissionResult,
@@ -230,6 +232,13 @@ export const Survey: React.FC<SurveyProps> = ({
 }) => {
   const { model: surveyModel, isLoading, error } = useSurveyModel(model);
   const surveyState = useSurveyState(surveyModel);
+
+  // Call onModelLoaded when survey model is loaded
+  React.useEffect(() => {
+    if (surveyModel && onModelLoaded) {
+      onModelLoaded(surveyModel);
+    }
+  }, [surveyModel, onModelLoaded]);
 
   if (isLoading) {
     return (
