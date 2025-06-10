@@ -40,3 +40,10 @@ export type {
 
 // Submission mode hook
 export { useSubmissionMode } from './useSubmissionMode';
+
+// Navigation state hook - enhanced navigation with validation integration
+export { useNavigationState } from './useNavigationState';
+export type {
+  NavigationState as EnhancedNavigationState,
+  UseNavigationStateReturn
+} from './useNavigationState';
