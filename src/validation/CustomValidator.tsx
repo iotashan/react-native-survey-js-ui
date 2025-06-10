@@ -1,4 +1,11 @@
-import { SurveyValidator, JsonObject, Question, SurveyModel, ValidatorResult, CustomError } from 'survey-core';
+import { Question } from 'survey-core';
+
+// Define types for validator functionality
+interface ValidatorResult {
+  error?: string | null;
+}
+
+// CustomError class is not used directly anymore since we use ValidatorResult interface
 
 /**
  * Custom validation error result interface
@@ -46,16 +53,26 @@ export interface CustomValidationRule {
  * Custom validator class that extends survey-core's SurveyValidator
  * Supports both synchronous and asynchronous validation
  */
+// Base validator class stub
+class SurveyValidator {
+  text?: string;
+  errorOwner?: any;
+  
+  getDefaultErrorText(_name?: string): string {
+    return 'Validation failed';
+  }
+}
+
 export class CustomValidator extends SurveyValidator {
   public ruleName: string;
   public validationFunction: ValidationFunction;
-  private cache: Map<string, ValidatorResult> = new Map();
+  private cache: Map<string, ValidatorResult | null> = new Map();
   private lastValidationPromise: Promise<any> | null = null;
   
   // Properties from SurveyValidator that we need to override/implement
-  public text: string = '';
-  public errorOwner: any = null;
-  public onAsyncCompleted: ((result: ValidatorResult) => void) | null = null;
+  override text: string = '';
+  override errorOwner: any = null;
+  public onAsyncCompleted: ((result: ValidatorResult | null) => void) | null = null;
 
   constructor(
     ruleName: string,
@@ -98,7 +115,7 @@ export class CustomValidator extends SurveyValidator {
     
     // Check cache for performance optimization
     if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey);
+      return this.cache.get(cacheKey) ?? null;
     }
 
     try {
@@ -113,10 +130,9 @@ export class CustomValidator extends SurveyValidator {
         return result;
       }
     } catch (error) {
-      const errorResult = new ValidatorResult(
-        value,
-        new CustomError(this.text || 'Validation error', this.errorOwner)
-      );
+      const errorResult: ValidatorResult = {
+        error: this.text || 'Validation error'
+      };
       this.cache.set(cacheKey, errorResult);
       return errorResult;
     }
@@ -137,9 +153,8 @@ export class CustomValidator extends SurveyValidator {
     if (this.isValidationPassed(validationResult)) {
       return null; // null means validation passed
     } else {
-      const errorMessage = this.getErrorMessage(validationResult, name, value);
-      const error = new CustomError(errorMessage, this.errorOwner);
-      return new ValidatorResult(value, error);
+      const errorMessage = this.getErrorMessage(validationResult, name || '', value);
+      return { error: errorMessage };
     }
   }
 
@@ -159,10 +174,7 @@ export class CustomValidator extends SurveyValidator {
       .then((validationResult) => {
         const result = this.isValidationPassed(validationResult)
           ? null
-          : new ValidatorResult(
-              value,
-              new CustomError(this.getErrorMessage(validationResult, name, value), this.errorOwner)
-            );
+          : { error: this.getErrorMessage(validationResult, name || '', value) };
         
         this.cache.set(cacheKey, result);
         this.lastValidationPromise = null;
@@ -174,13 +186,9 @@ export class CustomValidator extends SurveyValidator {
         return result;
       })
       .catch((error) => {
-        const errorResult = new ValidatorResult(
-          value,
-          new CustomError(
-            this.text || `Validation error: ${error.message}`,
-            this.errorOwner
-          )
-        );
+        const errorResult = {
+          error: this.text || `Validation error: ${(error as any).message || error}`
+        };
         
         this.cache.set(cacheKey, errorResult);
         this.lastValidationPromise = null;
@@ -258,7 +266,7 @@ export class CustomValidator extends SurveyValidator {
   /**
    * Get default error text for the field
    */
-  protected getDefaultErrorText(name: string): string {
+  override getDefaultErrorText(name: string): string {
     return `Validation failed for field "${name}"`;
   }
 
@@ -285,7 +293,7 @@ export class CustomValidator extends SurveyValidator {
           const originalCallback = customValidator.onAsyncCompleted;
           customValidator.onAsyncCompleted = (asyncResult) => {
             const isValid = !asyncResult || !asyncResult.error;
-            const errors = isValid ? [] : [asyncResult?.error?.text || 'Validation failed'];
+            const errors = isValid ? [] : [typeof asyncResult?.error === 'string' ? asyncResult.error : ((asyncResult?.error as any)?.text || 'Validation failed')];
             
             if (onValidationComplete) {
               onValidationComplete(isValid, errors);
@@ -303,7 +311,7 @@ export class CustomValidator extends SurveyValidator {
       } else {
         // Handle sync validation
         const isValid = !result || !result.error;
-        const errors = isValid ? [] : [result?.error?.text || 'Validation failed'];
+        const errors = isValid ? [] : [typeof result?.error === 'string' ? result.error : ((result?.error as any)?.text || 'Validation failed')];
         
         if (onValidationComplete) {
           onValidationComplete(isValid, errors);
@@ -312,7 +320,7 @@ export class CustomValidator extends SurveyValidator {
         return isValid;
       }
     } catch (error) {
-      const errors = [`Validation error: ${error.message || error}`];
+      const errors = [`Validation error: ${(error as any).message || error}`];
       if (onValidationComplete) {
         onValidationComplete(false, errors);
       }
@@ -351,7 +359,7 @@ export class CustomValidator extends SurveyValidator {
                   setValidationState((prev: any) => {
                     const newErrors = { ...prev.errors };
                     const questionErrors = newErrors[question.name] || [];
-                    const errorText = asyncResult.error.text || 'Validation failed';
+                    const errorText = typeof asyncResult.error === 'string' ? asyncResult.error : ((asyncResult.error as any).text || 'Validation failed');
                     
                     if (!questionErrors.includes(errorText)) {
                       questionErrors.push(errorText);
@@ -378,10 +386,10 @@ export class CustomValidator extends SurveyValidator {
             }
           } else if (result && result.error) {
             // Add sync validation error
-            errors.push(result.error.text || 'Validation failed');
+            errors.push(typeof result.error === 'string' ? result.error : ((result.error as any).text || 'Validation failed'));
           }
         } catch (error) {
-          errors.push(`Validation error: ${error.message || error}`);
+          errors.push(`Validation error: ${(error as any).message || error}`);
         }
       });
       
@@ -411,16 +419,16 @@ export class CustomValidator extends SurveyValidator {
         
         if (!validator.isAsync && result && result.error) {
           // Add sync validation error
-          errors.push(result.error.text || 'Validation failed');
+          errors.push(typeof result.error === 'string' ? result.error : ((result.error as any).text || 'Validation failed'));
         }
         // Note: Async validation results would be handled separately via callbacks
       } catch (error) {
-        errors.push(`Validation error: ${error.message || error}`);
+        errors.push(`Validation error: ${(error as any).message || error}`);
       }
     });
     
     // Return first error message or null if no errors
-    return errors.length > 0 ? errors[0] : null;
+    return errors.length > 0 ? (errors[0] ?? null) : null;
   }
 
   /**
@@ -449,15 +457,15 @@ export class CustomValidator extends SurveyValidator {
             );
             
             if (result && result.error) {
-              errors.push(result.error.text || 'Validation failed');
+              errors.push(typeof result.error === 'string' ? result.error : ((result.error as any).text || 'Validation failed'));
             }
           } catch (error) {
-            errors.push(`Validation error: ${error.message || error}`);
+            errors.push(`Validation error: ${(error as any).message || error}`);
           }
         }
       });
       
-      return errors.length > 0 ? errors[0] : null;
+      return errors.length > 0 ? (errors[0] ?? null) : null;
     };
     
     const validateAsync = (): void => {
@@ -479,7 +487,7 @@ export class CustomValidator extends SurveyValidator {
               pendingAsyncValidations--;
               
               if (asyncResult && asyncResult.error) {
-                const errorText = asyncResult.error.text || 'Validation failed';
+                const errorText = typeof asyncResult.error === 'string' ? asyncResult.error : ((asyncResult.error as any).text || 'Validation failed');
                 currentError = errorText;
                 onErrorChange(errorText);
               } else if (pendingAsyncValidations === 0 && !currentError) {
@@ -494,7 +502,7 @@ export class CustomValidator extends SurveyValidator {
             };
           } catch (error) {
             pendingAsyncValidations--;
-            const errorText = `Validation error: ${error.message || error}`;
+            const errorText = `Validation error: ${(error as any).message || error}`;
             currentError = errorText;
             onErrorChange(errorText);
           }

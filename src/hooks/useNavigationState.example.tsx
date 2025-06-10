@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { View, Text, Button } from 'react-native';
-import { Model } from 'survey-core';
-import { useSurveyModel } from '../useSurveyModel';
-import { useSurveyState } from '../useSurveyState';
-import { useNavigationState } from '../useNavigationState';
-import { PageNavigation } from '../../components/PageNavigation';
+import { useSurveyModel } from './useSurveyModel';
+import { useSurveyState } from './useSurveyState';
+import { useNavigationState } from './useNavigationState';
+import { PageNavigation } from '../components/PageNavigation';
 
 /**
  * Example: Basic Navigation with Enhanced State Management
@@ -257,7 +256,7 @@ export function NavigationEventsExample() {
 
   const { model } = useSurveyModel({ json: surveyJson });
   const surveyState = useSurveyState(model);
-  const { navigationState, navigateNext, completeSurvey } = 
+  const { navigationState } = 
     useNavigationState(model, surveyState.validation);
 
   // React to navigation state changes

@@ -473,7 +473,7 @@ export function ValidationProvider({
           validator.onAsyncCompleted = (asyncResult) => {
             const isValid = !asyncResult || !asyncResult.error;
             if (!isValid && asyncResult?.error) {
-              setFieldError(fieldName, [asyncResult.error.text || 'Validation failed']);
+              setFieldError(fieldName, [typeof asyncResult.error === 'string' ? asyncResult.error : ((asyncResult.error as any).text || 'Validation failed')]);
             } else {
               clearFieldError(fieldName);
             }
@@ -484,7 +484,7 @@ export function ValidationProvider({
         // Sync validation
         const isValid = !result || !result.error;
         if (!isValid && result?.error) {
-          setFieldError(fieldName, [result.error.text || 'Validation failed']);
+          setFieldError(fieldName, [typeof result.error === 'string' ? result.error : ((result.error as any).text || 'Validation failed')]);
         } else {
           clearFieldError(fieldName);
         }
@@ -507,7 +507,7 @@ export function ValidationProvider({
       if (!currentPage) return true;
       
       let isValid = true;
-      const visibleQuestions = currentPage.getAllQuestions().filter((q: any) => q.isVisible);
+      const visibleQuestions = ((currentPage as any).getAllQuestions ? (currentPage as any).getAllQuestions() : currentPage.questions || []).filter((q: any) => q.isVisible);
       
       for (const question of visibleQuestions) {
         const questionValid = validateField(question.name);

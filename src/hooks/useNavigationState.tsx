@@ -1,5 +1,5 @@
 import * as React from 'react';
-const { useState, useEffect, useCallback, useMemo, useRef } = React;
+const { useState, useEffect, useCallback, useRef } = React;
 import type { Model } from 'survey-core';
 import type { ValidationState } from './useSurveyState';
 
@@ -160,8 +160,8 @@ export function useNavigationState(
     const isSinglePage = visiblePageCount <= 1;
     const isFirstPage = currentModel.isFirstPage;
     const isLastPage = currentModel.isLastPage;
-    const isCompleted = currentModel.getPropertyValue('isCompleted') === true || currentModel.state === 'completed';
-    const checkErrorsMode = currentModel.checkErrorsMode || 'onNextPage';
+    const isCompleted = currentModel.getPropertyValue('isCompleted') === true || (currentModel as any).state === 'completed';
+    const checkErrorsMode = (currentModel as any).checkErrorsMode || 'onNextPage';
 
     // Determine if validation should block navigation
     const hasBlockingErrors = currentValidation.hasErrors && checkErrorsMode !== 'onComplete';
@@ -197,7 +197,7 @@ export function useNavigationState(
     if (!model) return;
 
     const handlePageChanged = (sender: Model) => {
-      setNavigationState(prev => ({
+      setNavigationState(() => ({
         ...calculateNavigationState(sender, validationState),
         navigationError: null, // Clear error on page change
         isNavigating: false,
@@ -214,7 +214,7 @@ export function useNavigationState(
       }));
     };
 
-    const handleCompleting = (_sender: Model, options: any) => {
+    const handleCompleting = (_sender: Model) => {
       setNavigationState(prev => ({
         ...prev,
         isCompleting: true,
@@ -230,12 +230,12 @@ export function useNavigationState(
     model.onCurrentPageChanged.add(handlePageChanged);
     model.onComplete.add(handleComplete);
     
-    if (model.onCompleting) {
-      model.onCompleting.add(handleCompleting);
+    if ((model as any).onCompleting) {
+      (model as any).onCompleting.add(handleCompleting);
     }
     
-    if (model.onAfterRenderPage) {
-      model.onAfterRenderPage.add(handleAfterRenderPage);
+    if ((model as any).onAfterRenderPage) {
+      (model as any).onAfterRenderPage.add(handleAfterRenderPage);
     }
 
     // Cleanup
@@ -243,12 +243,12 @@ export function useNavigationState(
       model.onCurrentPageChanged.remove(handlePageChanged);
       model.onComplete.remove(handleComplete);
       
-      if (model.onCompleting) {
-        model.onCompleting.remove(handleCompleting);
+      if ((model as any).onCompleting) {
+        (model as any).onCompleting.remove(handleCompleting);
       }
       
-      if (model.onAfterRenderPage) {
-        model.onAfterRenderPage.remove(handleAfterRenderPage);
+      if ((model as any).onAfterRenderPage) {
+        (model as any).onAfterRenderPage.remove(handleAfterRenderPage);
       }
     };
   }, [model, validationState, calculateNavigationState]);
@@ -275,11 +275,11 @@ export function useNavigationState(
       // Use provided validation function
       if (validatePage) {
         isValid = validatePage();
-      } else if (model.checkErrorsMode !== 'onComplete') {
+      } else if ((model as any).checkErrorsMode !== 'onComplete') {
         // Default validation if no function provided
         try {
-          if (model.currentPage?.validate) {
-            isValid = model.currentPage.validate(true, false);
+          if ((model.currentPage as any)?.validate) {
+            isValid = (model.currentPage as any).validate(true, false);
           }
         } catch (error) {
           // Fallback if validation fails
@@ -366,10 +366,10 @@ export function useNavigationState(
       } else {
         // Default validation
         try {
-          if (model.completeLastPage) {
-            isValid = model.completeLastPage();
-          } else if (model.currentPage?.validate) {
-            isValid = model.currentPage.validate(true, false);
+          if ((model as any).completeLastPage) {
+            isValid = (model as any).completeLastPage();
+          } else if ((model.currentPage as any)?.validate) {
+            isValid = (model.currentPage as any).validate(true, false);
           }
         } catch (error) {
           // Fallback if validation fails
@@ -378,7 +378,7 @@ export function useNavigationState(
       }
 
       if (isValid) {
-        if (model.completeLastPage && !model.completeLastPage()) {
+        if ((model as any).completeLastPage && !(model as any).completeLastPage()) {
           // completeLastPage returns false if validation failed
           setNavigationState(prev => ({
             ...prev,

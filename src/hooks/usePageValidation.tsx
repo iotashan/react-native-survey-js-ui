@@ -1,6 +1,6 @@
 import * as React from 'react';
 const { useState, useEffect, useCallback } = React;
-import type { Model, Question, PageModel, SurveyError } from 'survey-core';
+import type { Model, Question, PageModel } from 'survey-core';
 
 export interface ValidationError {
   questionName: string;
@@ -43,7 +43,7 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
   /**
    * Converts survey-core errors to our error format
    */
-  const parseErrors = useCallback((surveyErrors: SurveyError[]): Record<string, string[]> => {
+  const parseErrors = useCallback((surveyErrors: any[]): Record<string, string[]> => {
     const errorMap: Record<string, string[]> = {};
     
     surveyErrors.forEach((error) => {
@@ -261,10 +261,10 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
       let isValid = true;
 
       // Try using survey-core's validate method first
-      if (model.currentPage.validate) {
-        isValid = model.currentPage.validate(true, false);
+      if ((model.currentPage as any).validate) {
+        isValid = (model.currentPage as any).validate(true, false);
         
-        if (isValid && !model.currentPage.hasErrors) {
+        if (isValid && !(model.currentPage as any).hasErrors) {
           // No errors
           setValidationState(prev => ({
             ...prev,
@@ -275,7 +275,7 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
           return true;
         } else {
           // Has errors - collect them
-          const errors = model.currentPage.errors || [];
+          const errors = (model.currentPage as any).errors || [];
           const errorMap = parseErrors(errors);
           
           setValidationState(prev => ({
@@ -438,18 +438,18 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
       return;
     }
 
-    const handleValidateQuestion = (sender: Model, options: any) => {
+    const handleValidateQuestion = (_sender: Model, options: any) => {
       try {
         // Update errors for the specific question that was validated
         const questionName = options?.name;
         if (!questionName) return;
 
-        const question = model.getQuestionByName(questionName);
+        const question = (model as any).getQuestionByName ? (model as any).getQuestionByName(questionName) : null;
         if (!question) return;
 
         // Get errors for this specific question
         const questionErrors = (question as any).errors || [];
-        const errorTexts = questionErrors.map((error: SurveyError) => error.text);
+        const errorTexts = questionErrors.map((error: any) => error.text);
 
         setValidationState((prev) => {
           const newErrors = { ...prev.errors };
@@ -471,7 +471,7 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
       }
     };
 
-    const handleValueChanged = (sender: Model, options: any) => {
+    const handleValueChanged = (_sender: Model, options: any) => {
       try {
         // Clear errors for question when value changes
         const questionName = options?.name;
@@ -484,12 +484,16 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
     };
 
     // Subscribe to events
-    model.onValidateQuestion.add(handleValidateQuestion);
+    if ((model as any).onValidateQuestion) {
+      (model as any).onValidateQuestion.add(handleValidateQuestion);
+    }
     model.onValueChanged.add(handleValueChanged);
 
     // Cleanup
     return () => {
-      model.onValidateQuestion.remove(handleValidateQuestion);
+      if ((model as any).onValidateQuestion) {
+        (model as any).onValidateQuestion.remove(handleValidateQuestion);
+      }
       model.onValueChanged.remove(handleValueChanged);
     };
   }, [model, clearErrors]);

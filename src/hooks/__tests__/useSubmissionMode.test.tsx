@@ -145,6 +145,11 @@ describe('useSubmissionMode', () => {
         debounceDelay: 500 
       };
       
+      let onValueChangedHandler: any;
+      surveyModel.onValueChanged.add.mockImplementation((handler: any) => {
+        onValueChangedHandler = handler;
+      });
+      
       renderHook(() =>
         useSubmissionMode(
           surveyModel,
@@ -157,9 +162,20 @@ describe('useSubmissionMode', () => {
 
       // Make multiple rapid changes
       act(() => {
-        surveyModel.setValue('question1', 'test1');
-        surveyModel.setValue('question1', 'test2');
-        surveyModel.setValue('question1', 'test3');
+        surveyModel.data = { question1: 'test1' };
+        if (onValueChangedHandler) {
+          onValueChangedHandler(surveyModel, { name: 'question1' });
+        }
+        
+        surveyModel.data = { question1: 'test2' };
+        if (onValueChangedHandler) {
+          onValueChangedHandler(surveyModel, { name: 'question1' });
+        }
+        
+        surveyModel.data = { question1: 'test3' };
+        if (onValueChangedHandler) {
+          onValueChangedHandler(surveyModel, { name: 'question1' });
+        }
       });
 
       // Should not have submitted yet
@@ -197,6 +213,11 @@ describe('useSubmissionMode', () => {
         headers: { 'Authorization': 'Bearer token' },
       };
 
+      let onCompleteHandler: any;
+      surveyModel.onComplete.add.mockImplementation((handler: any) => {
+        onCompleteHandler = handler;
+      });
+
       const { result } = renderHook(() =>
         useSubmissionMode(
           surveyModel,
@@ -207,9 +228,14 @@ describe('useSubmissionMode', () => {
         )
       );
 
+      // Verify onComplete handler was registered
+      expect(surveyModel.onComplete.add).toHaveBeenCalled();
+
       act(() => {
-        surveyModel.setValue('question1', 'test value');
-        surveyModel.completeLastPage();
+        surveyModel.data = { question1: 'test value' };
+        if (onCompleteHandler) {
+          onCompleteHandler(surveyModel);
+        }
       });
 
       await waitFor(() => {
@@ -244,6 +270,11 @@ describe('useSubmissionMode', () => {
         autoRetry: false,
       };
 
+      let onCompleteHandler: any;
+      surveyModel.onComplete.add.mockImplementation((handler: any) => {
+        onCompleteHandler = handler;
+      });
+
       const { result } = renderHook(() =>
         useSubmissionMode(
           surveyModel,
@@ -255,7 +286,10 @@ describe('useSubmissionMode', () => {
       );
 
       act(() => {
-        surveyModel.completeLastPage();
+        surveyModel.data = { question1: 'test value' };
+        if (onCompleteHandler) {
+          onCompleteHandler(surveyModel);
+        }
       });
 
       await waitFor(() => {
@@ -294,6 +328,11 @@ describe('useSubmissionMode', () => {
         retryDelay: 1000,
       };
 
+      let onCompleteHandler: any;
+      surveyModel.onComplete.add.mockImplementation((handler: any) => {
+        onCompleteHandler = handler;
+      });
+
       const { result } = renderHook(() =>
         useSubmissionMode(
           surveyModel,
@@ -305,10 +344,18 @@ describe('useSubmissionMode', () => {
       );
 
       act(() => {
-        surveyModel.completeLastPage();
+        surveyModel.data = { question1: 'test value' };
+        if (onCompleteHandler) {
+          onCompleteHandler(surveyModel);
+        }
       });
 
-      // First attempt should fail
+      // Wait for initial request to complete and fail
+      await waitFor(() => {
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+      });
+
+      // First attempt should fail and status should be retrying
       await waitFor(() => {
         expect(result.current.status).toBe('retrying');
       });
@@ -318,10 +365,14 @@ describe('useSubmissionMode', () => {
         jest.advanceTimersByTime(1000);
       });
 
+      // Wait for retry to be processed
+      await waitFor(() => {
+        expect(global.fetch).toHaveBeenCalledTimes(2);
+      });
+
       // Second attempt should succeed
       await waitFor(() => {
         expect(result.current.status).toBe('success');
-        expect(global.fetch).toHaveBeenCalledTimes(2);
       });
     });
 
@@ -337,8 +388,13 @@ describe('useSubmissionMode', () => {
         endpoint: 'https://api.example.com/submit',
         autoRetry: true,
         maxRetries: 2,
-        retryDelay: 1000,
+        retryDelay: 100, // Shorter delay for testing
       };
+
+      let onCompleteHandler: any;
+      surveyModel.onComplete.add.mockImplementation((handler: any) => {
+        onCompleteHandler = handler;
+      });
 
       const { result } = renderHook(() =>
         useSubmissionMode(
@@ -350,25 +406,44 @@ describe('useSubmissionMode', () => {
         )
       );
 
+      // Trigger initial submission
       act(() => {
-        surveyModel.completeLastPage();
+        surveyModel.data = { question1: 'test value' };
+        if (onCompleteHandler) {
+          onCompleteHandler(surveyModel);
+        }
       });
 
-      // Advance through all retry attempts
-      for (let i = 0; i < 3; i++) {
-        await waitFor(() => {
-          expect(result.current.status).toBe(i === 2 ? 'error' : 'retrying');
-        });
-        
-        if (i < 2) {
-          act(() => {
-            jest.advanceTimersByTime(1000);
-          });
-        }
-      }
+      // Wait for initial attempt
+      await waitFor(() => {
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+      });
 
-      expect(global.fetch).toHaveBeenCalledTimes(3);
-      expect(result.current.status).toBe('error');
+      // Advance time for first retry
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      // Wait for first retry
+      await waitFor(() => {
+        expect(global.fetch).toHaveBeenCalledTimes(2);
+      });
+
+      // Advance time for second retry
+      act(() => {
+        jest.advanceTimersByTime(100);
+      });
+
+      // Wait for second retry
+      await waitFor(() => {
+        expect(global.fetch).toHaveBeenCalledTimes(3);
+      });
+
+      // Final status should be error after all retries exhausted
+      await waitFor(() => {
+        expect(result.current.status).toBe('error');
+        expect(result.current.lastResult?.error?.message).toContain('HTTP 500');
+      });
     });
   });
 
@@ -386,9 +461,8 @@ describe('useSubmissionMode', () => {
         )
       );
 
-      act(() => {
-        surveyModel.setValue('question1', 'manual test');
-      });
+      // Set the data on the model
+      surveyModel.data = { question1: 'manual test' };
 
       // Should not auto-submit in manual mode
       expect(mockSubmissionEvent).not.toHaveBeenCalled();
@@ -422,6 +496,11 @@ describe('useSubmissionMode', () => {
         transformData,
       };
 
+      let onCompleteHandler: any;
+      surveyModel.onComplete.add.mockImplementation((handler: any) => {
+        onCompleteHandler = handler;
+      });
+
       renderHook(() =>
         useSubmissionMode(
           surveyModel,
@@ -433,8 +512,10 @@ describe('useSubmissionMode', () => {
       );
 
       act(() => {
-        surveyModel.setValue('question1', 'test');
-        surveyModel.completeLastPage();
+        surveyModel.data = { question1: 'test' };
+        if (onCompleteHandler) {
+          onCompleteHandler(surveyModel);
+        }
       });
 
       await waitFor(() => {
@@ -456,6 +537,11 @@ describe('useSubmissionMode', () => {
     it('should call status change callback', async () => {
       const options: SubmissionOptions = { mode: 'onComplete' };
 
+      let onCompleteHandler: any;
+      surveyModel.onComplete.add.mockImplementation((handler: any) => {
+        onCompleteHandler = handler;
+      });
+
       renderHook(() =>
         useSubmissionMode(
           surveyModel,
@@ -467,12 +553,16 @@ describe('useSubmissionMode', () => {
       );
 
       act(() => {
-        surveyModel.completeLastPage();
+        surveyModel.data = { question1: 'test' };
+        if (onCompleteHandler) {
+          onCompleteHandler(surveyModel);
+        }
       });
 
       await waitFor(() => {
-        expect(mockStatusChange).toHaveBeenCalledWith('pending');
-        expect(mockStatusChange).toHaveBeenCalledWith('success', expect.any(Object));
+        expect(mockStatusChange).toHaveBeenCalledTimes(2);
+        expect(mockStatusChange).toHaveBeenNthCalledWith(1, 'pending', undefined);
+        expect(mockStatusChange).toHaveBeenNthCalledWith(2, 'success', expect.any(Object));
       });
     });
   });

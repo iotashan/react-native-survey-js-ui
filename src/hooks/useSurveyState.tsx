@@ -1,6 +1,6 @@
 // Import React hooks directly to avoid resolution issues
 import * as React from 'react';
-import { Model, Question, PageModel, SurveyError } from 'survey-core';
+import { Model, Question, PageModel } from 'survey-core';
 
 // Import validation interfaces
 export interface ValidationError {
@@ -95,7 +95,7 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
   /**
    * Converts survey-core errors to our error format
    */
-  const parseErrors = React.useCallback((surveyErrors: SurveyError[]): Record<string, string[]> => {
+  const parseErrors = React.useCallback((surveyErrors: any[]): Record<string, string[]> => {
     const errorMap: Record<string, string[]> = {};
     
     surveyErrors.forEach((error) => {
@@ -264,18 +264,18 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
       updateValidationState();
     };
 
-    const handleValidateQuestion = (sender: Model, options: any) => {
+    const handleValidateQuestion = (_sender: Model, options: any) => {
       try {
         // Update errors for the specific question that was validated
         const questionName = options?.name;
         if (!questionName) return;
 
-        const question = model.getQuestionByName(questionName);
+        const question = (model as any).getQuestionByName ? (model as any).getQuestionByName(questionName) : null;
         if (!question) return;
 
         // Get errors for this specific question
         const questionErrors = (question as any).errors || [];
-        const errorTexts = questionErrors.map((error: SurveyError) => error.text);
+        const errorTexts = questionErrors.map((error: any) => error.text);
 
         setState((prev) => {
           const newErrors = { ...prev.validation.errors };
@@ -309,8 +309,8 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
     if ((model as any).onValidatedErrorsOnCurrentPage) {
       (model as any).onValidatedErrorsOnCurrentPage.add(handleValidatedErrorsOnCurrentPage);
     }
-    if (model.onValidateQuestion) {
-      model.onValidateQuestion.add(handleValidateQuestion);
+    if ((model as any).onValidateQuestion) {
+      (model as any).onValidateQuestion.add(handleValidateQuestion);
     }
 
     // Don't run validation on initial load - let SurveyJS handle validation timing
@@ -323,8 +323,8 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
       if ((model as any).onValidatedErrorsOnCurrentPage) {
         (model as any).onValidatedErrorsOnCurrentPage.remove(handleValidatedErrorsOnCurrentPage);
       }
-      if (model.onValidateQuestion) {
-        model.onValidateQuestion.remove(handleValidateQuestion);
+      if ((model as any).onValidateQuestion) {
+        (model as any).onValidateQuestion.remove(handleValidateQuestion);
       }
     };
   }, [model, updateValidationState]);
@@ -344,10 +344,10 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
       let isValid = true;
 
       // Try using survey-core's validate method first
-      if (model.currentPage.validate) {
-        isValid = model.currentPage.validate(true, false);
+      if ((model.currentPage as any).validate) {
+        isValid = (model.currentPage as any).validate(true, false);
         
-        if (isValid && !model.currentPage.hasErrors) {
+        if (isValid && !(model.currentPage as any).hasErrors) {
           // No errors
           setState(prev => ({
             ...prev,
@@ -361,7 +361,7 @@ export function useSurveyState(model: Model | null): UseSurveyStateReturn {
           return true;
         } else {
           // Has errors - collect them
-          const errors = model.currentPage.errors || [];
+          const errors = (model.currentPage as any).errors || [];
           const errorMap = parseErrors(errors);
           
           setState(prev => ({
