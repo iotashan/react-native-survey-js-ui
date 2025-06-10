@@ -23,6 +23,9 @@ export {
   type CustomValidationRule,
 } from './CustomValidator';
 
+// Import for local use
+import { ValidatorRegistry, CustomValidator } from './CustomValidator';
+
 /**
  * Common validation rules that can be registered globally
  */

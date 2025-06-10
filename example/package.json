@@ -7,7 +7,14 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:e2e": "jest --config e2e/jest.config.js",
+    "test:e2e-mcp": "jest --config e2e-mobile-mcp/jest.config.js",
+    "test:e2e-mcp:basic": "jest --config e2e-mobile-mcp/jest.config.js --testNamePattern=\"Survey Flow\"",
+    "test:e2e-mcp:cross-platform": "jest --config e2e-mobile-mcp/jest.config.js --testNamePattern=\"Cross-Platform\"",
+    "test:e2e-mcp:errors": "jest --config e2e-mobile-mcp/jest.config.js --testNamePattern=\"Error Handling\"",
+    "test:e2e-mcp:integration": "jest --config e2e-mobile-mcp/jest.config.js --testNamePattern=\"Integration\"",
+    "test:all": "yarn test && yarn test:e2e-mcp"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
@@ -33,6 +40,7 @@
     "@types/react-navigation": "^3.4.0",
     "flow-parser": "^0.273.0",
     "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
     "react-native-builder-bob": "^0.40.11",
     "react-native-monorepo-config": "^0.1.9",
     "react-test-renderer": "18.3.1"

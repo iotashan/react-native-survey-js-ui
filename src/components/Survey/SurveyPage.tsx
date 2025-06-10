@@ -47,7 +47,7 @@ export const SurveyPage: React.FC<SurveyPageProps> = ({ page, onQuestionValueCha
                       onQuestionValueChange(question.name, value);
                     }
                   }}
-                  error={questionError}
+                  {...(questionError ? { error: questionError } : {})}
                 />
               </View>
             );

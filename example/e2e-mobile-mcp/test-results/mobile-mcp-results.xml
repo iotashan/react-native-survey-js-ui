@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mobile MCP E2E Tests" tests="46" failures="8" errors="0" time="55.04">
+  <testsuite name="Error Handling and Edge Cases - Mobile MCP E2E Tests" errors="0" failures="0" skipped="12" timestamp="2025-06-10T00:39:40" time="0.141" tests="12">
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Validation Error Handling should show validation error for required field" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Validation Error Handling should show validation error for required field" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Validation Error Handling should clear validation error when field is filled" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Validation Error Handling should clear validation error when field is filled" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Validation Error Handling should handle invalid data gracefully" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Validation Error Handling should handle invalid data gracefully" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Network and Connectivity Edge Cases should handle app backgrounding gracefully" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Network and Connectivity Edge Cases should handle app backgrounding gracefully" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Network and Connectivity Edge Cases should handle memory pressure scenarios" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Network and Connectivity Edge Cases should handle memory pressure scenarios" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests UI Edge Cases should handle rapid orientation changes" name="Error Handling and Edge Cases - Mobile MCP E2E Tests UI Edge Cases should handle rapid orientation changes" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests UI Edge Cases should handle edge tap positions" name="Error Handling and Edge Cases - Mobile MCP E2E Tests UI Edge Cases should handle edge tap positions" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests UI Edge Cases should handle simultaneous gestures gracefully" name="Error Handling and Edge Cases - Mobile MCP E2E Tests UI Edge Cases should handle simultaneous gestures gracefully" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Data Persistence Edge Cases should handle partial survey data correctly" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Data Persistence Edge Cases should handle partial survey data correctly" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Data Persistence Edge Cases should handle survey completion edge cases" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Data Persistence Edge Cases should handle survey completion edge cases" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Recovery and Resilience should recover from unexpected errors" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Recovery and Resilience should recover from unexpected errors" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Error Handling and Edge Cases - Mobile MCP E2E Tests Recovery and Resilience should maintain performance under stress" name="Error Handling and Edge Cases - Mobile MCP E2E Tests Recovery and Resilience should maintain performance under stress" time="0">
+      <skipped/>
+    </testcase>
+  </testsuite>
+  <testsuite name="Cross-Platform Behavior - Mobile MCP E2E Tests" errors="0" failures="0" skipped="12" timestamp="2025-06-10T00:39:40" time="0.495" tests="12">
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Responsive Layout Behavior should adapt survey layout to portrait orientation" name="Cross-Platform Behavior - Mobile MCP E2E Tests Responsive Layout Behavior should adapt survey layout to portrait orientation" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Responsive Layout Behavior should adapt survey layout to landscape orientation" name="Cross-Platform Behavior - Mobile MCP E2E Tests Responsive Layout Behavior should adapt survey layout to landscape orientation" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Responsive Layout Behavior should maintain survey state during orientation changes" name="Cross-Platform Behavior - Mobile MCP E2E Tests Responsive Layout Behavior should maintain survey state during orientation changes" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Touch and Gesture Behavior should handle precise touch interactions" name="Cross-Platform Behavior - Mobile MCP E2E Tests Touch and Gesture Behavior should handle precise touch interactions" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Touch and Gesture Behavior should handle swipe gestures for navigation" name="Cross-Platform Behavior - Mobile MCP E2E Tests Touch and Gesture Behavior should handle swipe gestures for navigation" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Touch and Gesture Behavior should handle multi-step touch sequences" name="Cross-Platform Behavior - Mobile MCP E2E Tests Touch and Gesture Behavior should handle multi-step touch sequences" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Screen Size and Resolution Adaptation should work correctly on current device screen size" name="Cross-Platform Behavior - Mobile MCP E2E Tests Screen Size and Resolution Adaptation should work correctly on current device screen size" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Screen Size and Resolution Adaptation should handle different aspect ratios" name="Cross-Platform Behavior - Mobile MCP E2E Tests Screen Size and Resolution Adaptation should handle different aspect ratios" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Performance and Responsiveness should respond to interactions within reasonable time" name="Cross-Platform Behavior - Mobile MCP E2E Tests Performance and Responsiveness should respond to interactions within reasonable time" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Performance and Responsiveness should handle rapid consecutive interactions" name="Cross-Platform Behavior - Mobile MCP E2E Tests Performance and Responsiveness should handle rapid consecutive interactions" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Accessibility and Platform Integration should provide proper accessibility labels" name="Cross-Platform Behavior - Mobile MCP E2E Tests Accessibility and Platform Integration should provide proper accessibility labels" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Cross-Platform Behavior - Mobile MCP E2E Tests Accessibility and Platform Integration should integrate with device capabilities" name="Cross-Platform Behavior - Mobile MCP E2E Tests Accessibility and Platform Integration should integrate with device capabilities" time="0">
+      <skipped/>
+    </testcase>
+  </testsuite>
+  <testsuite name="Mobile MCP Integration Tests" errors="0" failures="0" skipped="10" timestamp="2025-06-10T00:39:40" time="0.061" tests="10">
+    <testcase classname="Mobile MCP Integration Tests Test Suite Integration should provide same test coverage as Detox tests" name="Mobile MCP Integration Tests Test Suite Integration should provide same test coverage as Detox tests" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Test Suite Integration should complement unit tests effectively" name="Mobile MCP Integration Tests Test Suite Integration should complement unit tests effectively" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Test Suite Integration should verify build and packaging integration" name="Mobile MCP Integration Tests Test Suite Integration should verify build and packaging integration" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Performance Benchmarking should measure app launch performance" name="Mobile MCP Integration Tests Performance Benchmarking should measure app launch performance" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Performance Benchmarking should measure navigation performance" name="Mobile MCP Integration Tests Performance Benchmarking should measure navigation performance" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Performance Benchmarking should measure survey completion performance" name="Mobile MCP Integration Tests Performance Benchmarking should measure survey completion performance" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Coverage Verification should test all major UI components" name="Mobile MCP Integration Tests Coverage Verification should test all major UI components" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Coverage Verification should verify accessibility compliance" name="Mobile MCP Integration Tests Coverage Verification should verify accessibility compliance" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Compatibility Testing should work with different device configurations" name="Mobile MCP Integration Tests Compatibility Testing should work with different device configurations" time="0">
+      <skipped/>
+    </testcase>
+    <testcase classname="Mobile MCP Integration Tests Compatibility Testing should handle platform-specific features" name="Mobile MCP Integration Tests Compatibility Testing should handle platform-specific features" time="0">
+      <skipped/>
+    </testcase>
+  </testsuite>
+  <testsuite name="Survey Flow - Mobile MCP E2E Tests" errors="0" failures="8" skipped="0" timestamp="2025-06-10T00:39:41" time="54.307" tests="12">
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Basic Navigation should display the main navigation tabs" name="Survey Flow - Mobile MCP E2E Tests Basic Navigation should display the main navigation tabs" time="1.005">
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Basic Navigation should navigate to Survey Demo tab" name="Survey Flow - Mobile MCP E2E Tests Basic Navigation should navigate to Survey Demo tab" time="9.046">
+      <failure>Error: Survey container not visible after navigation
+    at /Users/shan/react-native-survey-js-ui/example/e2e-mobile-mcp/survey-flow-mcp.test.ts:86:17
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+    at _next (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)</failure>
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Basic Navigation should navigate to Explore tab" name="Survey Flow - Mobile MCP E2E Tests Basic Navigation should navigate to Explore tab" time="9.031">
+      <failure>Error: Question type list not visible after navigation
+    at /Users/shan/react-native-survey-js-ui/example/e2e-mobile-mcp/survey-flow-mcp.test.ts:119:17
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+    at _next (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)</failure>
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Survey Completion Flow should display survey title" name="Survey Flow - Mobile MCP E2E Tests Survey Completion Flow should display survey title" time="3.011">
+      <failure>Error: expect(received).toBeTruthy()
+
+Received: undefined
+    at Object.toBeTruthy (/Users/shan/react-native-survey-js-ui/example/e2e-mobile-mcp/survey-flow-mcp.test.ts:152:27)
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+    at _next (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)</failure>
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Survey Completion Flow should show first survey page" name="Survey Flow - Mobile MCP E2E Tests Survey Completion Flow should show first survey page" time="3.012">
+      <failure>Error: expect(received).toBeTruthy()
+
+Received: undefined
+    at Object.toBeTruthy (/Users/shan/react-native-survey-js-ui/example/e2e-mobile-mcp/survey-flow-mcp.test.ts:162:26)
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+    at _next (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)</failure>
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Survey Completion Flow should fill out text question and navigate" name="Survey Flow - Mobile MCP E2E Tests Survey Completion Flow should fill out text question and navigate" time="5.017">
+      <failure>Error: Name question input not found
+    at /Users/shan/react-native-survey-js-ui/example/e2e-mobile-mcp/survey-flow-mcp.test.ts:175:17
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+    at _next (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)</failure>
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Survey Completion Flow should complete survey flow" name="Survey Flow - Mobile MCP E2E Tests Survey Completion Flow should complete survey flow" time="5.019">
+      <failure>Error: Survey completion message not found
+    at /Users/shan/react-native-survey-js-ui/example/e2e-mobile-mcp/survey-flow-mcp.test.ts:292:17
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+    at _next (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)</failure>
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Question Type Exploration should display question type categories" name="Survey Flow - Mobile MCP E2E Tests Question Type Exploration should display question type categories" time="3.012">
+      <failure>Error: expect(received).toBeGreaterThan(expected)
+
+Expected: &gt; 0
+Received:   0
+    at Object.toBeGreaterThan (/Users/shan/react-native-survey-js-ui/example/e2e-mobile-mcp/survey-flow-mcp.test.ts:338:33)
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+    at _next (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)</failure>
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Question Type Exploration should open question type demo" name="Survey Flow - Mobile MCP E2E Tests Question Type Exploration should open question type demo" time="5.017">
+      <failure>Error: Text Input question type not found
+    at /Users/shan/react-native-survey-js-ui/example/e2e-mobile-mcp/survey-flow-mcp.test.ts:350:17
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:3:17)
+    at _next (/Users/shan/react-native-survey-js-ui/example/node_modules/@babel/runtime/helpers/asyncToGenerator.js:17:9)</failure>
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Device Integration should handle orientation changes" name="Survey Flow - Mobile MCP E2E Tests Device Integration should handle orientation changes" time="3.011">
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Device Integration should handle swipe gestures" name="Survey Flow - Mobile MCP E2E Tests Device Integration should handle swipe gestures" time="5.025">
+    </testcase>
+    <testcase classname="Survey Flow - Mobile MCP E2E Tests Device Integration should capture device info correctly" name="Survey Flow - Mobile MCP E2E Tests Device Integration should capture device info correctly" time="1.007">
+    </testcase>
+  </testsuite>
+</testsuites>

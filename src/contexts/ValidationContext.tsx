@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { Model, Question } from 'survey-core';
-import { ValidatorRegistry, CustomValidator, type ValidationFunction } from '../validation';
+import { ValidatorRegistry, type ValidationFunction } from '../validation';
 
 /**
  * Validation timing modes for form validation
@@ -27,12 +27,14 @@ export interface ValidationContextValue {
   validateField: (fieldName: string) => boolean;
   validatePage: (pageIndex?: number) => boolean;
   validateSurvey: () => boolean | Promise<boolean>;
+  validateAllVisibleQuestions: () => boolean;
   setValidationMode: (mode: ValidationMode) => void;
   clearErrors: () => void;
   clearFieldError: (fieldName: string) => void;
   setFieldError: (fieldName: string, errors: string[]) => void;
   getFieldErrors: (fieldName: string) => string[];
   markFieldTouched: (fieldName: string) => void;
+  setShowErrors: (show: boolean) => void;
   
   // Custom validation methods
   registerCustomValidator: (ruleName: string, validationFunction: ValidationFunction, errorMessage?: string) => void;
@@ -64,7 +66,7 @@ export function ValidationProvider({
   const [isValidating, setIsValidating] = useState(false);
   
   // Custom validator state - track which validators are applied to which fields
-  const [fieldCustomValidators, setFieldCustomValidators] = useState<Record<string, string[]>>({});
+  const [_fieldCustomValidators, setFieldCustomValidators] = useState<Record<string, string[]>>({});
   
   // Ref to track current validation mode for event handlers
   const validationModeRef = useRef(validationMode);
@@ -433,7 +435,7 @@ export function ValidationProvider({
   const addCustomValidatorToField = useCallback((
     fieldName: string, 
     validatorRuleName: string, 
-    customErrorMessage?: string
+    _customErrorMessage?: string
   ) => {
     setFieldCustomValidators(prev => ({
       ...prev,
@@ -495,6 +497,42 @@ export function ValidationProvider({
     }
   }, [setFieldError, clearFieldError]);
 
+  // Additional validation methods
+  const validateAllVisibleQuestions = useCallback((): boolean => {
+    if (!model) return true;
+    
+    try {
+      // Get all visible questions on current page
+      const currentPage = model.currentPage;
+      if (!currentPage) return true;
+      
+      let isValid = true;
+      const visibleQuestions = currentPage.getAllQuestions().filter((q: any) => q.isVisible);
+      
+      for (const question of visibleQuestions) {
+        const questionValid = validateField(question.name);
+        if (!questionValid) {
+          isValid = false;
+        }
+      }
+      
+      return isValid;
+    } catch (error) {
+      console.error('Error validating all visible questions:', error);
+      return false;
+    }
+  }, [model, validateField]);
+
+  const setShowErrors = useCallback((show: boolean) => {
+    if (!model) return;
+    
+    // This could be used to control whether errors are shown
+    // For now, we'll implement a basic version
+    if (!show) {
+      clearErrors();
+    }
+  }, [model, clearErrors]);
+
   // Memoize context value to prevent unnecessary re-renders
   const contextValue = useMemo<ValidationContextValue>(() => ({
     model,
@@ -506,12 +544,14 @@ export function ValidationProvider({
     validateField,
     validatePage,
     validateSurvey,
+    validateAllVisibleQuestions,
     setValidationMode,
     clearErrors,
     clearFieldError,
     setFieldError,
     getFieldErrors,
     markFieldTouched,
+    setShowErrors,
     registerCustomValidator,
     addCustomValidatorToField,
     removeCustomValidatorFromField,
@@ -526,11 +566,13 @@ export function ValidationProvider({
     validateField,
     validatePage,
     validateSurvey,
+    validateAllVisibleQuestions,
     clearErrors,
     clearFieldError,
     setFieldError,
     getFieldErrors,
     markFieldTouched,
+    setShowErrors,
     registerCustomValidator,
     addCustomValidatorToField,
     removeCustomValidatorFromField,

@@ -15,6 +15,9 @@ export * from './mockScenarios';
 // Re-export platform utilities
 export * from './platformUtils';
 
+// Re-export Mobile MCP test helpers
+export * from './mobileMcpHelpers';
+
 // Re-export mocks
 export { MockSurveyModel } from '../__mocks__/survey-core/Model.mock';
 
