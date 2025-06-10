@@ -94,6 +94,68 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
   }, [model]);
 
   /**
+   * Check if a value is empty for validation purposes
+   */
+  const isValueEmpty = useCallback((value: any, questionType: string): boolean => {
+    if (value === null || value === undefined) {
+      return true;
+    }
+    
+    if (typeof value === 'string') {
+      return value.trim() === '';
+    }
+    
+    if (Array.isArray(value)) {
+      return value.length === 0;
+    }
+    
+    if (typeof value === 'object') {
+      // For matrix questions or other object-based questions
+      if (questionType === 'matrix' || questionType === 'matrixdropdown' || questionType === 'matrixdynamic') {
+        return Object.keys(value).length === 0 || Object.values(value).every(v => !v);
+      }
+      return Object.keys(value).length === 0;
+    }
+    
+    return false;
+  }, []);
+
+  /**
+   * Generate contextual required error message based on question type
+   */
+  const getRequiredErrorMessage = useCallback((question: Question): string => {
+    // Use custom required error text if provided
+    if ((question as any).requiredErrorText) {
+      return (question as any).requiredErrorText;
+    }
+    
+    // Generate contextual message based on question type
+    switch (question.type) {
+      case 'radiogroup':
+      case 'dropdown':
+        return 'Please select an option';
+      case 'checkbox':
+        return 'Please select at least one option';
+      case 'matrix':
+      case 'matrixdropdown':
+      case 'matrixdynamic':
+        return 'Please answer all required rows';
+      case 'rating':
+        return 'Please provide a rating';
+      case 'imagepicker':
+        return 'Please select an image';
+      case 'file':
+        return 'Please upload a file';
+      case 'signaturepad':
+        return 'Please provide a signature';
+      case 'boolean':
+        return 'Please make a selection';
+      default:
+        return 'This field is required';
+    }
+  }, []);
+
+  /**
    * Validate a single question and update state
    */
   const validateSingleQuestion = useCallback((question: Question) => {
@@ -109,9 +171,36 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
         }
       }
 
-      // Check required validation
-      if (question.isRequired && (!question.value || question.value === '')) {
-        errors.push('This field is required');
+      // Enhanced required validation
+      if (question.isRequired) {
+        const isEmpty = isValueEmpty(question.value, question.type);
+        if (isEmpty) {
+          const requiredError = getRequiredErrorMessage(question);
+          // Avoid duplicate required messages
+          if (!errors.some(err => err.toLowerCase().includes('required') || err === requiredError)) {
+            errors.push(requiredError);
+          }
+        }
+      }
+
+      // Validate custom validators (like minimum selection count)
+      if ((question as any).validators && Array.isArray((question as any).validators)) {
+        (question as any).validators.forEach((validator: any) => {
+          try {
+            if (validator.type === 'answercount' && Array.isArray(question.value)) {
+              const count = question.value.length;
+              if (validator.minCount && count < validator.minCount) {
+                errors.push(validator.text || `Please select at least ${validator.minCount} options`);
+              }
+              if (validator.maxCount && count > validator.maxCount) {
+                errors.push(validator.text || `Please select no more than ${validator.maxCount} options`);
+              }
+            }
+            // Add other validator types as needed
+          } catch (validatorError) {
+            // Ignore validator errors
+          }
+        });
       }
 
       // Update validation state for this question
@@ -140,8 +229,8 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
       // Fallback validation for cases where survey-core methods don't exist
       const errors: string[] = [];
       
-      if (question.isRequired && (!question.value || question.value === '')) {
-        errors.push('This field is required');
+      if (question.isRequired && isValueEmpty(question.value, question.type)) {
+        errors.push(getRequiredErrorMessage(question));
       }
 
       setValidationState(prev => {
@@ -166,7 +255,7 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
         };
       });
     }
-  }, []);
+  }, [isValueEmpty, getRequiredErrorMessage]);
 
   /**
    * Update validation state based on current model state
@@ -177,53 +266,29 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
     }
 
     try {
-      const errors: Record<string, string[]> = {};
-      const validationMessages: ValidationError[] = [];
-
-      // Get all questions on current page
+      // Get all questions on current page and validate each one
       const questions = model.currentPage.questions || [];
       
       questions.forEach((question: Question) => {
-        const questionErrors: string[] = [];
-        
-        // Check if question has errors (survey-core specific method)
-        if ((question as any).hasErrors && (question as any).hasErrors()) {
-          if ((question as any).errors && Array.isArray((question as any).errors)) {
-            questionErrors.push(...(question as any).errors.map((e: any) => e.text || e.message || String(e)));
-          }
-        }
-
-        // Check required validation
-        if (question.isRequired && (!question.value || question.value === '')) {
-          questionErrors.push('This field is required');
-        }
-
-        if (questionErrors.length > 0) {
-          errors[question.name] = questionErrors;
-          questionErrors.forEach(message => {
-            validationMessages.push({ questionName: question.name, message });
-          });
-        }
+        validateSingleQuestion(question);
       });
 
-      const hasErrors = Object.keys(errors).length > 0;
-
-      setValidationState(prev => ({
-        ...prev,
-        hasErrors,
-        errors,
-        validationMessages,
-      }));
     } catch (error) {
-      // Fallback: assume no errors if validation methods don't exist
-      setValidationState(prev => ({
-        ...prev,
-        hasErrors: false,
-        errors: {},
-        validationMessages: [],
-      }));
+      // Fallback validation
+      const questions = model.currentPage?.questions || [];
+      questions.forEach((question: Question) => {
+        if (question.isRequired && isValueEmpty(question.value, question.type)) {
+          const requiredError = getRequiredErrorMessage(question);
+          setValidationState(prev => ({
+            ...prev,
+            hasErrors: true,
+            errors: { ...prev.errors, [question.name]: [requiredError] },
+            validationMessages: [...prev.validationMessages, { questionName: question.name, message: requiredError }],
+          }));
+        }
+      });
     }
-  }, [model]);
+  }, [model, validateSingleQuestion, isValueEmpty, getRequiredErrorMessage]);
 
   /**
    * Validate the current page
@@ -248,14 +313,17 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
         const questions = model.currentPage.questions || [];
         
         questions.forEach((question: Question) => {
-          if (question.isRequired && (!question.value || question.value === '')) {
+          if (question.isRequired && isValueEmpty(question.value, question.type)) {
             isValid = false;
           }
         });
       }
 
-      // Update validation state
-      updateValidationState();
+      // Force update validation state by calling validateSingleQuestion for each question
+      const questions = model.currentPage.questions || [];
+      questions.forEach((question: Question) => {
+        validateSingleQuestion(question);
+      });
 
       setValidationState(prev => ({ ...prev, isValidating: false }));
       
@@ -264,7 +332,7 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
       setValidationState(prev => ({ ...prev, isValidating: false }));
       return true; // Fallback: assume valid if validation fails
     }
-  }, [model, updateValidationState]);
+  }, [model, updateValidationState, isValueEmpty]);
 
   /**
    * Validate all pages in the survey
@@ -291,7 +359,7 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
         pages.forEach((page: PageModel) => {
           const questions = page.questions || [];
           questions.forEach((question: Question) => {
-            if (question.isRequired && (!question.value || question.value === '')) {
+            if (question.isRequired && isValueEmpty(question.value, question.type)) {
               isValid = false;
             }
           });
@@ -305,7 +373,7 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
       setValidationState(prev => ({ ...prev, isValidating: false }));
       return true; // Fallback: assume valid if validation fails
     }
-  }, [model]);
+  }, [model, isValueEmpty]);
 
   /**
    * Clear all validation errors
@@ -340,12 +408,12 @@ export function usePageValidation(model: Model | null): UsePageValidationReturn 
         return !(question as any).hasErrors();
       } else {
         // Fallback validation
-        return !(question.isRequired && (!question.value || question.value === ''));
+        return !(question.isRequired && isValueEmpty(question.value, question.type));
       }
     } catch (error) {
       return true; // Fallback: assume valid if validation fails
     }
-  }, [model, validateSingleQuestion]);
+  }, [model, validateSingleQuestion, isValueEmpty]);
 
   return {
     validationState,
