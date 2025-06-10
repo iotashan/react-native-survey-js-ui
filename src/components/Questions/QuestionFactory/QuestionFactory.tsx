@@ -19,7 +19,9 @@ const questionRegistry = new Map<string, QuestionComponent>();
 // Register built-in question types
 questionRegistry.set('text', TextQuestion);
 
-export interface QuestionFactoryProps extends QuestionComponentProps {}
+export interface QuestionFactoryProps extends QuestionComponentProps {
+  model?: any; // Survey model for validation
+}
 
 export const QuestionFactory: React.FC<QuestionFactoryProps> & {
   registerQuestionType: (type: string, component: QuestionComponent) => void;
